@@ -22,6 +22,7 @@ import de.hs_kl.imst.gatav.tilerenderer.drawable.GameContent;
 import de.hs_kl.imst.gatav.tilerenderer.drawable.TileGraphics;
 import de.hs_kl.imst.gatav.tilerenderer.util.Direction;
 import de.hs_kl.imst.gatav.tilerenderer.util.FPSHelper;
+import de.hs_kl.imst.gatav.tilerenderer.util.GameCamera;
 import de.hs_kl.imst.gatav.tilerenderer.util.LevelHelper;
 import de.hs_kl.imst.gatav.tilerenderer.util.TileInformation;
 
@@ -44,6 +45,7 @@ public class GameView extends SurfaceView implements SurfaceHolder.Callback, Run
     private Thread timeThread;
     private volatile boolean runningTimeThread=false;    // access to elementary data types (not double or long) are atomic and should be volatile to synchronize content
     private volatile double elapsedTime = 0.0;
+
     synchronized private void resetElapsedTime() { elapsedTime = 0.0;}
     synchronized private double getElapsedTime() { return elapsedTime; }
     synchronized private void increaseElapsedTime(double increment) { elapsedTime += increment; }
@@ -132,8 +134,8 @@ public class GameView extends SurfaceView implements SurfaceHolder.Callback, Run
      * @param fracsec Teil einer Sekunde, der seit dem letzten Update vergangen ist
      */
     void updateContent(float fracsec) {
-        //if(gameContent != null)
-        //    gameContent.update(fracsec);
+        if(gameContent != null)
+            gameContent.update(fracsec);
     }
 
     /**

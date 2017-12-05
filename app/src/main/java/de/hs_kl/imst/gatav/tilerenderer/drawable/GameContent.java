@@ -5,6 +5,7 @@ import android.content.res.AssetManager;
 import android.graphics.Bitmap;
 import android.graphics.Canvas;
 import android.graphics.Paint;
+import android.graphics.Rect;
 import android.support.annotation.Nullable;
 import android.util.Log;
 
@@ -18,6 +19,7 @@ import java.util.Random;
 
 import de.hs_kl.imst.gatav.tilerenderer.TileLoader;
 import de.hs_kl.imst.gatav.tilerenderer.util.Direction;
+import de.hs_kl.imst.gatav.tilerenderer.util.GameCamera;
 import de.hs_kl.imst.gatav.tilerenderer.util.TileInformation;
 
 public class GameContent implements Drawable {
@@ -35,10 +37,9 @@ public class GameContent implements Drawable {
     private TileLoader tileLoader;
 
     /**
-     * Kamera Position
+     * Game Camera
      */
-    private int cameraX = 0;
-    private int timer = 0;
+    private GameCamera camera = new GameCamera();
 
     /**
      * Beinhaltet Referenzen auf alle dynamischen Kacheln, deren {@link Drawable#update(float)} Methode
@@ -126,6 +127,10 @@ public class GameContent implements Drawable {
         this.assetManager = context.getAssets();
         this.levelName = levelName;
 
+        //Kamera setzen
+        camera.setCameraYCenter(300);
+        camera.setCameraXCenter(700);
+
         // Level laden mit Wall (W), Floor (F) und Player (P)
         // Target wird im geladenen Level zum Schluss zusätzlich gesetzt
         loadLevel();
@@ -182,18 +187,22 @@ public class GameContent implements Drawable {
         // Erste Ebene zeichnen (Wände und Boden)
 
         ArrayList<ArrayList<TileInformation>> map = tileLoader.getMap();
-        canvas.translate(-(((cameraX*2) % 500)),0);
+        camera.draw(canvas);
         for(ArrayList<TileInformation> currentLayerTiles : map) {
             for(TileInformation currentTile : currentLayerTiles) {
-                Bitmap bmp = tileLoader.getTiles().get(currentTile.getTilesetPiece());
-                if(bmp!=null) {
-                    canvas.drawBitmap(bmp, currentTile.getxPos() * tileLoader.getTileWidth(), currentTile.getyPos() * tileLoader.getTileHeight() - 150, null);
+
+                int left = currentTile.getxPos() * tileLoader.getTileWidth();
+                int top = currentTile.getyPos() * tileLoader.getTileHeight() - 150;
+                int right = left + tileLoader.getTileWidth();
+                int bottom = top + tileLoader.getTileHeight();
+                Rect test = new Rect(left, top, right, bottom);
+                if(camera.isRectInView(test)) {
+                    Bitmap bmp = tileLoader.getTiles().get(currentTile.getTilesetPiece());
+                    canvas.drawBitmap(bmp, left, top, null);
                 }
             }
         }
 
-        cameraX++;
-        timer++;
 
         // Zweite Ebene zeichnen
 
@@ -208,6 +217,11 @@ public class GameContent implements Drawable {
      */
     @Override
     public void update(float fracsec) {
+        if(camera.getCameraXCenter() < 1400) {
+            camera.setCameraXCenter(camera.getCameraXCenter() + 1);
+        } else {
+            camera.setCameraXCenter(700);
+        }
         // 1. Schritt: Auf mögliche Player Bewegung prüfen und ggf. durchführen/anstoßen
         // vorhandenen Player Move einmalig ausführen bzw. anstoßen, falls
         // PlayerDirection nicht IDLE ist und Player aktuell nicht in einer Animation
@@ -292,4 +306,5 @@ public class GameContent implements Drawable {
        //TODO
         return null;
     }
+
 }

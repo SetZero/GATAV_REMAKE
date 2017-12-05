@@ -161,6 +161,7 @@ public class TileLoader {
             InputSource is = new InputSource(fis);
             Document doc = builder.parse(is);
             Node tileset = doc.getElementsByTagName("tileset").item(0);
+
             Element tilesetElement = (Element)tileset;
             tileWidth = Integer.parseInt(tilesetElement.getAttribute("tilewidth"));
             tileHeight = Integer.parseInt(tilesetElement.getAttribute("tileheight"));
