@@ -122,6 +122,7 @@ public class TileLoader {
                 List<String> items = Arrays.asList(layerString.split("\\s*,\\s*"));
                 this.map.add(new ArrayList<TileInformation>());
 
+                Log.d("TileLoader", "Start Loading Tiles");
                 for(int y = 0; y < height; y++) {
                     for(int x = 0; x < width; x++) {
                         int itemID = Integer.parseInt(items.get(x + (y*width)).trim());
@@ -134,6 +135,7 @@ public class TileLoader {
                         }
                     }
                 }
+                Log.d("TileLoader", "Finished Loading Tiles");
             }
 
             fis.close();
@@ -151,6 +153,7 @@ public class TileLoader {
     }
 
     private void generateBitmaps(String src, int firstGID) {
+        Log.d("TileLoader", "Start Generating Bitmaps");
         try {
             DocumentBuilderFactory factory = DocumentBuilderFactory.newInstance();
             DocumentBuilder builder = factory.newDocumentBuilder();
@@ -167,14 +170,16 @@ public class TileLoader {
             Node image = doc.getElementsByTagName("image").item(0);
             Element imageElement = (Element)image;
             String sourceImage = imageElement.getAttribute("source");
-            BitmapRegionDecoder decoder = BitmapRegionDecoder.newInstance(getGraphicsStream(sourceImage), false);
+            BitmapRegionDecoder decoder = BitmapRegionDecoder.newInstance(getGraphicsStream(sourceImage), true);
 
+            Log.d("TileLoader", "Start Splitting");
             for(int i = 0; i < tiles; i++) {
                 int xPos = (i % columns) * tileWidth;
                 int yPos = ( i / columns) * tileHeight;
                 Bitmap region = decoder.decodeRegion(new Rect( xPos, yPos, xPos+tileWidth, yPos+tileHeight), null);
                 this.tiles.put(firstGID+i, region);
             }
+            Log.d("TileLoader", "Finished Generating Bitmaps");
 
         } catch (FileNotFoundException e) {
             e.printStackTrace();

@@ -21,6 +21,7 @@ import java.util.ArrayList;
 import de.hs_kl.imst.gatav.tilerenderer.drawable.GameContent;
 import de.hs_kl.imst.gatav.tilerenderer.drawable.TileGraphics;
 import de.hs_kl.imst.gatav.tilerenderer.util.Direction;
+import de.hs_kl.imst.gatav.tilerenderer.util.FPSHelper;
 import de.hs_kl.imst.gatav.tilerenderer.util.LevelHelper;
 import de.hs_kl.imst.gatav.tilerenderer.util.TileInformation;
 
@@ -97,9 +98,10 @@ public class GameView extends SurfaceView implements SurfaceHolder.Callback, Run
         canvas.save();
         gameContent.draw(canvas);
         canvas.restore();
-        /*
+
         // Layer 2 (Collected Targets, Score and Elapsed Time)
-        String collectedText = String.format("%d gesammelt", gameContent.getCollectedTargets());
+        FPSHelper.draw(canvas);
+        /*String collectedText = String.format("%d gesammelt", gameContent.getCollectedTargets());
         String scoreText = String.format("Punkte: %d", gameContent.getCollectedScore());
         String timeText = "Zeit: " + String.format("%.2f", getElapsedTime()) + " Sekunden";
         String timeTextFake = "Zeit: " + String.format("%.2f", 200.0) + " Sekunden";
