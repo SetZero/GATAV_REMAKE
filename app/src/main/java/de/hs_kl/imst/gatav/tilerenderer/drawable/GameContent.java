@@ -2,6 +2,7 @@ package de.hs_kl.imst.gatav.tilerenderer.drawable;
 
 import android.content.Context;
 import android.content.res.AssetManager;
+import android.graphics.Bitmap;
 import android.graphics.Canvas;
 import android.graphics.Paint;
 import android.support.annotation.Nullable;
@@ -15,7 +16,9 @@ import java.util.ArrayList;
 import java.util.Collections;
 import java.util.Random;
 
+import de.hs_kl.imst.gatav.tilerenderer.TileLoader;
 import de.hs_kl.imst.gatav.tilerenderer.util.Direction;
+import de.hs_kl.imst.gatav.tilerenderer.util.TileInformation;
 
 public class GameContent implements Drawable {
     /**
@@ -27,10 +30,15 @@ public class GameContent implements Drawable {
     public int getGameHeight() { return gameHeight; }
 
     /**
-     * Beinhaltet alle Tiles, die das Spielfeld als solches darstellen. Diese werden als erstes
-     * gezeichnet und bilden somit die unterste Ebene.
+     * Der Tile Loader in welchem das Aktuelle Level geladen wird
      */
-    private TileGraphics[][] tiles;         // [zeilen][spalten]
+    private TileLoader tileLoader;
+
+    /**
+     * Kamera Position
+     */
+    private int cameraX = 0;
+    private int timer = 0;
 
     /**
      * Beinhaltet Referenzen auf alle dynamischen Kacheln, deren {@link Drawable#update(float)} Methode
@@ -39,7 +47,7 @@ public class GameContent implements Drawable {
     private ArrayList<TileGraphics> dynamicTiles = new ArrayList<>();
 
     /**
-     * Beinhaltet alle Ziele. Diese werden als zweites und somit über die in {@link GameContent#tiles}
+     * Beinhaltet alle Ziele. Diese werden als zweites und somit über die in
      * definierten Elemente gezeichnet.
      */
     private TileGraphics[][] targetTiles;   // [zeilen][spalten]
@@ -120,14 +128,10 @@ public class GameContent implements Drawable {
 
         // Level laden mit Wall (W), Floor (F) und Player (P)
         // Target wird im geladenen Level zum Schluss zusätzlich gesetzt
-        try {
-            loadLevel(assetManager.open(String.format("levels/%s.txt", levelName)));
-        } catch (IOException e) {
-            e.printStackTrace();
-        }
+        loadLevel();
 
         // Player ist animiert und muss deshalb updates auf seine Position erfahren
-        dynamicTiles.add(player);
+        //dynamicTiles.add(player);
     }
 
 
@@ -155,32 +159,15 @@ public class GameContent implements Drawable {
             throw new AssertionError("Spieler wurde außerhalb des Spielfeldes bewegt. Loch im Level?");
 
         // Zweiter Schritt: Prüfen ob Spieler sich an Zielposition bewegen kann (Zielkachel.isPassable())
-        TileGraphics targetTile = tiles[newY][newX];
-        if(targetTile == null || !targetTile.isPassable())
-            return false;
 
         // Dritter Schritt: Spieler verschieben bzw. Verschieben starten.
         // Hinterher steht der Spieler logisch bereits auf der neuen Position
-        player.move(newX, newY);
 
         // Vierter Schritt: Prüfen ob auf der Zielkachel ein Target existiert
-        if(targetTiles[newY][newX] != null && targetTiles[newY][newX] instanceof Target) {
-            collectedTargets++;
-            // TODO
-            // Altes Ziel entfernen
-            targets.remove(targetTiles[newY][newX]);
-            targetTiles[newY][newX] = null;
-            // Neues Ziel erzeugen
-            createNewTarget();
-        }
+
+
         // Prüfen ob auf der Zielposition das dynamische Target existert => Sonderpunkte :-)
-        if(dynTarget!=null) {
-            if(samePosition(player, dynTarget)) {
-                collectedScore += dynTarget.getScore();
-                dynamicTiles.remove(dynTarget);
-                // TODO
-            }
-        }
+
 
         return true;
     }
@@ -193,22 +180,25 @@ public class GameContent implements Drawable {
     @Override
     public void draw(Canvas canvas) {
         // Erste Ebene zeichnen (Wände und Boden)
-        for (int yIndex = 0; yIndex < tiles.length; yIndex++)
-            for (int xIndex = 0; xIndex < tiles[yIndex].length; xIndex++) {
-                if(tiles[yIndex][xIndex] == null) continue;
-                tiles[yIndex][xIndex].draw(canvas);
+
+        ArrayList<ArrayList<TileInformation>> map = tileLoader.getMap();
+        canvas.translate(-(((cameraX*2) % 500)),0);
+        for(ArrayList<TileInformation> currentLayerTiles : map) {
+            for(TileInformation currentTile : currentLayerTiles) {
+                Bitmap bmp = tileLoader.getTiles().get(currentTile.getTilesetPiece());
+                if(bmp!=null) {
+                    canvas.drawBitmap(bmp, currentTile.getxPos() * tileLoader.getTileWidth(), currentTile.getyPos() * tileLoader.getTileHeight() - 150, null);
+                }
             }
+        }
+
+        cameraX++;
+        timer++;
+
         // Zweite Ebene zeichnen
-        for (int yIndex = 0; yIndex < targetTiles.length; yIndex++)
-            for (int xIndex = 0; xIndex < targetTiles[yIndex].length; xIndex++) {
-                if(targetTiles[yIndex][xIndex] == null) continue;
-                targetTiles[yIndex][xIndex].draw(canvas);
-            }
+
         // Dynamisches Ziel zeichnen
-        if(dynTarget!=null)
-            dynTarget.draw(canvas);
         // Spieler zeichnen
-        player.draw(canvas);
     }
 
 
@@ -222,79 +212,38 @@ public class GameContent implements Drawable {
         // vorhandenen Player Move einmalig ausführen bzw. anstoßen, falls
         // PlayerDirection nicht IDLE ist und Player aktuell nicht in einer Animation
         //Log.d("updateGameContent", ""+isPlayerDirectionIDLE()+" "+player.isMoving());
-        if(!isPlayerDirectionIDLE() && !player.isMoving())
-            movePlayer(getPlayerDirection());
+
         // Dynamisches Ziel vielleicht erzeugen
-        if(dynTarget==null) {
-            if(random.nextDouble()<0.004)
-                createAndMoveDynamicTarget();
-        }
+
 
         // 2. Schritt: Updates bei allen dynamischen Kacheln durchführen (auch Player)
-        for(TileGraphics dynamicTile : dynamicTiles)
-            dynamicTile.update(fracsec);
+
 
         // 3. Schritt: Animationen auf Ende überprüfen und ggf. wieder freischalten
         // Player Move fertig ausgeführt => Sperre für neues Player Event freischalten
-        if(!player.isMoving())
-            resetPlayerDirection();
+
         // Animation des dynamischen Ziels abgeschlossen
-       if(dynTarget!= null && !dynTarget.isMoving()) {
-            dynamicTiles.remove(dynTarget);
-            dynTarget = null;
-        }
+
    }
 
 
     /**
      * Level aus Stream laden und Datenstrukturen entsprechend initialisieren
-     * @param levelIs InputStream von welchem Leveldaten gelesen werden sollen
      * @throws IOException falls beim Laden etwas schief geht (IO Fehler, Fehler in Leveldatei)
      */
-    private void loadLevel(InputStream levelIs) throws IOException {
+    private void loadLevel() {
         // Erster Schritt: Leveldatei zeilenweise lesen und Inhalt zwischenspeichern. Zudem ermitteln, wie breit der Level maximal ist.
         // Spielfeldgröße ermitteln
-        ArrayList<String> levelLines = new ArrayList<>();
-        BufferedReader br = new BufferedReader(new InputStreamReader(levelIs));
-        int maxLineLength = 0;
-        String currentLine = null;
-        while((currentLine = br.readLine()) != null) {
-            maxLineLength = Math.max(maxLineLength, currentLine.length());
-            levelLines.add(currentLine);
-        }
-        br.close();
-        gameWidth = (int)(maxLineLength * TileGraphics.getTileSize());
-        gameHeight = (int)(levelLines.size() * TileGraphics.getTileSize());
+
+        tileLoader = new TileLoader(context, "test");
+        gameHeight = tileLoader.getHeight();
+        gameWidth = tileLoader.getWidth();
 
 
         // Zweiter Schritt: basierend auf dem Inhalt der Leveldatei die Datenstrukturen befüllen
-        tiles = new TileGraphics[levelLines.size()][];
-        targetTiles = new TileGraphics[levelLines.size()][];
 
-        for(int yIndex = 0; yIndex < levelLines.size(); yIndex++) {
-            tiles[yIndex] = new TileGraphics[maxLineLength];
-            targetTiles[yIndex] = new TileGraphics[maxLineLength];
-            String line = levelLines.get(yIndex);
-            for(int xIndex = 0; xIndex < maxLineLength && xIndex < line.length(); xIndex++) {
-                TileGraphics tg = getTileByCharacter(line.charAt(xIndex), xIndex, yIndex);
-                // Floor Tiles sind gleichzeitig Kacheln, auf denen Ziele erscheinen können
-                if(tg instanceof Floor) {
-                    possibleTargets.add(tg);
-                    tiles[yIndex][xIndex] = tg;
-                } else if(tg instanceof Player) {   // auch auf der Player Kachel können Ziele erscheinen, zusätzlich ist sie eine Floor Kachel
-                    tiles[yIndex][xIndex] = getTileByCharacter('f', xIndex, yIndex);
-                    possibleTargets.add(tiles[yIndex][xIndex]);
-                    if (player != null)
-                        throw new IOException("Invalid level file, contains more than one player!");
-                    player = (Player) tg;
-                } else {                            // Wall Kacheln
-                    tiles[yIndex][xIndex] = tg;
-                }
-            }
-        }
 
         // Dritter Schritt: erste Ziele erzeugen und platzieren
-        createNewTarget(); createNewTarget(); createNewTarget();
     }
 
 
@@ -308,52 +257,7 @@ public class GameContent implements Drawable {
      */
     @Nullable
     public void createAndMoveDynamicTarget() {
-        // Source zufällig aber gültig auswählen
-        TileGraphics sourceTile = possibleTargets.get(random.nextInt(possibleTargets.size()));
-        // Sicherstellen, dass das Ziel nicht an der gleichen Position wie der Spieler erzeugt wird
-        // und sich dort nicht bereits ein normales Ziel befindet
-        while(samePosition(sourceTile, player) || targetTiles[sourceTile.getY()][sourceTile.getX()]!=null)
-            sourceTile = possibleTargets.get(random.nextInt(possibleTargets.size()));
 
-        // Destination bestimmen, falls möglich, ansonsten Abbruch
-        // 0 left, 1 right, 2 up, 3 down
-        ArrayList<Integer> dl = new ArrayList<Integer>();
-        dl.add(0); dl.add(1); dl.add(2); dl.add(3);
-        Collections.shuffle(dl);
-
-        TileGraphics destinationTile=null;
-        Direction destinationDirection=Direction.IDLE;
-        int destDir=-1;
-        int newX=-1, newY=-1;
-        // alle vier Richtungen zufällig durchgehen, bis die erste passt oder eben keine
-        for(int i=0; i<4; i++) {
-            switch(dl.get(i)) {
-                case 0: newX=sourceTile.getX()-1; newY=sourceTile.getY();
-                    destinationDirection=Direction.LEFT; destDir=0; break;
-                case 1: newX=sourceTile.getX()+1; newY=sourceTile.getY();
-                    destinationDirection=Direction.RIGHT; destDir=1; break;
-                case 2: newX=sourceTile.getX(); newY=sourceTile.getY()-1;
-                    destinationDirection=Direction.UP; destDir=2; break;
-                case 3: newX=sourceTile.getX(); newY=sourceTile.getY()+1;
-                    destinationDirection=Direction.DOWN; destDir=3; break;
-            }
-            if ((!(newX >= 0 && newX < gameWidth && newY >= 0 && newY < gameHeight)))
-                continue;
-            destinationTile = tiles[newY][newX];
-            if(destinationTile == null || !destinationTile.isPassable()) {
-                destinationTile = null;
-                continue;
-            }
-            break;
-        }
-        if(destinationTile==null)
-            return;
-
-        // Dynamischen Ziel erzeugen und Move einstellen
-        dynTarget = new DynamicTarget(sourceTile.getX(), sourceTile.getY(), getGraphicsStream(levelName, "sse1"));  // TODO
-        dynTarget.move(newX, newY);
-        dynTarget.setSpeed(0.1f);   // TODO
-        dynamicTiles.add(dynTarget);
     }
 
 
@@ -363,47 +267,7 @@ public class GameContent implements Drawable {
      * @return neues Ziel
      */
     private void createNewTarget() {
-        TileGraphics targetTile = possibleTargets.get(random.nextInt(possibleTargets.size()));
-        // Sicherstellen, dass das Ziel nicht an der gleichen Position wie der Spieler erzeugt wird
-        // und sich dort nicht bereits ein Ziel befindet
-        while(samePosition(targetTile, player) || targetTiles[targetTile.getY()][targetTile.getX()]!=null)
-            targetTile = possibleTargets.get(random.nextInt(possibleTargets.size()));
-
-        // Ziel zufällig auswählen
-        Target newTarget = chooseTarget(targetTile.getX(), targetTile.getY(), 0);
-
-        targetTiles[newTarget.getY()][newTarget.getX()] = newTarget;
-        targets.add(newTarget);
-    }
-
-
-    /**
-     * Sucht das neue Ziel aus
-     * @param x x-Koordinate
-     * @param y y-Koordinate
-     * @param targetNumber 0 für zufällige Auswahl, 1-... für explizite Auswahl des Ziels
-     * @return Das Ziel
-     */
-    private Target chooseTarget(int x, int y, int targetNumber) {
-        int targetScores [] = {1, 2, 4};    // TODO
-        double targetProps [] = {0.6, 0.8}; // TODO
-        int targetIndex;
-
-        // zufällige Auswahl des Targets nach Wahrscheinlichkeiten in targetProps
-        if(targetNumber==0) {
-            double dice = random.nextDouble();
-            targetIndex = targetProps.length;
-            while (targetIndex > 0 && dice < targetProps[targetIndex-1])
-                targetIndex--;
-            targetNumber = targetIndex+1;
-        } else  // explizite Wahl der Nummer des Targets
-        {
-            if(targetNumber<1 || targetNumber>targetScores.length)    // explizit ausgewähltes Target
-                targetNumber = 1;
-            targetIndex=targetNumber-1;
-        }
-
-        return new Target(x, y, null, targetScores[targetIndex]);   // TODO
+        //TODO: spawn enemies
     }
 
 
@@ -414,8 +278,7 @@ public class GameContent implements Drawable {
      * @return true wenn Position gleich, andernfalls false
      */
     private boolean samePosition(TileGraphics a, TileGraphics b) {
-        if(a.getX() == b.getX() && a.getY() == b.getY())
-            return true;
+        //TODO
         return false;
     }
 
@@ -426,28 +289,7 @@ public class GameContent implements Drawable {
      * @return Inputstream
      */
     private InputStream getGraphicsStream(String levelName, String graphicsName) {
-        try {
-            return assetManager.open("levels/" + levelName + "/" + graphicsName + ".png");
-        }catch(IOException e){
-            try {
-                return assetManager.open("levels/default/" + graphicsName + ".png");
-            }catch(IOException e2){
-                return null;
-            }
-        }
-    }
-
-
-    @Nullable
-    private TileGraphics getTileByCharacter(char c, int xIndex, int yIndex) {
-        switch(c) {
-            case 'w':
-            case 'W': return new Wall(xIndex, yIndex, null);    // TODO
-            case 'f':
-            case 'F': return new Floor(xIndex, yIndex, null);
-            case 'p':
-            case 'P': return new Player(xIndex, yIndex, getGraphicsStream(levelName, "bender"));
-        }
+       //TODO
         return null;
     }
 }

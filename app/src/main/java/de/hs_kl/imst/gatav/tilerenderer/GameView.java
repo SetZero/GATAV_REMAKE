@@ -16,10 +16,13 @@ import android.view.MotionEvent;
 import android.view.SurfaceHolder;
 import android.view.SurfaceView;
 
+import java.util.ArrayList;
+
 import de.hs_kl.imst.gatav.tilerenderer.drawable.GameContent;
 import de.hs_kl.imst.gatav.tilerenderer.drawable.TileGraphics;
 import de.hs_kl.imst.gatav.tilerenderer.util.Direction;
 import de.hs_kl.imst.gatav.tilerenderer.util.LevelHelper;
+import de.hs_kl.imst.gatav.tilerenderer.util.TileInformation;
 
 
 /**
@@ -54,10 +57,7 @@ public class GameView extends SurfaceView implements SurfaceHolder.Callback, Run
     private GestureDetectorCompat gestureDetector;
 
     private GameContent gameContent;
-    private TileLoader tileLoader;
 
-    private int cameraX = 0;
-    private int timer = 0;
 
 
     private Paint scoreAndTimePaint = new Paint();
@@ -79,7 +79,6 @@ public class GameView extends SurfaceView implements SurfaceHolder.Callback, Run
        // gestureDetector = new GestureDetectorCompat(context, this);
 
         scoreAndTimePaint.setTextSize(20f * context.getResources().getDisplayMetrics().density);
-        tileLoader = new TileLoader(context, "test");
 
     }
 
@@ -91,33 +90,14 @@ public class GameView extends SurfaceView implements SurfaceHolder.Callback, Run
         // Layer 0 (clear background)
         canvas.drawColor(Color.parseColor("#9bd3ff"));
 
-        canvas.save();
-        int[][][] map = tileLoader.getMap();
-        int height = tileLoader.getHeight();
-        int width = tileLoader.getWidth();
-        for(int layers = 0; layers < tileLoader.getLayers(); layers++) {
-            for (int x = 0; x < width; x++) {
-                for (int y = 0; y < height; y++) {
-                    Bitmap bmp = tileLoader.getTiles().get(map[layers][x][y]);
-                    if(bmp!=null) {
-                        //canvas.translate(,0);
-                        canvas.drawBitmap(bmp, x * tileLoader.getTileWidth() + ((cameraX) % 10) - 5, y * tileLoader.getTileHeight() - 150, null);
-                    }
-                }
-            }
-        }
-        if(timer%10 == 0) cameraX++;
-        timer++;
-        canvas.restore();
+
 
         // Layer 1 (Game content)
-        /*if(gameContent == null) return;
+        if(gameContent == null) return;
         canvas.save();
-        canvas.translate((canvas.getWidth() - gameContent.getGameWidth()) / 2,
-                (canvas.getHeight() - gameContent.getGameHeight()) / 2);
         gameContent.draw(canvas);
         canvas.restore();
-
+        /*
         // Layer 2 (Collected Targets, Score and Elapsed Time)
         String collectedText = String.format("%d gesammelt", gameContent.getCollectedTargets());
         String scoreText = String.format("Punkte: %d", gameContent.getCollectedScore());

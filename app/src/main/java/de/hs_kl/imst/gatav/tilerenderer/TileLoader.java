@@ -19,6 +19,7 @@ import java.io.FileInputStream;
 import java.io.FileNotFoundException;
 import java.io.IOException;
 import java.io.InputStream;
+import java.util.ArrayList;
 import java.util.Arrays;
 import java.util.HashMap;
 import java.util.List;
@@ -27,6 +28,8 @@ import java.util.Map;
 import javax.xml.parsers.DocumentBuilder;
 import javax.xml.parsers.DocumentBuilderFactory;
 import javax.xml.parsers.ParserConfigurationException;
+
+import de.hs_kl.imst.gatav.tilerenderer.util.TileInformation;
 
 public class TileLoader {
     private AssetManager assetManager;
@@ -38,7 +41,8 @@ public class TileLoader {
     private int tileWidth = 0;
     private int tileHeight = 0;
     private int layers = 0;
-    private int[][][] map;
+    //private int[][][] map;
+    private ArrayList<ArrayList<TileInformation>> map;
 
     public int getWidth() {
         return width;
@@ -60,8 +64,12 @@ public class TileLoader {
         return layers;
     }
 
-    public int[][][] getMap() {
+    public ArrayList<ArrayList<TileInformation>> getMap() {
         return map;
+    }
+
+    public ArrayList<TileInformation> getLayer(int layer) {
+        return map.get(layer);
     }
 
     public Map<Integer, Bitmap> getTiles() {
@@ -105,17 +113,25 @@ public class TileLoader {
 
             NodeList layerList = doc.getElementsByTagName("layer");
             layers = layerList.getLength();
-            this.map = new int[layers][width][height];
-            System.out.println("Length: " + this.map.length);
+            this.map = new ArrayList<>(layers);//new int[layers][width][height];
+            Log.d("TileLoader", "Layers: " + this.map.size());
 
             for (int layer = 0; layer < layers; layer++) {
                 Element layerElement = (Element) layerList.item(layer);
                 String layerString = layerElement.getElementsByTagName("data").item(0).getTextContent();
                 List<String> items = Arrays.asList(layerString.split("\\s*,\\s*"));
+                this.map.add(new ArrayList<TileInformation>());
 
                 for(int y = 0; y < height; y++) {
                     for(int x = 0; x < width; x++) {
-                        this.map[layer][x][y] = Integer.parseInt(items.get(x + (y*width)).trim());
+                        int itemID = Integer.parseInt(items.get(x + (y*width)).trim());
+                        if(itemID != 0) {
+                            TileInformation tile = new TileInformation();
+                            tile.setxPos(x);
+                            tile.setyPos(y);
+                            tile.setTilesetPiece(itemID);
+                            this.map.get(layer).add(tile);
+                        }
                     }
                 }
             }
