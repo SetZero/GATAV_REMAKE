@@ -4,6 +4,7 @@ import android.content.Context;
 import android.content.res.AssetManager;
 import android.graphics.Bitmap;
 import android.graphics.Canvas;
+import android.graphics.Color;
 import android.graphics.Paint;
 import android.graphics.Rect;
 import android.support.annotation.Nullable;
@@ -15,11 +16,15 @@ import java.io.InputStream;
 import java.io.InputStreamReader;
 import java.util.ArrayList;
 import java.util.Collections;
+import java.util.List;
+import java.util.Map;
 import java.util.Random;
 
 import de.hs_kl.imst.gatav.tilerenderer.TileLoader;
 import de.hs_kl.imst.gatav.tilerenderer.util.Direction;
 import de.hs_kl.imst.gatav.tilerenderer.util.GameCamera;
+import de.hs_kl.imst.gatav.tilerenderer.util.Hitboxes.Collidable;
+import de.hs_kl.imst.gatav.tilerenderer.util.Hitboxes.Rectangle;
 import de.hs_kl.imst.gatav.tilerenderer.util.TileInformation;
 
 public class GameContent implements Drawable {
@@ -185,9 +190,10 @@ public class GameContent implements Drawable {
     @Override
     public void draw(Canvas canvas) {
         // Erste Ebene zeichnen (Wände und Boden)
+        //Setup Camera
+        camera.draw(canvas);
 
         ArrayList<ArrayList<TileInformation>> map = tileLoader.getMap();
-        camera.draw(canvas);
         for(ArrayList<TileInformation> currentLayerTiles : map) {
             for(TileInformation currentTile : currentLayerTiles) {
 
@@ -197,12 +203,29 @@ public class GameContent implements Drawable {
                 int bottom = top + tileLoader.getTileHeight();
                 Rect test = new Rect(left, top, right, bottom);
                 if(camera.isRectInView(test)) {
+                    //Log.d("GameContent", "In View: " + test.left + ", " + test.top);
                     Bitmap bmp = tileLoader.getTiles().get(currentTile.getTilesetPiece());
                     canvas.drawBitmap(bmp, left, top, null);
                 }
             }
         }
+        //Debug Hitboxen
+        Map<String, List<Collidable>> groups =  tileLoader.getObjectGroups();
+        List<Collidable> collision = groups.get("Kollisionen");
+        Paint p = new Paint();
+        p.setColor(Color.argb(128, 0, 65, 200));
+        if(collision != null) {
+            for(Collidable collidable : collision) {
+                if(collidable instanceof Rectangle) {
+                    Rect r = ((Rectangle) collidable).getRect();
+                    if(camera.isRectInView(r)) {
+                        canvas.drawRect(r, p);
+                    } else {
 
+                    }
+                }
+            }
+        }
 
         // Zweite Ebene zeichnen
 

@@ -32,6 +32,8 @@ import javax.xml.parsers.DocumentBuilder;
 import javax.xml.parsers.DocumentBuilderFactory;
 import javax.xml.parsers.ParserConfigurationException;
 
+import de.hs_kl.imst.gatav.tilerenderer.util.Hitboxes.Collidable;
+import de.hs_kl.imst.gatav.tilerenderer.util.Hitboxes.Rectangle;
 import de.hs_kl.imst.gatav.tilerenderer.util.TileInformation;
 
 public class TileLoader {
@@ -47,6 +49,7 @@ public class TileLoader {
     //private int[][][] map;
     private ArrayList<ArrayList<TileInformation>> map;
     private Map<Integer, Bitmap> tiles = new HashMap<>();
+    private Map<String, List<Collidable>> objectGroups = new HashMap<>();
 
     public int getWidth() {
         return width;
@@ -80,6 +83,9 @@ public class TileLoader {
         return tiles;
     }
 
+    public Map<String, List<Collidable>> getObjectGroups() {
+        return objectGroups;
+    }
 
 
     public TileLoader(Context context, String filename) {
@@ -143,6 +149,8 @@ public class TileLoader {
                 generateBitmaps(src, firstGID, usedTilesInMap);
             }
 
+            loadObjectGroups(doc);
+
             fis.close();
         } catch (FileNotFoundException e) {
             e.printStackTrace();
@@ -176,15 +184,9 @@ public class TileLoader {
             Node image = doc.getElementsByTagName("image").item(0);
             Element imageElement = (Element)image;
             String sourceImage = imageElement.getAttribute("source");
-            BitmapRegionDecoder decoder = BitmapRegionDecoder.newInstance(getGraphicsStream(sourceImage), true);
+            BitmapRegionDecoder decoder = BitmapRegionDecoder.newInstance(getGraphicsStream(sourceImage), false);
 
             Log.d("TileLoader", "Start Splitting" + usedTilesInTileset.size() + " Tiles");
-            /*for(int i = 0; i < tiles; i++) {
-                int xPos = (i % columns) * tileWidth;
-                int yPos = ( i / columns) * tileHeight;
-                Bitmap region = decoder.decodeRegion(new Rect( xPos, yPos, xPos+tileWidth, yPos+tileHeight), null);
-                this.tiles.put(firstGID+i, region);
-            }*/
             for(Integer i : usedTilesInTileset) {
                 if(i < firstGID || i > firstGID+tiles) continue;
                 int realPosInTileset = i - firstGID;
@@ -203,6 +205,35 @@ public class TileLoader {
             e.printStackTrace();
         } catch (SAXException e) {
             e.printStackTrace();
+        }
+    }
+
+    private void loadObjectGroups(Document doc) {
+        NodeList objectgroups = doc.getElementsByTagName("objectgroup");
+        int groups = objectgroups.getLength();
+        for (int group = 0; group < groups; group++) {
+            Element groupElement = (Element) objectgroups.item(group);
+            String name = groupElement.getAttribute("name");
+            objectGroups.put(name, new ArrayList<Collidable>());
+
+            NodeList objects = groupElement.getElementsByTagName("object");
+            int objectAmount = objects.getLength();
+            for (int i = 0; i < objectAmount; i++) {
+                Element objectElement = (Element) objects.item(i);
+                int id = Integer.parseInt(objectElement.getAttribute("id"));
+                int x = (int) Double.parseDouble(objectElement.getAttribute("x"));
+                int y = (int) Double.parseDouble(objectElement.getAttribute("y"));
+
+                //Rect
+                String width = objectElement.getAttribute("width");
+                String height = objectElement.getAttribute("height");
+                if(width != null && height != null && !width.isEmpty() && !height.isEmpty()) {
+                    Rectangle tmpRect = new Rectangle(x, y, (int) Double.parseDouble(width), (int) Double.parseDouble(height));
+                    Rect tmp = tmpRect.getRect();
+                    Log.d("GameContent", "In View: " + tmp.left + ", " + tmp.top + " | " + tmp.right + ", " + tmp.bottom);
+                    objectGroups.get(name).add(tmpRect);
+                }
+            }
         }
     }
 
