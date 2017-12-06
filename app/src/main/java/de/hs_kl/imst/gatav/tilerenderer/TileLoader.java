@@ -186,7 +186,7 @@ public class TileLoader {
             String sourceImage = imageElement.getAttribute("source");
             BitmapRegionDecoder decoder = BitmapRegionDecoder.newInstance(getGraphicsStream(sourceImage), false);
 
-            Log.d("TileLoader", "Start Splitting" + usedTilesInTileset.size() + " Tiles");
+            Log.d("TileLoader", "Start Splitting " + usedTilesInTileset.size() + " Tiles");
             for(Integer i : usedTilesInTileset) {
                 if(i < firstGID || i > firstGID+tiles) continue;
                 int realPosInTileset = i - firstGID;
@@ -209,15 +209,18 @@ public class TileLoader {
     }
 
     private void loadObjectGroups(Document doc) {
+        Log.d("TileLoader", "Start Loading Hitboxes ");
         NodeList objectgroups = doc.getElementsByTagName("objectgroup");
         int groups = objectgroups.getLength();
         for (int group = 0; group < groups; group++) {
+            Log.d("TileLoader", "Hitbox Layer: " + group);
             Element groupElement = (Element) objectgroups.item(group);
             String name = groupElement.getAttribute("name");
             objectGroups.put(name, new ArrayList<Collidable>());
 
             NodeList objects = groupElement.getElementsByTagName("object");
             int objectAmount = objects.getLength();
+
             for (int i = 0; i < objectAmount; i++) {
                 Element objectElement = (Element) objects.item(i);
                 int id = Integer.parseInt(objectElement.getAttribute("id"));
@@ -229,12 +232,11 @@ public class TileLoader {
                 String height = objectElement.getAttribute("height");
                 if(width != null && height != null && !width.isEmpty() && !height.isEmpty()) {
                     Rectangle tmpRect = new Rectangle(x, y, (int) Double.parseDouble(width), (int) Double.parseDouble(height));
-                    Rect tmp = tmpRect.getRect();
-                    Log.d("GameContent", "In View: " + tmp.left + ", " + tmp.top + " | " + tmp.right + ", " + tmp.bottom);
                     objectGroups.get(name).add(tmpRect);
                 }
             }
         }
+        Log.d("TileLoader", "Finished Hitboxes");
     }
 
     private InputStream getGraphicsStream(String graphicsName) {

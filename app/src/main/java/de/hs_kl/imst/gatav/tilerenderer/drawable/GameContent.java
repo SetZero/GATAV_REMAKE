@@ -26,6 +26,7 @@ import de.hs_kl.imst.gatav.tilerenderer.util.GameCamera;
 import de.hs_kl.imst.gatav.tilerenderer.util.Hitboxes.Collidable;
 import de.hs_kl.imst.gatav.tilerenderer.util.Hitboxes.Rectangle;
 import de.hs_kl.imst.gatav.tilerenderer.util.TileInformation;
+import de.hs_kl.imst.gatav.tilerenderer.util.World;
 
 public class GameContent implements Drawable {
     /**
@@ -45,6 +46,11 @@ public class GameContent implements Drawable {
      * Game Camera
      */
     private GameCamera camera = new GameCamera();
+
+    /**
+     * World Class
+     */
+    World world;
 
     /**
      * Beinhaltet Referenzen auf alle dynamischen Kacheln, deren {@link Drawable#update(float)} Methode
@@ -193,39 +199,9 @@ public class GameContent implements Drawable {
         //Setup Camera
         camera.draw(canvas);
 
-        ArrayList<ArrayList<TileInformation>> map = tileLoader.getMap();
-        for(ArrayList<TileInformation> currentLayerTiles : map) {
-            for(TileInformation currentTile : currentLayerTiles) {
+        world.draw(camera, canvas);
 
-                int left = currentTile.getxPos() * tileLoader.getTileWidth();
-                int top = currentTile.getyPos() * tileLoader.getTileHeight();
-                int right = left + tileLoader.getTileWidth();
-                int bottom = top + tileLoader.getTileHeight();
-                Rect test = new Rect(left, top, right, bottom);
-                if(camera.isRectInView(test)) {
-                    //Log.d("GameContent", "In View: " + test.left + ", " + test.top);
-                    Bitmap bmp = tileLoader.getTiles().get(currentTile.getTilesetPiece());
-                    canvas.drawBitmap(bmp, left, top, null);
-                }
-            }
-        }
-        //Debug Hitboxen
-        Map<String, List<Collidable>> groups =  tileLoader.getObjectGroups();
-        List<Collidable> collision = groups.get("Kollisionen");
-        Paint p = new Paint();
-        p.setColor(Color.argb(128, 0, 65, 200));
-        if(collision != null) {
-            for(Collidable collidable : collision) {
-                if(collidable instanceof Rectangle) {
-                    Rect r = ((Rectangle) collidable).getRect();
-                    if(camera.isRectInView(r)) {
-                        canvas.drawRect(r, p);
-                    } else {
 
-                    }
-                }
-            }
-        }
 
         // Zweite Ebene zeichnen
 
@@ -275,6 +251,8 @@ public class GameContent implements Drawable {
         tileLoader = new TileLoader(context, "test");
         gameHeight = tileLoader.getHeight();
         gameWidth = tileLoader.getWidth();
+
+        world = new World(tileLoader);
 
 
         // Zweiter Schritt: basierend auf dem Inhalt der Leveldatei die Datenstrukturen befüllen

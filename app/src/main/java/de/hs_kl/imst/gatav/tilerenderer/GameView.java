@@ -103,30 +103,6 @@ public class GameView extends SurfaceView implements SurfaceHolder.Callback, Run
 
         // Layer 2 (Collected Targets, Score and Elapsed Time)
         FPSHelper.draw(canvas);
-        /*String collectedText = String.format("%d gesammelt", gameContent.getCollectedTargets());
-        String scoreText = String.format("Punkte: %d", gameContent.getCollectedScore());
-        String timeText = "Zeit: " + String.format("%.2f", getElapsedTime()) + " Sekunden";
-        String timeTextFake = "Zeit: " + String.format("%.2f", 200.0) + " Sekunden";
-        Rect collectedTextBounds = new Rect();
-        scoreAndTimePaint.getTextBounds(collectedText, 0, collectedText.length(), collectedTextBounds);
-        Rect scoreTextBounds = new Rect();
-        scoreAndTimePaint.getTextBounds(scoreText, 0, scoreText.length(), scoreTextBounds);
-        Rect timeTextBounds = new Rect();
-        scoreAndTimePaint.getTextBounds(timeText, 0, timeText.length(), timeTextBounds);
-        float textWidth = Math.max(scoreAndTimePaint.measureText(timeText), scoreAndTimePaint.measureText(timeTextFake))+10;
-        textWidth = Math.max(scoreAndTimePaint.measureText(collectedText), textWidth);
-        textWidth = Math.max(scoreAndTimePaint.measureText(scoreText), textWidth);
-        canvas.save();
-        canvas.translate(gameWidth - textWidth, scoreTextBounds.height());
-        canvas.drawText(collectedText, 0, 0, scoreAndTimePaint);
-        canvas.translate(0, (int) (timeTextBounds.height() * 1.5));
-        canvas.drawText(scoreText, 0, 0, scoreAndTimePaint);
-        if(gameMode==1) {   // game running
-            canvas.translate(0, (int)(timeTextBounds.height()*1.5));
-            canvas.drawText(timeText, 0, 0, scoreAndTimePaint);
-        }
-        // TODO
-        canvas.restore();*/
     }
 
     /**
@@ -222,11 +198,6 @@ public class GameView extends SurfaceView implements SurfaceHolder.Callback, Run
 
             if(!gameOver)
                 updateContent(fracsec); // kompletten Spielzustand aktualisieren
-
-            /*if(gameContent!=null && gameContent.getCollectedTargets() >= maxCollectedTargets) {
-                gameMode = 2;
-                gameOver = true; // Game over
-            }*/
 
             updateGraphics(canvas); // Neu zeichnen
 
