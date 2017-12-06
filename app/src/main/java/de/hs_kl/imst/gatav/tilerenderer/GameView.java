@@ -79,7 +79,7 @@ public class GameView extends SurfaceView implements SurfaceHolder.Callback, Run
         surfaceHolder = getHolder();
         surfaceHolder.addCallback(this);
 
-       // gestureDetector = new GestureDetectorCompat(context, this);
+       gestureDetector = new GestureDetectorCompat(context, this);
 
         scoreAndTimePaint.setTextSize(20f * context.getResources().getDisplayMetrics().density);
 
@@ -103,6 +103,30 @@ public class GameView extends SurfaceView implements SurfaceHolder.Callback, Run
 
         // Layer 2 (Collected Targets, Score and Elapsed Time)
         FPSHelper.draw(canvas);
+        /*String collectedText = String.format("%d gesammelt", gameContent.getCollectedTargets());
+        String scoreText = String.format("Punkte: %d", gameContent.getCollectedScore());
+        String timeText = "Zeit: " + String.format("%.2f", getElapsedTime()) + " Sekunden";
+        String timeTextFake = "Zeit: " + String.format("%.2f", 200.0) + " Sekunden";
+        Rect collectedTextBounds = new Rect();
+        scoreAndTimePaint.getTextBounds(collectedText, 0, collectedText.length(), collectedTextBounds);
+        Rect scoreTextBounds = new Rect();
+        scoreAndTimePaint.getTextBounds(scoreText, 0, scoreText.length(), scoreTextBounds);
+        Rect timeTextBounds = new Rect();
+        scoreAndTimePaint.getTextBounds(timeText, 0, timeText.length(), timeTextBounds);
+        float textWidth = Math.max(scoreAndTimePaint.measureText(timeText), scoreAndTimePaint.measureText(timeTextFake))+10;
+        textWidth = Math.max(scoreAndTimePaint.measureText(collectedText), textWidth);
+        textWidth = Math.max(scoreAndTimePaint.measureText(scoreText), textWidth);
+        canvas.save();
+        canvas.translate(gameWidth - textWidth, scoreTextBounds.height());
+        canvas.drawText(collectedText, 0, 0, scoreAndTimePaint);
+        canvas.translate(0, (int) (timeTextBounds.height() * 1.5));
+        canvas.drawText(scoreText, 0, 0, scoreAndTimePaint);
+        if(gameMode==1) {   // game running
+            canvas.translate(0, (int)(timeTextBounds.height()*1.5));
+            canvas.drawText(timeText, 0, 0, scoreAndTimePaint);
+        }
+        // TODO
+        canvas.restore();*/
     }
 
     /**
@@ -199,6 +223,11 @@ public class GameView extends SurfaceView implements SurfaceHolder.Callback, Run
             if(!gameOver)
                 updateContent(fracsec); // kompletten Spielzustand aktualisieren
 
+            /*if(gameContent!=null && gameContent.getCollectedTargets() >= maxCollectedTargets) {
+                gameMode = 2;
+                gameOver = true; // Game over
+            }*/
+
             updateGraphics(canvas); // Neu zeichnen
 
             surfaceHolder.unlockCanvasAndPost(canvas);
@@ -232,14 +261,14 @@ public class GameView extends SurfaceView implements SurfaceHolder.Callback, Run
      * @param event Aktuelles {@link MotionEvent}
      * @return true wenn das Event verarbeitet wurde, andernfalls false
      */
-    /*@Override
+    @Override
     public boolean onTouchEvent(MotionEvent event) {
 
         if(gestureDetector.onTouchEvent(event))
             return true;
         else
             return super.onTouchEvent(event);
-    }*/
+    }
 
     /**
      * Die Fling-Geste wird genutzt, um die Spielfigur durch den Level zu bewegen.
@@ -252,12 +281,11 @@ public class GameView extends SurfaceView implements SurfaceHolder.Callback, Run
      */
     @Override
     public boolean onFling(MotionEvent e1, MotionEvent e2, float velocityX, float velocityY) {
-/*
+
         // Wird der Player aktuell noch animiert, wird der Fling wegkonsumiert
         // (bei uns nur konzeptionell notwendig, da die laufende Animation in GameContent
         // neue Animationen eh abblockt)
-        if(!gameContent.isPlayerDirectionIDLE())
-            return true;
+        Log.d("move", "RIGHT");
 
         float deg = (float) Math.toDegrees(
                 Math.acos(velocityX/Math.sqrt(velocityX * velocityX + velocityY * velocityY))
@@ -265,19 +293,22 @@ public class GameView extends SurfaceView implements SurfaceHolder.Callback, Run
         if(velocityY > 0)
             deg = 180f + (180f - deg);
 
-        if(deg > 315 || deg < 45)
+        if(deg > 315 || deg < 45){
             gameContent.setPlayerDirection(Direction.RIGHT);
+            Log.d("move", "RIGHT");
+            gameContent.movePlayer(Direction.RIGHT);}
         else if(deg >= 45 && deg <= 135)
             gameContent.setPlayerDirection(Direction.UP);
-        else if(deg > 135 && deg < 225)
+        else if(deg > 135 && deg < 225){
             gameContent.setPlayerDirection(Direction.LEFT);
+            gameContent.movePlayer(Direction.LEFT);}
         else if(deg >= 225 && deg < 315)
             gameContent.setPlayerDirection(Direction.DOWN);
 
         // erster Fling startet den Zeitzähler
         gameMode=1;
         startTimeThread();
-*/
+
         return true;
     }
 

@@ -4,29 +4,20 @@ import android.content.Context;
 import android.content.res.AssetManager;
 import android.graphics.Bitmap;
 import android.graphics.Canvas;
-import android.graphics.Color;
-import android.graphics.Paint;
 import android.graphics.Rect;
 import android.support.annotation.Nullable;
 import android.util.Log;
 
-import java.io.BufferedReader;
 import java.io.IOException;
 import java.io.InputStream;
-import java.io.InputStreamReader;
 import java.util.ArrayList;
-import java.util.Collections;
-import java.util.List;
-import java.util.Map;
 import java.util.Random;
 
 import de.hs_kl.imst.gatav.tilerenderer.TileLoader;
 import de.hs_kl.imst.gatav.tilerenderer.util.Direction;
 import de.hs_kl.imst.gatav.tilerenderer.util.GameCamera;
-import de.hs_kl.imst.gatav.tilerenderer.util.Hitboxes.Collidable;
-import de.hs_kl.imst.gatav.tilerenderer.util.Hitboxes.Rectangle;
 import de.hs_kl.imst.gatav.tilerenderer.util.TileInformation;
-import de.hs_kl.imst.gatav.tilerenderer.util.World;
+import de.hs_kl.imst.gatav.tilerenderer.util.Vector2;
 
 public class GameContent implements Drawable {
     /**
@@ -48,15 +39,10 @@ public class GameContent implements Drawable {
     private GameCamera camera = new GameCamera();
 
     /**
-     * World Class
-     */
-    World world;
-
-    /**
      * Beinhaltet Referenzen auf alle dynamischen Kacheln, deren {@link Drawable#update(float)} Methode
      * aufgerufen werden muss. Damit lassen sich Kachel-Animationen durchführen.
      */
-    private ArrayList<TileGraphics> dynamicTiles = new ArrayList<>();
+    private ArrayList<MovableGraphics> dynamics = new ArrayList<>();
 
     /**
      * Beinhaltet alle Ziele. Diese werden als zweites und somit über die in
@@ -116,7 +102,7 @@ public class GameContent implements Drawable {
     private Random random = new Random();
 
 
-    private Context context;
+    public static Context context;
 
     /**
      * {@link AssetManager} über den wir unsere Leveldaten beziehen
@@ -135,19 +121,20 @@ public class GameContent implements Drawable {
      */
     public GameContent(Context context, String levelName) {
         this.context = context;
+
         this.assetManager = context.getAssets();
         this.levelName = levelName;
 
         //Kamera setzen
-        camera.setCameraYCenter(450);
+        camera.setCameraYCenter(300);
         camera.setCameraXCenter(700);
 
         // Level laden mit Wall (W), Floor (F) und Player (P)
         // Target wird im geladenen Level zum Schluss zusätzlich gesetzt
         loadLevel();
-
+        player = new Player(100, 100);
         // Player ist animiert und muss deshalb updates auf seine Position erfahren
-        //dynamicTiles.add(player);
+        dynamics.add(player);
     }
 
 
@@ -166,17 +153,16 @@ public class GameContent implements Drawable {
         int newX = -1;
         int newY = -1;
         switch(direction) {
-            case UP: newX = player.getX(); newY = player.getY() - 1; break;
-            case DOWN: newX = player.getX(); newY = player.getY() + 1; break;
-            case RIGHT: newX = player.getX() + 1; newY = player.getY(); break;
-            case LEFT: newX = player.getX() - 1; newY = player.getY(); break;
+            case UP: player.move(new Vector2(0,90),10000); break;
+            case RIGHT: player.move(new Vector2(900,0),100); break;
+            case LEFT: player.move(new Vector2(-900,0),100); break;
         }
-        if ((!(newX >= 0 && newX < gameWidth && newY >= 0 && newY < gameHeight)))
-            throw new AssertionError("Spieler wurde außerhalb des Spielfeldes bewegt. Loch im Level?");
+        //if ((!(newX >= 0 && newX < gameWidth && newY >= 0 && newY < gameHeight)))throw new AssertionError("Spieler wurde außerhalb des Spielfeldes bewegt. Loch im Level?");
 
         // Zweiter Schritt: Prüfen ob Spieler sich an Zielposition bewegen kann (Zielkachel.isPassable())
 
         // Dritter Schritt: Spieler verschieben bzw. Verschieben starten.
+        //player.move(newX,newY);
         // Hinterher steht der Spieler logisch bereits auf der neuen Position
 
         // Vierter Schritt: Prüfen ob auf der Zielkachel ein Target existiert
@@ -196,11 +182,27 @@ public class GameContent implements Drawable {
     @Override
     public void draw(Canvas canvas) {
         // Erste Ebene zeichnen (Wände und Boden)
-        //Setup Camera
+
+        ArrayList<ArrayList<TileInformation>> map = tileLoader.getMap();
         camera.draw(canvas);
+        for(ArrayList<TileInformation> currentLayerTiles : map) {
+            for(TileInformation currentTile : currentLayerTiles) {
 
-        world.draw(camera, canvas);
+                int left = currentTile.getxPos() * tileLoader.getTileWidth();
+                int top = currentTile.getyPos() * tileLoader.getTileHeight() - 150;
+                int right = left + tileLoader.getTileWidth();
+                int bottom = top + tileLoader.getTileHeight();
+                Rect test = new Rect(left, top, right, bottom);
+                if(camera.isRectInView(test)) {
+                    Bitmap bmp = tileLoader.getTiles().get(currentTile.getTilesetPiece());
+                    canvas.drawBitmap(bmp, left, top, null);
+                }
+            }
+        }
 
+        for(MovableGraphics x: dynamics){
+            x.draw(canvas);
+        }
 
 
         // Zweite Ebene zeichnen
@@ -221,6 +223,7 @@ public class GameContent implements Drawable {
         } else {
             camera.setCameraXCenter(700);
         }
+
         // 1. Schritt: Auf mögliche Player Bewegung prüfen und ggf. durchführen/anstoßen
         // vorhandenen Player Move einmalig ausführen bzw. anstoßen, falls
         // PlayerDirection nicht IDLE ist und Player aktuell nicht in einer Animation
@@ -230,7 +233,9 @@ public class GameContent implements Drawable {
 
 
         // 2. Schritt: Updates bei allen dynamischen Kacheln durchführen (auch Player)
-
+        for(MovableGraphics x: dynamics){
+            x.update(fracsec);
+        }
 
         // 3. Schritt: Animationen auf Ende überprüfen und ggf. wieder freischalten
         // Player Move fertig ausgeführt => Sperre für neues Player Event freischalten
@@ -248,11 +253,9 @@ public class GameContent implements Drawable {
         // Erster Schritt: Leveldatei zeilenweise lesen und Inhalt zwischenspeichern. Zudem ermitteln, wie breit der Level maximal ist.
         // Spielfeldgröße ermitteln
 
-        tileLoader = new TileLoader(context, "test");
+        tileLoader = new TileLoader(context, levelName);
         gameHeight = tileLoader.getHeight();
         gameWidth = tileLoader.getWidth();
-
-        world = new World(tileLoader);
 
 
         // Zweiter Schritt: basierend auf dem Inhalt der Leveldatei die Datenstrukturen befüllen
@@ -307,5 +310,13 @@ public class GameContent implements Drawable {
        //TODO
         return null;
     }
-
+    private InputStream getPlayerGraphics(){
+        try {
+            return context.getAssets().open("dynamics/player/Player.png");
+        } catch (IOException e) {
+            e.printStackTrace();
+            Log.d("player",e.getMessage());
+        }
+        return null;
+    }
 }

@@ -34,7 +34,6 @@ public abstract class TileGraphics implements Drawable {
     public TileGraphics(int x, int y, InputStream is) {
         this.x = x;
         this.y = y;
-
         if(is != null) {
             tileBitmap = Bitmap.createScaledBitmap(BitmapFactory.decodeStream(is), (int)tileSize, (int)tileSize, true);
         }

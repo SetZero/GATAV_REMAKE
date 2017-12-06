@@ -1,26 +1,40 @@
 package de.hs_kl.imst.gatav.tilerenderer.drawable;
 
+import android.content.res.AssetManager;
 import android.graphics.Canvas;
 import android.graphics.Color;
-import android.graphics.Paint;
-import android.util.Log;
 
+import java.io.IOException;
 import java.io.InputStream;
+import java.net.MalformedURLException;
+import java.net.URL;
 
-public class Player extends MovableTileGraphics {
+import de.hs_kl.imst.gatav.tilerenderer.util.Vector2;
 
-    public Player(int x, int y, InputStream is) {
-        super(x, y, is);
+public class Player extends MovableGraphics {
 
-        tilePaint.setColor(Color.parseColor("#F0CC00"));
+    public Player(float x, float y) {
+        super(x, y);
+            try {
+                InputStream is = GameContent.context.getAssets().open("dynamics/player/Player.png");
+                loadGraphic(is,170,350);
+            } catch (IOException e) {
+                e.printStackTrace();
+            }
     }
-
-
+    public void move(Vector2 v2, float velocity){
+        super.move(v2,velocity);
+    }
     /**
      * {@inheritDoc}
      */
-    @Override
+
     public boolean isPassable() {
         return false;
+    }
+
+    @Override
+    public void draw(Canvas canvas) {
+        super.draw(canvas);
     }
 }
