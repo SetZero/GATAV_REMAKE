@@ -128,7 +128,7 @@ public class GameContent implements Drawable {
         this.levelName = levelName;
 
         //Kamera setzen
-        camera.setCameraYCenter(300);
+        camera.setCameraYCenter(450);
         camera.setCameraXCenter(700);
 
         // Level laden mit Wall (W), Floor (F) und Player (P)
@@ -192,7 +192,7 @@ public class GameContent implements Drawable {
             for(TileInformation currentTile : currentLayerTiles) {
 
                 int left = currentTile.getxPos() * tileLoader.getTileWidth();
-                int top = currentTile.getyPos() * tileLoader.getTileHeight() - 150;
+                int top = currentTile.getyPos() * tileLoader.getTileHeight();
                 int right = left + tileLoader.getTileWidth();
                 int bottom = top + tileLoader.getTileHeight();
                 Rect test = new Rect(left, top, right, bottom);
