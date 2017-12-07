@@ -19,6 +19,8 @@ import java.io.FileInputStream;
 import java.io.FileNotFoundException;
 import java.io.IOException;
 import java.io.InputStream;
+import java.io.Reader;
+import java.io.StringReader;
 import java.util.ArrayList;
 import java.util.Arrays;
 import java.util.HashMap;
@@ -27,6 +29,9 @@ import java.util.LinkedList;
 import java.util.List;
 import java.util.Map;
 import java.util.Set;
+import java.util.stream.Collector;
+import java.util.stream.Collectors;
+import java.util.stream.IntStream;
 
 import javax.xml.parsers.DocumentBuilder;
 import javax.xml.parsers.DocumentBuilderFactory;
@@ -121,7 +126,7 @@ public class TileLoader {
                 Element layerElement = (Element) layerList.item(layer);
                 String layerString = layerElement.getElementsByTagName("data").item(0).getTextContent();
                 List<String> items = Arrays.asList(layerString.split("\\s*,\\s*"));
-                this.map.add(new ArrayList<TileInformation>());
+                this.map.add(new ArrayList<>());
 
                 Log.d("TileLoader", "Start Loading Tiles");
                 for(int y = 0; y < height; y++) {
@@ -137,6 +142,7 @@ public class TileLoader {
                         }
                     }
                 }
+
                 Log.d("TileLoader", "Finished Loading Tiles");
             }
 
@@ -187,6 +193,15 @@ public class TileLoader {
             BitmapRegionDecoder decoder = BitmapRegionDecoder.newInstance(getGraphicsStream(sourceImage), false);
 
             Log.d("TileLoader", "Start Splitting " + usedTilesInTileset.size() + " Tiles");
+            /*usedTilesInTileset.parallelStream().filter(i -> (i<firstGID || i > firstGID+tiles)).map(
+                    i -> {
+                        int realPosInTileset = i - firstGID;
+                        int xPos = (realPosInTileset % columns) * tileWidth;
+                        int yPos = (realPosInTileset / columns) * tileHeight;
+                        Bitmap region = decoder.decodeRegion(new Rect( xPos, yPos, xPos+tileWidth, yPos+tileHeight), null);
+                        return region;
+                    }
+            ).collect(Collectors.toMap())*/
             for(Integer i : usedTilesInTileset) {
                 if(i < firstGID || i > firstGID+tiles) continue;
                 int realPosInTileset = i - firstGID;
