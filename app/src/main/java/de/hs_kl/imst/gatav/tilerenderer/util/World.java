@@ -46,7 +46,7 @@ public class World {
                 }
             }
         }
-
+/*
         //2. Draw all Debug Hitboxes
         Map<String, List<Collidable>> groups =  tileLoader.getObjectGroups();
         List<Collidable> collision = groups.get("Kollisionen");
@@ -62,7 +62,7 @@ public class World {
                 }
             }
         }
-
+    */
         //3. Draw all Dynamic Objects
         for(Drawable object : dynamicObjects) {
             object.draw(canvas);

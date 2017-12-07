@@ -2,7 +2,9 @@
 <project version="4">
   <component name="ProjectModuleManager">
     <modules>
-      <module fileurl="file://$PROJECT_DIR$/.idea/modules/GATAV_REMAKE.iml" filepath="$PROJECT_DIR$/.idea/modules/GATAV_REMAKE.iml" />
+      <module fileurl="file://$PROJECT_DIR$/GATAV_REMAKE.iml" filepath="$PROJECT_DIR$/GATAV_REMAKE.iml" />
+      <module fileurl="file://C:\Users\keven\Documents\GitHub\GATAV_REMAKE\.idea\modules\GATAV_REMAKE.iml" filepath="C:\Users\keven\Documents\GitHub\GATAV_REMAKE\.idea\modules\GATAV_REMAKE.iml" />
+      <module fileurl="file://$PROJECT_DIR$/app/app.iml" filepath="$PROJECT_DIR$/app/app.iml" />
     </modules>
   </component>
 </project>
