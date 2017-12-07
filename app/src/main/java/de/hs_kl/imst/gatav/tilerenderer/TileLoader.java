@@ -193,6 +193,7 @@ public class TileLoader {
             BitmapRegionDecoder decoder = BitmapRegionDecoder.newInstance(getGraphicsStream(sourceImage), false);
 
             Log.d("TileLoader", "Start Splitting " + usedTilesInTileset.size() + " Tiles");
+            //TODO: List to Map?!
             /*usedTilesInTileset.parallelStream().filter(i -> (i<firstGID || i > firstGID+tiles)).map(
                     i -> {
                         int realPosInTileset = i - firstGID;
