@@ -157,7 +157,9 @@ public class TileLoader {
             }
 
             loadObjectGroups(doc);
-
+            for(Collidable c: objectGroups.get("Kollisionen")){
+                Log.d("test","x "+c.getX()+" y "+c.getY());
+            }
             fis.close();
         } catch (FileNotFoundException e) {
             e.printStackTrace();
@@ -168,8 +170,6 @@ public class TileLoader {
         } catch (ParserConfigurationException e) {
             e.printStackTrace();
         }
-
-
     }
 
     private void generateBitmaps(String src, int firstGID, Set<Integer> usedTilesInTileset) {
@@ -249,6 +249,7 @@ public class TileLoader {
                 String height = objectElement.getAttribute("height");
                 if (width != null && height != null && !width.isEmpty() && !height.isEmpty()) {
                     Rectangle tmpRect = new Rectangle(x, y, (int) Double.parseDouble(width), (int) Double.parseDouble(height));
+                    tmpRect.setId(id);
                     objectGroups.get(name).add(tmpRect);
                 }
             }

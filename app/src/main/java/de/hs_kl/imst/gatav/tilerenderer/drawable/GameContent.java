@@ -18,6 +18,7 @@ import de.hs_kl.imst.gatav.tilerenderer.util.Direction;
 import de.hs_kl.imst.gatav.tilerenderer.util.GameCamera;
 import de.hs_kl.imst.gatav.tilerenderer.util.TileInformation;
 import de.hs_kl.imst.gatav.tilerenderer.util.Vector2;
+import de.hs_kl.imst.gatav.tilerenderer.util.World;
 
 public class GameContent implements Drawable {
     /**
@@ -36,10 +37,10 @@ public class GameContent implements Drawable {
     private ArrayList<MovableGraphics> dynamics = new ArrayList<>();
     private int collectedTargets = 0;
     public int getCollectedTargets() { return collectedTargets; }
-
+    private World world;
     private int collectedScore = 0;
     public int getCollectedScore() { return collectedScore; }
-    private Player player = null;
+    public static Player player = null;
     private volatile Direction playerDirection = Direction.IDLE;
     synchronized public void resetPlayerDirection() { playerDirection = Direction.IDLE;}
     synchronized public boolean isPlayerDirectionIDLE() { return playerDirection == Direction.IDLE; }
@@ -63,8 +64,9 @@ public class GameContent implements Drawable {
         camera.setCameraXCenter(700);
 
         loadLevel();
-        player = new Player(100, 100);
-        dynamics.add(player);
+        world = new World(tileLoader,1f/60f);
+        player = new Player(400, 350);
+        world.addGameObject(player);
     }
 
 
@@ -74,7 +76,7 @@ public class GameContent implements Drawable {
         int newX = -1;
         int newY = -1;
         switch(direction) {
-            case UP: player.move(new Vector2(0,90),100); break;
+            case UP: player.move(new Vector2(0,-900),100); break;
             case RIGHT: player.move(new Vector2(900,0),100); break;
             case LEFT: player.move(new Vector2(-900,0),100); break;
         }
@@ -85,42 +87,17 @@ public class GameContent implements Drawable {
 
     @Override
     public void draw(Canvas canvas) {
-
-        // Erste Ebene zeichnen (Wände und Boden)
-        ArrayList<ArrayList<TileInformation>> map = tileLoader.getMap();
-        camera.draw(canvas);
-        for(ArrayList<TileInformation> currentLayerTiles : map) {
-            for(TileInformation currentTile : currentLayerTiles) {
-
-                int left = currentTile.getxPos() * tileLoader.getTileWidth();
-                int top = currentTile.getyPos() * tileLoader.getTileHeight() - 150;
-                int right = left + tileLoader.getTileWidth();
-                int bottom = top + tileLoader.getTileHeight();
-                Rect test = new Rect(left, top, right, bottom);
-                if(camera.isRectInView(test)) {
-                    Bitmap bmp = tileLoader.getTiles().get(currentTile.getTilesetPiece());
-                    canvas.drawBitmap(bmp, left, top, null);
-                }
-            }
-        }
-
-        for(MovableGraphics x: dynamics){
-            x.draw(canvas);
-        }
+        world.draw(camera,canvas);
     }
 
     @Override
-    public void update(float fracsec) {
+    public void update(float delta) {
         if(camera.getCameraXCenter() < 1400) {
             camera.setCameraXCenter(camera.getCameraXCenter() + 1);
         } else {
             camera.setCameraXCenter(700);
         }
-
-        for(MovableGraphics x: dynamics){
-            x.update(fracsec);
-        }
-
+        world.update(delta);
    }
 
     private void loadLevel() {

@@ -297,8 +297,9 @@ public class GameView extends SurfaceView implements SurfaceHolder.Callback, Run
             gameContent.setPlayerDirection(Direction.RIGHT);
             Log.d("move", "RIGHT");
             gameContent.movePlayer(Direction.RIGHT);}
-        else if(deg >= 45 && deg <= 135)
+        else if(deg >= 45 && deg <= 135){
             gameContent.setPlayerDirection(Direction.UP);
+            gameContent.movePlayer(Direction.UP);}
         else if(deg > 135 && deg < 225){
             gameContent.setPlayerDirection(Direction.LEFT);
             gameContent.movePlayer(Direction.LEFT);}

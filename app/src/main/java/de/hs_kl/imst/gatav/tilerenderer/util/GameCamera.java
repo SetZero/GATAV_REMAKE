@@ -52,7 +52,7 @@ public class GameCamera {
         int maxX = cameraXCenter + (canvasWidth/2) + 16;
         int maxY = cameraYCenter + (canvasHeight/2) + 16;
         Rect b = new Rect(minX, minY, maxX, maxY);
-        if(b.contains(a))
+        if(b.intersect(a))
             return true;
         return false;
     }

@@ -11,6 +11,7 @@ import java.io.InputStream;
 
 import de.hs_kl.imst.gatav.tilerenderer.util.Direction;
 import de.hs_kl.imst.gatav.tilerenderer.util.Hitboxes.Collidable;
+import de.hs_kl.imst.gatav.tilerenderer.util.Hitboxes.Rectangle;
 import de.hs_kl.imst.gatav.tilerenderer.util.Vector2;
 
 public abstract class MovableGraphics implements Drawable {
@@ -22,15 +23,15 @@ public abstract class MovableGraphics implements Drawable {
     protected float velocity = 0.0f;
     protected int width, height;
 
-    public Collidable getHitbox() {
+    public Rectangle getHitbox() {
         return hitbox;
     }
 
-    public void setHitbox(Collidable hitbox) {
+    public void setHitbox(Rectangle hitbox) {
         this.hitbox = hitbox;
     }
 
-    protected Collidable hitbox = null;
+    protected Rectangle hitbox = null;
 
     //public void setSpeed(float speed) { this.speed = speed; }
 
@@ -73,6 +74,11 @@ public abstract class MovableGraphics implements Drawable {
         this.velocity = velocity;
     }
 
+    public void impact(Vector2 direction, float velocity){
+        this.directionVec = Vector2.add(direction,this.directionVec);
+        this.velocity += velocity;
+    }
+
     public float getVelocity(){
         return velocity;
     }
@@ -90,6 +96,9 @@ public abstract class MovableGraphics implements Drawable {
     public void update(float delta) {
         move(delta);
         bmp.setBounds((int)Position.getX(), (int)Position.getY()+height, (int)Position.getX()+width, (int)Position.getY());
+        hitbox.setX((int)Position.getX()); hitbox.setY((int)Position.getY());
+        hitbox.setWidth(width/10);
+        hitbox.setHeight(height/10);
     }
 
     protected void getDirection(){
