@@ -60,13 +60,15 @@ public class GameContent implements Drawable {
         this.levelName = levelName;
 
         //Kamera setzen
-        camera.setCameraYCenter(300);
-        camera.setCameraXCenter(700);
+        //camera.setCameraYCenter(450);
+        //camera.setCameraXCenter(700);
 
         loadLevel();
         world = new World(tileLoader,1f/60f);
-        player = new Player(400, 350);
+        player = new Player(450, 650);
         world.addGameObject(player);
+
+        camera.attach(player);
     }
 
 
@@ -92,11 +94,11 @@ public class GameContent implements Drawable {
 
     @Override
     public void update(float delta) {
-        if(camera.getCameraXCenter() < 1400) {
+        /*if(camera.getCameraXCenter() < 1400) {
             camera.setCameraXCenter(camera.getCameraXCenter() + 1);
         } else {
             camera.setCameraXCenter(700);
-        }
+        }*/
         world.update(delta);
    }
 

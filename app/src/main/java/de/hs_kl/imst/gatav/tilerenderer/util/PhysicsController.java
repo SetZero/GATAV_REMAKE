@@ -27,10 +27,10 @@ public class PhysicsController {
 
     private ArrayList<MovableGraphics> physicals = new ArrayList<MovableGraphics>();
     private float gravity = 18f;
-    private Map<String, List<Collidable>> objects;
+    private World world;
 
-    public PhysicsController(Map<String, List<Collidable>> objects){
-        this.objects = objects;
+    public PhysicsController(World world){
+        this.world = world;
     }
 
     public void Update(float delta){
@@ -54,12 +54,11 @@ public class PhysicsController {
     }
 
     public boolean onGround(MovableGraphics item){
-
-        for(Collidable c : objects.get("Kollisionen")){
-            //colliding with funktioniert nicht
-            Log.d("player rect","bottom "+item.getHitbox().getRect().bottom+" top "+item.getHitbox().getRect().top+" left "+item.getHitbox().getRect().left+" right "+item.getHitbox().getRect().right);
-            if(item.getHitbox() != null && item.getHitbox().isCollidingWith((Rectangle)c)) {
-                return true;}
+        Log.d("Physics", "Actually: " + world.getObjects().get("Kollisionen").size() + "Objects!");
+        for(Collidable c : world.getObjects().get("Kollisionen")){
+           if(item.getHitbox() != null && item.getHitbox().isCollidingWith(c)) {
+                return true;
+            }
         }
         return false;
     }

@@ -17,11 +17,14 @@ import de.hs_kl.imst.gatav.tilerenderer.util.Vector2;
 public abstract class MovableGraphics implements Drawable {
 
     protected BitmapDrawable bmp = null;
+
     //koordinaten als Vektor
     protected Vector2 Position = new Vector2();
     //aktuelle Geschwindigkeit des Objekts
     protected float velocity = 0.0f;
     protected int width, height;
+
+    protected Rectangle hitbox = null;
 
     public Rectangle getHitbox() {
         return hitbox;
@@ -31,11 +34,14 @@ public abstract class MovableGraphics implements Drawable {
         this.hitbox = hitbox;
     }
 
-    protected Rectangle hitbox = null;
-
     //public void setSpeed(float speed) { this.speed = speed; }
 
     // RichtungsVektor
+
+
+    public MovableGraphics(float x, float y) {
+        this.Position = new Vector2(x,y);
+    }
 
     public Vector2 getDirectionVec() {
         return directionVec;
@@ -45,16 +51,15 @@ public abstract class MovableGraphics implements Drawable {
         this.directionVec = directionVec;
     }
 
+    public Vector2 getPosition() {
+        return Position;
+    }
+
     protected Vector2 directionVec = new Vector2();
 
     protected volatile Direction currentDirection = Direction.IDLE;
     synchronized public boolean isMoving() { return currentDirection != Direction.IDLE; }
     synchronized protected void setMovingDirection(Direction newDirection) { currentDirection = newDirection; }
-
-
-    public MovableGraphics(float x, float y) {
-        this.Position = new Vector2(x,y);
-    }
 
     public MovableGraphics(Vector2 pos) {
         this.Position = pos;

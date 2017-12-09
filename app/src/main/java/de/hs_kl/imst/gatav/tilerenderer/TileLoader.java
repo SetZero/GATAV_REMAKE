@@ -172,7 +172,7 @@ public class TileLoader {
         }
     }
 
-    private void generateBitmaps(String src, int firstGID, Set<Integer> usedTilesInTileset) {
+    synchronized private void generateBitmaps(String src, int firstGID, Set<Integer> usedTilesInTileset) {
         Log.d("TileLoader", "Start Generating Bitmaps");
         try {
             DocumentBuilderFactory factory = DocumentBuilderFactory.newInstance();
@@ -225,7 +225,7 @@ public class TileLoader {
         }
     }
 
-    private void loadObjectGroups(Document doc) {
+    synchronized private void loadObjectGroups(Document doc) {
         Log.d("TileLoader", "Start Loading Hitboxes ");
         NodeList objectgroups = doc.getElementsByTagName("objectgroup");
         int groups = objectgroups.getLength();
@@ -238,6 +238,7 @@ public class TileLoader {
             NodeList objects = groupElement.getElementsByTagName("object");
             int objectAmount = objects.getLength();
 
+            Log.d("TileLoader", "Adding " + objectAmount + " Objects!");
             for (int i = 0; i < objectAmount; i++) {
                 Element objectElement = (Element) objects.item(i);
                 int id = Integer.parseInt(objectElement.getAttribute("id"));

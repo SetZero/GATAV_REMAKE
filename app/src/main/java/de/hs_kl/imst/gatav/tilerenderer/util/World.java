@@ -34,8 +34,12 @@ public class World {
     public World(TileLoader tileLoader, float step) {
         this.tileLoader = tileLoader;
         objects = tileLoader.getObjectGroups();
-        physics = new PhysicsController(objects);
+        physics = new PhysicsController(this);
         this.step = step;
+    }
+
+    public Map<String, List<Collidable>> getObjects() {
+        return objects;
     }
 
     public void update(float delta){
@@ -68,7 +72,6 @@ public class World {
         //2. Draw all Debug Hitboxes
         Map<String, List<Collidable>> groups =  tileLoader.getObjectGroups();
         List<Collidable> collision = groups.get("Kollisionen");
-        collision.add (GameContent.player.getHitbox());
         Paint p = new Paint();
         p.setColor(Color.argb(128, 0, 65, 200));
         if(collision != null) {
