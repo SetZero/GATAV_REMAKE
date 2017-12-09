@@ -57,21 +57,21 @@ public class GameCamera {
         float ratioX = canvasHeight / (float)cameraViewHeight;
         float ratioY = canvasWidth / (float)cameraViewWidth;
 
-        int xPos = cameraXCenter - (canvasWidth/2);
-        int yPos = cameraYCenter - (canvasHeight/2);
+        int xPos = cameraXCenter - (cameraViewWidth/2);
+        int yPos = cameraYCenter - (cameraViewHeight/2);
         if(xPos < 0) xPos = 0;
         if(yPos < 0) yPos = 0;
+        canvas.scale(ratioX, ratioY);
         canvas.translate(-xPos, -yPos);
 
-        //canvas.scale(ratioX, ratioY);
     }
 
     public boolean isRectInView(Rect a) {
         //TODO: Make this less static, bind to Rec width!
-        int minX = cameraXCenter - ((canvasWidth/2));
-        int minY = cameraYCenter - ((canvasHeight/2));
-        int maxX = cameraXCenter + (canvasWidth/2);
-        int maxY = cameraYCenter + (canvasHeight/2);
+        int minX = cameraXCenter - ((cameraViewWidth/2));
+        int minY = cameraYCenter - ((cameraViewHeight/2));
+        int maxX = cameraXCenter + (cameraViewWidth/2);
+        int maxY = cameraYCenter + (cameraViewHeight/2);
         Rect b = new Rect(minX, minY, maxX, maxY);
         if(b.intersect(a))
             return true;

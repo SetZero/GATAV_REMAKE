@@ -15,6 +15,7 @@ import android.view.GestureDetector;
 import android.view.MotionEvent;
 import android.view.SurfaceHolder;
 import android.view.SurfaceView;
+import android.view.View;
 
 import java.util.ArrayList;
 
@@ -82,6 +83,13 @@ public class GameView extends SurfaceView implements SurfaceHolder.Callback, Run
        gestureDetector = new GestureDetectorCompat(context, this);
 
         scoreAndTimePaint.setTextSize(20f * context.getResources().getDisplayMetrics().density);
+        setSystemUiVisibility( View.SYSTEM_UI_FLAG_LAYOUT_STABLE
+                | View.SYSTEM_UI_FLAG_LAYOUT_HIDE_NAVIGATION
+                | View.SYSTEM_UI_FLAG_LAYOUT_FULLSCREEN
+                | View.SYSTEM_UI_FLAG_HIDE_NAVIGATION // hide nav bar
+                | View.SYSTEM_UI_FLAG_FULLSCREEN // hide status bar
+                | View.SYSTEM_UI_FLAG_IMMERSIVE
+        );
 
     }
 

@@ -39,7 +39,6 @@ public class PhysicsController {
             //gravity
             if(!onGround(item)) {
                 //velocity wird nur verringert wenn bewegung auf y achse
-                Log.d("gravity", "applied");
                 if(item.getDirectionVec().getY()<0f)
                     item.setVelocity(item.getVelocity() - gravity*delta);
                 item.impact(new Vector2(0f,905f),0f);
@@ -47,8 +46,8 @@ public class PhysicsController {
             else{   //wenn der movable den boden berührt und der richtungsvektor noch nach unten zeigt
                     // wird die gravitation beendet (spieler kann sich nicht nach unten bewegen)
                 if(item.getDirectionVec().getY()>0f){
-                    Log.d("gravity","removed");
-                item.setDirectionVec(new Vector2(item.getDirectionVec().getX(),0f));}
+                    item.setDirectionVec(new Vector2(item.getDirectionVec().getX(),0f));
+                }
             }
         }
     }
