@@ -54,7 +54,6 @@ public class PhysicsController {
     }
 
     public boolean onGround(MovableGraphics item){
-        Log.d("Physics", "Actually: " + world.getObjects().get("Kollisionen").size() + "Objects!");
         for(Collidable c : world.getObjects().get("Kollisionen")){
            if(item.getHitbox() != null && item.getHitbox().isCollidingWith(c)) {
                 return true;
