@@ -106,6 +106,8 @@ public class GameContent implements Drawable {
         tileLoader = new TileLoader(context, levelName);
         gameHeight = tileLoader.getHeight();
         gameWidth = tileLoader.getWidth();
+        camera.setLevelHeight(gameHeight * tileLoader.getTileHeight());
+        camera.setLevelWidth(gameWidth * tileLoader.getTileWidth());
     }
 
     private void spawnEnemys() {

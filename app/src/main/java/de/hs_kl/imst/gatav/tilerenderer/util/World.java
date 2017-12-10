@@ -55,16 +55,10 @@ public class World {
         camera.draw(canvas);
         for(ArrayList<TileInformation> currentLayerTiles : map) {
             for(TileInformation currentTile : currentLayerTiles) {
-
-                int left = currentTile.getxPos() * tileLoader.getTileWidth();
-                int top = currentTile.getyPos() * tileLoader.getTileHeight();
-                int right = left + tileLoader.getTileWidth();
-                int bottom = top + tileLoader.getTileHeight();
-                Rect test = new Rect(left, top, right, bottom);
+                Rect test = currentTile.getTileRect();
                 if(camera.isRectInView(test)) {
-                    //Log.d("GameContent", "In View: " + test.left + ", " + test.top);
                     Bitmap bmp = tileLoader.getTiles().get(currentTile.getTilesetPiece());
-                    canvas.drawBitmap(bmp, left, top, null);
+                    canvas.drawBitmap(bmp, test.left, test.top, null);
                 }
             }
         }

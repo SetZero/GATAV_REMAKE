@@ -137,6 +137,9 @@ public class TileLoader {
                             TileInformation tile = new TileInformation();
                             tile.setxPos(x);
                             tile.setyPos(y);
+                            tile.setWidth(tileWidth);
+                            tile.setHeight(tileHeight);
+                            tile.generateRect();
                             tile.setTilesetPiece(tileID);
                             usedTilesInMap.add(tileID);
                             this.map.get(layer).add(tile);

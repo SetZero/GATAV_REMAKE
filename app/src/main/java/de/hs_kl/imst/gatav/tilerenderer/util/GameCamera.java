@@ -14,10 +14,12 @@ public class GameCamera {
     private MovableGraphics attachedTo;
     private int canvasWidth = 0;
     private int canvasHeight = 0;
-    private  int cameraViewWidth = 600;
+    private  int cameraViewWidth = 1080;
     private int cameraViewHeight = 0; // automatic
     private int cameraXCenter;
     private int cameraYCenter;
+    private int levelHeight;
+    private int levelWidth;
 
     public int getCameraXCenter() {
         return cameraXCenter;
@@ -42,7 +44,17 @@ public class GameCamera {
         this.cameraYCenter = y;
     }
 
+
+    public void setLevelHeight(int levelHeight) {
+        this.levelHeight = levelHeight;
+    }
+
+    public void setLevelWidth(int levelWidth) {
+        this.levelWidth = levelWidth;
+    }
+
     public void draw(Canvas canvas) {
+        /* If attached to Graphic adjust values */
         if(attachedTo != null) {
             cameraXCenter = (int) attachedTo.getPosition().getX();
             cameraYCenter = (int) attachedTo.getPosition().getY();
@@ -51,16 +63,32 @@ public class GameCamera {
         canvasWidth = canvas.getWidth();
         canvasHeight = canvas.getHeight();
 
+        /* Camera Scale Ratio */
         float aspectRatio = canvasHeight / (float)canvasWidth;
         cameraViewHeight = (int)(cameraViewWidth * aspectRatio);
 
         float ratioX = canvasHeight / (float)cameraViewHeight;
         float ratioY = canvasWidth / (float)cameraViewWidth;
 
+        /* Real Camera Position */
         int xPos = cameraXCenter - (cameraViewWidth/2);
         int yPos = cameraYCenter - (cameraViewHeight/2);
-        if(xPos < 0) xPos = 0;
-        if(yPos < 0) yPos = 0;
+
+        /* Out of Bounds Check */
+        if(xPos < 0) {
+            cameraXCenter = cameraViewWidth/2;
+            xPos = 0;
+        } else if(xPos > levelWidth - cameraViewWidth) {
+            cameraXCenter = levelWidth -  (cameraViewWidth/2);
+            xPos = levelWidth - cameraViewWidth;
+        }
+        if(yPos < 0){
+            cameraYCenter = cameraViewHeight/2;
+            yPos = 0;
+        } else if(yPos > levelHeight - cameraViewHeight) {
+            cameraYCenter = levelHeight -  (cameraViewHeight/2);
+            yPos = levelHeight - cameraViewHeight;
+        }
         canvas.scale(ratioX, ratioY);
         canvas.translate(-xPos, -yPos);
 
