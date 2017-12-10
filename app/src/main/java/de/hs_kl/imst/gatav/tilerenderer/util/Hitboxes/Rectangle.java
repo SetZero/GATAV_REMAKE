@@ -15,6 +15,8 @@ public class Rectangle extends Collidable {
     public Rectangle(int x, int y, int width, int height) {
         this.width = width;
         this.height = height;
+        super.setX(x);
+        super.setY(y);
         rect = new Rect(x, y, x + width, y + height);
     }
 

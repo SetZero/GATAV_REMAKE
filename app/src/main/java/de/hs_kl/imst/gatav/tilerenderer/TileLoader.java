@@ -157,7 +157,9 @@ public class TileLoader {
             }
 
             loadObjectGroups(doc);
-
+            for(Collidable c: objectGroups.get("Kollisionen")){
+                Log.d("test","x "+c.getX()+" y "+c.getY());
+            }
             fis.close();
         } catch (FileNotFoundException e) {
             e.printStackTrace();
@@ -168,11 +170,9 @@ public class TileLoader {
         } catch (ParserConfigurationException e) {
             e.printStackTrace();
         }
-
-
     }
 
-    private void generateBitmaps(String src, int firstGID, Set<Integer> usedTilesInTileset) {
+    synchronized private void generateBitmaps(String src, int firstGID, Set<Integer> usedTilesInTileset) {
         Log.d("TileLoader", "Start Generating Bitmaps");
         try {
             DocumentBuilderFactory factory = DocumentBuilderFactory.newInstance();
@@ -225,7 +225,7 @@ public class TileLoader {
         }
     }
 
-    private void loadObjectGroups(Document doc) {
+     private void loadObjectGroups(Document doc) {
         Log.d("TileLoader", "Start Loading Hitboxes ");
         NodeList objectgroups = doc.getElementsByTagName("objectgroup");
         int groups = objectgroups.getLength();
@@ -238,6 +238,7 @@ public class TileLoader {
             NodeList objects = groupElement.getElementsByTagName("object");
             int objectAmount = objects.getLength();
 
+            Log.d("TileLoader", "Adding " + objectAmount + " Objects!");
             for (int i = 0; i < objectAmount; i++) {
                 Element objectElement = (Element) objects.item(i);
                 int id = Integer.parseInt(objectElement.getAttribute("id"));
@@ -249,6 +250,7 @@ public class TileLoader {
                 String height = objectElement.getAttribute("height");
                 if (width != null && height != null && !width.isEmpty() && !height.isEmpty()) {
                     Rectangle tmpRect = new Rectangle(x, y, (int) Double.parseDouble(width), (int) Double.parseDouble(height));
+                    tmpRect.setId(id);
                     objectGroups.get(name).add(tmpRect);
                 }
             }

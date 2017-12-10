@@ -5,61 +5,70 @@ import android.graphics.Bitmap;
 import android.graphics.BitmapFactory;
 import android.graphics.Canvas;
 import android.graphics.drawable.BitmapDrawable;
-import android.util.Log;
 
 import java.io.InputStream;
 
 import de.hs_kl.imst.gatav.tilerenderer.util.Direction;
-import de.hs_kl.imst.gatav.tilerenderer.util.Hitboxes.Collidable;
+import de.hs_kl.imst.gatav.tilerenderer.util.Hitboxes.Rectangle;
 import de.hs_kl.imst.gatav.tilerenderer.util.Vector2;
 
 public abstract class MovableGraphics implements Drawable {
 
     protected BitmapDrawable bmp = null;
+
+    public void setPosition(Vector2 position) {
+        Position = position;
+    }
+
     //koordinaten als Vektor
     protected Vector2 Position = new Vector2();
     //aktuelle Geschwindigkeit des Objekts
-    protected float velocity = 0.0f;
+    public boolean isOnGround = false;
     protected int width, height;
+    public boolean isActive = false;
 
-    public Collidable getHitbox() {
+    protected Rectangle hitbox = null;
+
+    public Rectangle getHitbox() {
         return hitbox;
     }
 
-    public void setHitbox(Collidable hitbox) {
+    public void setHitbox(Rectangle hitbox) {
         this.hitbox = hitbox;
     }
-
-    protected Collidable hitbox = null;
 
     //public void setSpeed(float speed) { this.speed = speed; }
 
     // RichtungsVektor
-
-    public Vector2 getDirectionVec() {
-        return directionVec;
-    }
-
-    public void setDirectionVec(Vector2 directionVec) {
-        this.directionVec = directionVec;
-    }
-
-    protected Vector2 directionVec = new Vector2();
-
-    protected volatile Direction currentDirection = Direction.IDLE;
-    synchronized public boolean isMoving() { return currentDirection != Direction.IDLE; }
-    synchronized protected void setMovingDirection(Direction newDirection) { currentDirection = newDirection; }
 
 
     public MovableGraphics(float x, float y) {
         this.Position = new Vector2(x,y);
     }
 
+    public Vector2 getVelocity() {
+        return velocity;
+    }
+
+    public void setVelocity(Vector2 velocity) {
+        this.velocity = velocity;
+    }
+
+    public Vector2 getPosition() {
+        return Position;
+    }
+
+    protected Vector2 velocity = new Vector2();
+
+    protected volatile Direction currentDirection = Direction.IDLE;
+    synchronized public boolean isMoving() { return currentDirection != Direction.IDLE; }
+    synchronized protected void setMovingDirection(Direction newDirection) { currentDirection = newDirection; }
+
     public MovableGraphics(Vector2 pos) {
         this.Position = pos;
     }
 
-    public void move(Vector2 direction, float velocity) {
+    public void move(Vector2 direction) {
 
         if(0f > direction.getY() )
             setMovingDirection(Direction.UP);
@@ -69,27 +78,26 @@ public abstract class MovableGraphics implements Drawable {
             setMovingDirection(Direction.RIGHT);
         else setMovingDirection(Direction.IDLE);
 
-        this.directionVec = direction;
-        this.velocity = velocity;
+        this.velocity = direction;
     }
 
-    public float getVelocity(){
-        return velocity;
-    }
-    public void setVelocity(float velocity){
-        this.velocity = velocity;
+    public void impact(Vector2 direction){
+        this.velocity = Vector2.add(direction,this.velocity);
     }
 
     private void move(float delta) {
-        if(velocity > 1.0f ) {
-            Position = Vector2.nextPoint(Position, directionVec, velocity * delta);
-        }
+        //if(velocity > 1.0f ) {
+            Position = Vector2.add(Vector2.skalarMul(velocity,delta),Position);
+        //}
     }
 
     @Override
     public void update(float delta) {
         move(delta);
         bmp.setBounds((int)Position.getX(), (int)Position.getY()+height, (int)Position.getX()+width, (int)Position.getY());
+        hitbox.setX((int)Position.getX()); hitbox.setY((int)Position.getY());
+        hitbox.setWidth(width/10);
+        hitbox.setHeight(height/10);
     }
 
     protected void getDirection(){
