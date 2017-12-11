@@ -64,8 +64,9 @@ public class World {
         }
 
         //2. Draw all Debug Hitboxes
-        Map<String, List<Collidable>> groups =  tileLoader.getObjectGroups();
-        List<Collidable> collision = groups.get("Kollisionen");
+        List<Collidable> collision = objects.get("Kollisionen");
+       // Log.d("objectgroup size", ""+tileLoader.getObjectGroups().get("Kollisionen").size());
+        //collision.add(GameContent.player.getHitbox());
         Paint p = new Paint();
         p.setColor(Color.argb(128, 0, 65, 200));
         if(collision != null) {

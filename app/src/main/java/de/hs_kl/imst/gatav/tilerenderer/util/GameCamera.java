@@ -91,7 +91,6 @@ public class GameCamera {
         }
         canvas.scale(ratioX, ratioY);
         canvas.translate(-xPos, -yPos);
-
     }
 
     public boolean isRectInView(Rect a) {

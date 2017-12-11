@@ -5,7 +5,6 @@ import android.graphics.Bitmap;
 import android.graphics.BitmapFactory;
 import android.graphics.Canvas;
 import android.graphics.drawable.BitmapDrawable;
-import android.util.Log;
 
 import java.io.InputStream;
 
@@ -17,15 +16,19 @@ import de.hs_kl.imst.gatav.tilerenderer.util.Vector2;
 public abstract class MovableGraphics implements Drawable {
 
     protected BitmapDrawable bmp = null;
-
     //koordinaten als Vektor
     protected Vector2 Position = new Vector2();
     //aktuelle Geschwindigkeit des Objekts
-    protected float velocity = 0.0f;
+    public boolean isOnGround = false;
     protected int width, height;
+    public boolean isActive = false;
 
     protected Rectangle hitbox = null;
 
+	public void setPosition(Vector2 position) {
+        Position = position;
+    }
+	
     public Rectangle getHitbox() {
         return hitbox;
     }
@@ -43,20 +46,21 @@ public abstract class MovableGraphics implements Drawable {
         this.Position = new Vector2(x,y);
     }
 
-    public Vector2 getDirectionVec() {
-        return directionVec;
+
+    public Vector2 getVelocity() {
+        return velocity;
     }
 
-    public void setDirectionVec(Vector2 directionVec) {
-        this.directionVec = directionVec;
+    public void setVelocity(Vector2 velocity) {
+        this.velocity = velocity;
     }
 
     public Vector2 getPosition() {
         return Position;
     }
 
-    protected Vector2 directionVec = new Vector2();
 
+    protected Vector2 velocity = new Vector2();
     protected volatile Direction currentDirection = Direction.IDLE;
     synchronized public boolean isMoving() { return currentDirection != Direction.IDLE; }
     synchronized protected void setMovingDirection(Direction newDirection) { currentDirection = newDirection; }
@@ -65,7 +69,7 @@ public abstract class MovableGraphics implements Drawable {
         this.Position = pos;
     }
 
-    public void move(Vector2 direction, float velocity) {
+    public void move(Vector2 direction) {
 
         if(0f > direction.getY() )
             setMovingDirection(Direction.UP);
@@ -75,26 +79,17 @@ public abstract class MovableGraphics implements Drawable {
             setMovingDirection(Direction.RIGHT);
         else setMovingDirection(Direction.IDLE);
 
-        this.directionVec = direction;
-        this.velocity = velocity;
+        this.velocity = direction;
     }
 
-    public void impact(Vector2 direction, float velocity){
-        this.directionVec = Vector2.add(direction,this.directionVec);
-        this.velocity += velocity;
-    }
-
-    public float getVelocity(){
-        return velocity;
-    }
-    public void setVelocity(float velocity){
-        this.velocity = velocity;
+    public void impact(Vector2 direction){
+        this.velocity = Vector2.add(direction,this.velocity);
     }
 
     private void move(float delta) {
-        if(velocity > 1.0f ) {
-            Position = Vector2.nextPoint(Position, directionVec, velocity * delta);
-        }
+        //if(velocity > 1.0f ) {
+            Position = Vector2.add(Vector2.skalarMul(velocity,delta),Position);
+        //}
     }
 
     @Override

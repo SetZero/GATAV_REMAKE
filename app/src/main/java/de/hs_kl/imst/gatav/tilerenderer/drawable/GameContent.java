@@ -65,7 +65,7 @@ public class GameContent implements Drawable {
 
         loadLevel();
         world = new World(tileLoader,1f/60f);
-        player = new Player(450, 650);
+        player = new Player(350, 550);
         world.addGameObject(player);
 
         camera.attach(player);
@@ -78,9 +78,9 @@ public class GameContent implements Drawable {
         int newX = -1;
         int newY = -1;
         switch(direction) {
-            case UP: player.move(new Vector2(0,-900),100); break;
-            case RIGHT: player.move(new Vector2(900,0),100); break;
-            case LEFT: player.move(new Vector2(-900,0),100); break;
+            case UP: player.impact(new Vector2(0,-180)); break;
+            case RIGHT: player.impact(new Vector2(90,0)); break;
+            case LEFT: player.impact(new Vector2(-90,0)); break;
         }
 
         return true;
