@@ -38,6 +38,7 @@ public class PhysicsController {
 
         for(MovableGraphics item: physicals){
             //gravity
+            //Log.d("velocity",item.getVelocity().x+"");
             ArrayList<Contact> collision = isColliding(item);
             boolean groundCollision = false;
             boolean noCollision = true;
@@ -66,11 +67,12 @@ public class PhysicsController {
             }
             if ( noCollision ) {
                 item.impact(new Vector2(0f, gravity));
-            } else {   //wenn der movable den boden berührt und der richtungsvektor noch nach unten zeigt
-                // wird die gravitation beendet (spieler kann sich nicht nach unten bewegen)
+            } else
+                {
                 if(leftCollision ){
                     if(item.getVelocity().x<0f)
                     item.setVelocity(new Vector2(0f,item.getVelocity().y));
+
                 }
                 if(rightCollision ){
                     if(item.getVelocity().x>0f)
@@ -100,7 +102,6 @@ public class PhysicsController {
             rectB = ((Rectangle) c).getRect();
             if(item.getHitbox().isCollidingWith(c)) {
 
-                //this test will determine if rectA's left side crossed rectB's right side:
                 float wy = (rectA.width()+rectB.width())*(rectA.centerY()-rectB.centerY());
                 float hx = (rectA.height()+rectB.height())*(rectA.centerX()-rectB.centerX());
 

@@ -43,10 +43,10 @@ public class World {
     }
 
     public void update(float delta){
-        physics.Update(step);
         for(Drawable x: dynamicObjects){
             x.update(delta);
         }
+        physics.Update(step);
     }
 
     public void draw(GameCamera camera, Canvas canvas) {

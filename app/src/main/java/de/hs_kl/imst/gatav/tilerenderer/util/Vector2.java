@@ -5,7 +5,7 @@ package de.hs_kl.imst.gatav.tilerenderer.util;
  */
 
 public class Vector2 {
-    float x = 0.0f, y=0.0f;
+    public float x = 0.0f, y=0.0f;
 
     public float getX() {
         return x;

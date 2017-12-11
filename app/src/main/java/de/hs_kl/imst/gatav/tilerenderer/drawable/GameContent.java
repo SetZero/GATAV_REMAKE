@@ -74,14 +74,7 @@ public class GameContent implements Drawable {
 
     public boolean movePlayer(Direction direction) {
 
-        // Erster Schritt: Basierend auf Zugrichtung die Zielposition bestimmen
-        int newX = -1;
-        int newY = -1;
-        switch(direction) {
-            case UP: player.impact(new Vector2(0,-180)); break;
-            case RIGHT: player.impact(new Vector2(90,0)); break;
-            case LEFT: player.impact(new Vector2(-90,0)); break;
-        }
+        player.move(direction);
 
         return true;
     }
@@ -94,11 +87,6 @@ public class GameContent implements Drawable {
 
     @Override
     public void update(float delta) {
-        /*if(camera.getCameraXCenter() < 1400) {
-            camera.setCameraXCenter(camera.getCameraXCenter() + 1);
-        } else {
-            camera.setCameraXCenter(700);
-        }*/
         world.update(delta);
    }
 

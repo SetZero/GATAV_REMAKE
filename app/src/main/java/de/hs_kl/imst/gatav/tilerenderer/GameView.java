@@ -290,11 +290,6 @@ public class GameView extends SurfaceView implements SurfaceHolder.Callback, Run
     @Override
     public boolean onFling(MotionEvent e1, MotionEvent e2, float velocityX, float velocityY) {
 
-        // Wird der Player aktuell noch animiert, wird der Fling wegkonsumiert
-        // (bei uns nur konzeptionell notwendig, da die laufende Animation in GameContent
-        // neue Animationen eh abblockt)
-        Log.d("move", "RIGHT");
-
         float deg = (float) Math.toDegrees(
                 Math.acos(velocityX/Math.sqrt(velocityX * velocityX + velocityY * velocityY))
         );
@@ -302,17 +297,13 @@ public class GameView extends SurfaceView implements SurfaceHolder.Callback, Run
             deg = 180f + (180f - deg);
 
         if(deg > 315 || deg < 45){
-            gameContent.setPlayerDirection(Direction.RIGHT);
-            Log.d("move", "RIGHT");
             gameContent.movePlayer(Direction.RIGHT);}
         else if(deg >= 45 && deg <= 135){
-            gameContent.setPlayerDirection(Direction.UP);
             gameContent.movePlayer(Direction.UP);}
         else if(deg > 135 && deg < 225){
-            gameContent.setPlayerDirection(Direction.LEFT);
             gameContent.movePlayer(Direction.LEFT);}
         else if(deg >= 225 && deg < 315)
-            gameContent.setPlayerDirection(Direction.DOWN);
+
 
         // erster Fling startet den Zeitzähler
         gameMode=1;

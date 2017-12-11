@@ -5,6 +5,7 @@ import android.graphics.Bitmap;
 import android.graphics.BitmapFactory;
 import android.graphics.Canvas;
 import android.graphics.drawable.BitmapDrawable;
+import android.util.Log;
 
 import java.io.InputStream;
 
@@ -60,36 +61,24 @@ public abstract class MovableGraphics implements Drawable {
     }
 
 
-    protected Vector2 velocity = new Vector2();
+    protected volatile Vector2 velocity = new Vector2();
     protected volatile Direction currentDirection = Direction.IDLE;
-    synchronized public boolean isMoving() { return currentDirection != Direction.IDLE; }
-    synchronized protected void setMovingDirection(Direction newDirection) { currentDirection = newDirection; }
 
     public MovableGraphics(Vector2 pos) {
         this.Position = pos;
     }
 
+    @Deprecated
     public void move(Vector2 direction) {
-
-        if(0f > direction.getY() )
-            setMovingDirection(Direction.UP);
-        else if(0f > direction.getX() )
-            setMovingDirection(Direction.LEFT);
-        else if(0f < direction.getX() )
-            setMovingDirection(Direction.RIGHT);
-        else setMovingDirection(Direction.IDLE);
-
         this.velocity = direction;
     }
 
-    public void impact(Vector2 direction){
+    synchronized public void impact(Vector2 direction){
         this.velocity = Vector2.add(direction,this.velocity);
     }
 
     private void move(float delta) {
-        //if(velocity > 1.0f ) {
             Position = Vector2.add(Vector2.skalarMul(velocity,delta),Position);
-        //}
     }
 
     @Override
