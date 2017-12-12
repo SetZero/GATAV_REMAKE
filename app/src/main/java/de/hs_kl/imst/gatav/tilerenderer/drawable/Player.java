@@ -36,7 +36,7 @@ public class Player extends MovableGraphics {
                 if (velocity.getY() != 0 && previous != Direction.UP) doublejump ++;
                 if(doublejump < 2){
                     velocity.setY(0f);
-                    impact(new Vector2(0f,-170f));
+                    impact(new Vector2(0f,-470f));
                     currentDirection = Direction.UP;
                     doublejump++;
                 }

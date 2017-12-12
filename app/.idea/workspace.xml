@@ -4,7 +4,7 @@
     <option name="TOOL_WINDOW_CONFIGURED_FILTER" value="Show only selected application" />
   </component>
   <component name="BookmarkManager">
-    <bookmark url="file://$PROJECT_DIR$/src/main/java/de/hs_kl/imst/gatav/tilerenderer/TileLoader.java" line="94" />
+    <bookmark url="file://$PROJECT_DIR$/src/main/java/de/hs_kl/imst/gatav/tilerenderer/TileLoader.java" line="98" />
   </component>
   <component name="ChangeListManager">
     <list default="true" id="e56d650f-03a9-4638-90b4-6daf252fa645" name="Default" comment="" />
@@ -46,11 +46,11 @@
       <file leaf-file-name="TileLoader.java" pinned="false" current-in-tab="false">
         <entry file="file://$PROJECT_DIR$/src/main/java/de/hs_kl/imst/gatav/tilerenderer/TileLoader.java">
           <provider selected="true" editor-type-id="text-editor">
-            <state relative-caret-position="51">
-              <caret line="69" column="5" lean-forward="false" selection-start-line="69" selection-start-column="5" selection-end-line="69" selection-end-column="5" />
+            <state relative-caret-position="119">
+              <caret line="73" column="5" lean-forward="false" selection-start-line="73" selection-start-column="5" selection-end-line="73" selection-end-column="5" />
               <folding>
-                <marker date="1513117109094" expanded="true" signature="10379:10575" ph="{...}" />
-                <marker date="1513117109094" expanded="true" signature="10640:10808" ph="{...}" />
+                <marker date="1513117457710" expanded="true" signature="11215:11411" ph="{...}" />
+                <marker date="1513117457710" expanded="true" signature="11476:11644" ph="{...}" />
               </folding>
             </state>
           </provider>
@@ -59,11 +59,10 @@
       <file leaf-file-name="PhysicsController.java" pinned="false" current-in-tab="false">
         <entry file="file://$PROJECT_DIR$/src/main/java/de/hs_kl/imst/gatav/tilerenderer/util/PhysicsController.java">
           <provider selected="true" editor-type-id="text-editor">
-            <state relative-caret-position="136">
-              <caret line="16" column="13" lean-forward="false" selection-start-line="16" selection-start-column="13" selection-end-line="16" selection-end-column="13" />
+            <state relative-caret-position="173">
+              <caret line="26" column="29" lean-forward="false" selection-start-line="26" selection-start-column="29" selection-end-line="26" selection-end-column="29" />
               <folding>
-                <marker date="1513117109099" expanded="true" signature="3451:4436" ph="{...}" />
-                <marker date="1513117109099" expanded="true" signature="4473:4524" ph="{...}" />
+                <element signature="e#3233#3242#0" expanded="true" />
               </folding>
             </state>
           </provider>
@@ -114,9 +113,12 @@
       <file leaf-file-name="Player.java" pinned="false" current-in-tab="true">
         <entry file="file://$PROJECT_DIR$/src/main/java/de/hs_kl/imst/gatav/tilerenderer/drawable/Player.java">
           <provider selected="true" editor-type-id="text-editor">
-            <state relative-caret-position="1003">
-              <caret line="71" column="103" lean-forward="false" selection-start-line="71" selection-start-column="103" selection-end-line="71" selection-end-column="103" />
-              <folding />
+            <state relative-caret-position="187">
+              <caret line="38" column="44" lean-forward="false" selection-start-line="38" selection-start-column="44" selection-end-line="38" selection-end-column="44" />
+              <folding>
+                <marker date="1513117916926" expanded="false" signature="2505:2516" ph=" { " />
+                <marker date="1513117916926" expanded="false" signature="2535:2541" ph=" }" />
+              </folding>
             </state>
           </provider>
         </entry>
@@ -145,6 +147,7 @@
                 <element signature="e#1716#1717#0" expanded="true" />
                 <element signature="e#1775#1776#0" expanded="true" />
                 <element signature="e#1816#1817#0" expanded="true" />
+                <marker date="1513117457749" expanded="true" signature="3086:3187" ph="{...}" />
               </folding>
             </state>
           </provider>
@@ -188,15 +191,15 @@
       <file leaf-file-name="GameView.java" pinned="false" current-in-tab="false">
         <entry file="file://$PROJECT_DIR$/src/main/java/de/hs_kl/imst/gatav/tilerenderer/GameView.java">
           <provider selected="true" editor-type-id="text-editor">
-            <state relative-caret-position="4471">
-              <caret line="278" column="5" lean-forward="false" selection-start-line="278" selection-start-column="5" selection-end-line="278" selection-end-column="5" />
+            <state relative-caret-position="4420">
+              <caret line="275" column="5" lean-forward="false" selection-start-line="275" selection-start-column="5" selection-end-line="275" selection-end-column="5" />
               <folding>
-                <marker date="1513117109092" expanded="true" signature="11662:11785" ph="{...}" />
-                <marker date="1513117109092" expanded="true" signature="11791:11949" ph="/**...*/" />
-                <marker date="1513117109092" expanded="false" signature="12006:12017" ph=" { " />
-                <marker date="1513117109092" expanded="false" signature="12029:12035" ph=" }" />
-                <marker date="1513117109092" expanded="true" signature="12180:12197" ph="{...}" />
-                <marker date="1513117109092" expanded="true" signature="12302:12319" ph="{...}" />
+                <marker date="1513117457770" expanded="true" signature="11430:11553" ph="{...}" />
+                <marker date="1513117457770" expanded="true" signature="11559:11717" ph="/**...*/" />
+                <marker date="1513117457770" expanded="false" signature="11774:11785" ph=" { " />
+                <marker date="1513117457770" expanded="false" signature="11797:11803" ph=" }" />
+                <marker date="1513117457770" expanded="true" signature="11948:11965" ph="{...}" />
+                <marker date="1513117457770" expanded="true" signature="12070:12087" ph="{...}" />
               </folding>
             </state>
           </provider>
@@ -1938,11 +1941,12 @@
         <option value="$PROJECT_DIR$/src/main/java/de/hs_kl/imst/gatav/tilerenderer/drawable/MovableTileGraphics.java" />
         <option value="$PROJECT_DIR$/src/main/java/de/hs_kl/imst/gatav/tilerenderer/drawable/DynamicTarget.java" />
         <option value="$PROJECT_DIR$/src/main/java/de/hs_kl/imst/gatav/tilerenderer/util/Vector2.java" />
-        <option value="$PROJECT_DIR$/src/main/java/de/hs_kl/imst/gatav/tilerenderer/drawable/Player.java" />
         <option value="$PROJECT_DIR$/src/main/java/de/hs_kl/imst/gatav/tilerenderer/MainGameActivity.java" />
         <option value="$PROJECT_DIR$/src/main/java/de/hs_kl/imst/gatav/tilerenderer/GameView.java" />
         <option value="$PROJECT_DIR$/src/main/java/de/hs_kl/imst/gatav/tilerenderer/drawable/GameContent.java" />
         <option value="$PROJECT_DIR$/src/main/java/de/hs_kl/imst/gatav/tilerenderer/drawable/MovableGraphics.java" />
+        <option value="$PROJECT_DIR$/src/main/java/de/hs_kl/imst/gatav/tilerenderer/util/PhysicsController.java" />
+        <option value="$PROJECT_DIR$/src/main/java/de/hs_kl/imst/gatav/tilerenderer/drawable/Player.java" />
       </list>
     </option>
   </component>
@@ -2324,7 +2328,7 @@
       <option name="ACTIVITY_CLASS" value="" />
       <method>
         <option name="Android.Gradle.BeforeRunTask" enabled="true" />
-        <option name="com.android.instantApps.provision.BeforeRunTask" enabled="true" clearCache="false" clearProvisionedDevices="false" myTimestamp="1513117412240" />
+        <option name="com.android.instantApps.provision.BeforeRunTask" enabled="true" clearCache="false" clearProvisionedDevices="false" myTimestamp="1513117955196" />
       </method>
     </configuration>
     <configuration default="true" type="AndroidTestRunConfigurationType" factoryName="Android Instrumented Tests">
@@ -2372,7 +2376,7 @@
       </Profilers>
       <method>
         <option name="Android.Gradle.BeforeRunTask" enabled="true" />
-        <option name="com.android.instantApps.provision.BeforeRunTask" enabled="true" clearCache="false" clearProvisionedDevices="false" myTimestamp="1513117412240" />
+        <option name="com.android.instantApps.provision.BeforeRunTask" enabled="true" clearCache="false" clearProvisionedDevices="false" myTimestamp="1513117955196" />
       </method>
     </configuration>
     <configuration default="true" type="Application" factoryName="Application">
@@ -2534,7 +2538,7 @@
       <option name="ACTIVITY_CLASS" value="" />
       <method>
         <option name="Android.Gradle.BeforeRunTask" enabled="true" />
-        <option name="com.android.instantApps.provision.BeforeRunTask" enabled="true" clearCache="false" clearProvisionedDevices="false" myTimestamp="1513117412241" />
+        <option name="com.android.instantApps.provision.BeforeRunTask" enabled="true" clearCache="false" clearProvisionedDevices="false" myTimestamp="1513117955197" />
       </method>
     </configuration>
     <list size="1">
@@ -2568,6 +2572,7 @@
   </component>
   <component name="ToolWindowManager">
     <frame x="-8" y="-8" width="1382" height="744" extended-state="6" />
+    <editor active="true" />
     <layout>
       <window_info id="Android Profiler" active="false" anchor="bottom" auto_hide="false" internal_type="DOCKED" type="DOCKED" visible="false" show_stripe_button="true" weight="0.32879046" sideWeight="0.47579426" order="7" side_tool="false" content_ui="tabs" />
       <window_info id="TODO" active="false" anchor="bottom" auto_hide="false" internal_type="DOCKED" type="DOCKED" visible="false" show_stripe_button="true" weight="0.33" sideWeight="0.5" order="6" side_tool="false" content_ui="tabs" />
@@ -2586,7 +2591,7 @@
       <window_info id="Gradle Console" active="false" anchor="bottom" auto_hide="false" internal_type="DOCKED" type="DOCKED" visible="false" show_stripe_button="true" weight="0.33" sideWeight="0.5" order="7" side_tool="true" content_ui="tabs" />
       <window_info id="Designer" active="false" anchor="left" auto_hide="false" internal_type="DOCKED" type="DOCKED" visible="false" show_stripe_button="true" weight="0.33" sideWeight="0.5" order="2" side_tool="false" content_ui="tabs" />
       <window_info id="Project" active="false" anchor="left" auto_hide="false" internal_type="DOCKED" type="DOCKED" visible="true" show_stripe_button="true" weight="0.16792738" sideWeight="0.5" order="0" side_tool="false" content_ui="combo" />
-      <window_info id="Gradle" active="true" anchor="right" auto_hide="false" internal_type="DOCKED" type="DOCKED" visible="true" show_stripe_button="true" weight="0.32980332" sideWeight="0.5" order="3" side_tool="false" content_ui="tabs" />
+      <window_info id="Gradle" active="false" anchor="right" auto_hide="false" internal_type="DOCKED" type="DOCKED" visible="true" show_stripe_button="true" weight="0.32980332" sideWeight="0.5" order="3" side_tool="false" content_ui="tabs" />
       <window_info id="Structure" active="false" anchor="left" auto_hide="false" internal_type="DOCKED" type="DOCKED" visible="false" show_stripe_button="true" weight="0.25" sideWeight="0.5" order="1" side_tool="false" content_ui="tabs" />
       <window_info id="Device File Explorer" active="false" anchor="right" auto_hide="false" internal_type="DOCKED" type="DOCKED" visible="false" show_stripe_button="true" weight="0.33" sideWeight="0.5" order="3" side_tool="true" content_ui="tabs" />
       <window_info id="Theme Preview" active="false" anchor="right" auto_hide="false" internal_type="DOCKED" type="DOCKED" visible="false" show_stripe_button="true" weight="0.33" sideWeight="0.5" order="3" side_tool="false" content_ui="tabs" />
@@ -2632,17 +2637,6 @@
     <watches-manager />
   </component>
   <component name="editorHistoryManager">
-    <entry file="file://$PROJECT_DIR$/src/main/java/de/hs_kl/imst/gatav/tilerenderer/TileLoader.java">
-      <provider selected="true" editor-type-id="text-editor">
-        <state relative-caret-position="1479">
-          <caret line="87" column="0" lean-forward="false" selection-start-line="87" selection-start-column="0" selection-end-line="87" selection-end-column="0" />
-          <folding>
-            <marker date="1513117109094" expanded="true" signature="10379:10575" ph="{...}" />
-            <marker date="1513117109094" expanded="true" signature="10640:10808" ph="{...}" />
-          </folding>
-        </state>
-      </provider>
-    </entry>
     <entry file="file://$PROJECT_DIR$/src/androidTest/java/de/hs_kl/imst/gatav/tilerenderer/ApplicationTest.java">
       <provider selected="true" editor-type-id="text-editor">
         <state relative-caret-position="119">
@@ -2654,7 +2648,10 @@
       <provider selected="true" editor-type-id="text-editor">
         <state relative-caret-position="204">
           <caret line="17" column="0" lean-forward="true" selection-start-line="17" selection-start-column="0" selection-end-line="17" selection-end-column="0" />
-          <folding />
+          <folding>
+            <marker date="1513117916926" expanded="false" signature="2505:2516" ph=" { " />
+            <marker date="1513117916926" expanded="false" signature="2535:2541" ph=" }" />
+          </folding>
         </state>
       </provider>
     </entry>
@@ -2681,6 +2678,7 @@
             <element signature="e#1716#1717#0" expanded="true" />
             <element signature="e#1775#1776#0" expanded="true" />
             <element signature="e#1816#1817#0" expanded="true" />
+            <marker date="1513117457749" expanded="true" signature="3086:3187" ph="{...}" />
           </folding>
         </state>
       </provider>
@@ -2781,8 +2779,8 @@
         <state relative-caret-position="51">
           <caret line="69" column="5" lean-forward="false" selection-start-line="69" selection-start-column="5" selection-end-line="69" selection-end-column="5" />
           <folding>
-            <marker date="1513117109094" expanded="true" signature="10379:10575" ph="{...}" />
-            <marker date="1513117109094" expanded="true" signature="10640:10808" ph="{...}" />
+            <marker date="1513117457710" expanded="true" signature="11215:11411" ph="{...}" />
+            <marker date="1513117457710" expanded="true" signature="11476:11644" ph="{...}" />
           </folding>
         </state>
       </provider>
@@ -2799,12 +2797,12 @@
         <state relative-caret-position="4471">
           <caret line="278" column="5" lean-forward="false" selection-start-line="278" selection-start-column="5" selection-end-line="278" selection-end-column="5" />
           <folding>
-            <marker date="1513117109092" expanded="true" signature="11662:11785" ph="{...}" />
-            <marker date="1513117109092" expanded="true" signature="11791:11949" ph="/**...*/" />
-            <marker date="1513117109092" expanded="false" signature="12006:12017" ph=" { " />
-            <marker date="1513117109092" expanded="false" signature="12029:12035" ph=" }" />
-            <marker date="1513117109092" expanded="true" signature="12180:12197" ph="{...}" />
-            <marker date="1513117109092" expanded="true" signature="12302:12319" ph="{...}" />
+            <marker date="1513117457770" expanded="true" signature="11430:11553" ph="{...}" />
+            <marker date="1513117457770" expanded="true" signature="11559:11717" ph="/**...*/" />
+            <marker date="1513117457770" expanded="false" signature="11774:11785" ph=" { " />
+            <marker date="1513117457770" expanded="false" signature="11797:11803" ph=" }" />
+            <marker date="1513117457770" expanded="true" signature="11948:11965" ph="{...}" />
+            <marker date="1513117457770" expanded="true" signature="12070:12087" ph="{...}" />
           </folding>
         </state>
       </provider>
@@ -2832,6 +2830,7 @@
             <element signature="e#1716#1717#0" expanded="true" />
             <element signature="e#1775#1776#0" expanded="true" />
             <element signature="e#1816#1817#0" expanded="true" />
+            <marker date="1513117457749" expanded="true" signature="3086:3187" ph="{...}" />
           </folding>
         </state>
       </provider>
@@ -2851,7 +2850,10 @@
       <provider selected="true" editor-type-id="text-editor">
         <state relative-caret-position="-643">
           <caret line="23" column="38" lean-forward="false" selection-start-line="23" selection-start-column="38" selection-end-line="23" selection-end-column="38" />
-          <folding />
+          <folding>
+            <marker date="1513117916926" expanded="false" signature="2505:2516" ph=" { " />
+            <marker date="1513117916926" expanded="false" signature="2535:2541" ph=" }" />
+          </folding>
         </state>
       </provider>
     </entry>
@@ -2860,8 +2862,8 @@
         <state relative-caret-position="1972">
           <caret line="160" column="50" lean-forward="false" selection-start-line="159" selection-start-column="79" selection-end-line="160" selection-end-column="50" />
           <folding>
-            <marker date="1513117109094" expanded="true" signature="10379:10575" ph="{...}" />
-            <marker date="1513117109094" expanded="true" signature="10640:10808" ph="{...}" />
+            <marker date="1513117457710" expanded="true" signature="11215:11411" ph="{...}" />
+            <marker date="1513117457710" expanded="true" signature="11476:11644" ph="{...}" />
           </folding>
         </state>
       </provider>
@@ -2870,7 +2872,10 @@
       <provider selected="true" editor-type-id="text-editor">
         <state relative-caret-position="357">
           <caret line="21" column="36" lean-forward="false" selection-start-line="21" selection-start-column="36" selection-end-line="21" selection-end-column="36" />
-          <folding />
+          <folding>
+            <marker date="1513117916926" expanded="false" signature="2505:2516" ph=" { " />
+            <marker date="1513117916926" expanded="false" signature="2535:2541" ph=" }" />
+          </folding>
         </state>
       </provider>
     </entry>
@@ -2897,6 +2902,7 @@
             <element signature="e#1716#1717#0" expanded="true" />
             <element signature="e#1775#1776#0" expanded="true" />
             <element signature="e#1816#1817#0" expanded="true" />
+            <marker date="1513117457749" expanded="true" signature="3086:3187" ph="{...}" />
           </folding>
         </state>
       </provider>
@@ -2977,12 +2983,12 @@
         <state relative-caret-position="4182">
           <caret line="270" column="5" lean-forward="false" selection-start-line="270" selection-start-column="5" selection-end-line="270" selection-end-column="5" />
           <folding>
-            <marker date="1513117109092" expanded="true" signature="11662:11785" ph="{...}" />
-            <marker date="1513117109092" expanded="true" signature="11791:11949" ph="/**...*/" />
-            <marker date="1513117109092" expanded="false" signature="12006:12017" ph=" { " />
-            <marker date="1513117109092" expanded="false" signature="12029:12035" ph=" }" />
-            <marker date="1513117109092" expanded="true" signature="12180:12197" ph="{...}" />
-            <marker date="1513117109092" expanded="true" signature="12302:12319" ph="{...}" />
+            <marker date="1513117457770" expanded="true" signature="11430:11553" ph="{...}" />
+            <marker date="1513117457770" expanded="true" signature="11559:11717" ph="/**...*/" />
+            <marker date="1513117457770" expanded="false" signature="11774:11785" ph=" { " />
+            <marker date="1513117457770" expanded="false" signature="11797:11803" ph=" }" />
+            <marker date="1513117457770" expanded="true" signature="11948:11965" ph="{...}" />
+            <marker date="1513117457770" expanded="true" signature="12070:12087" ph="{...}" />
           </folding>
         </state>
       </provider>
@@ -2999,8 +3005,8 @@
         <state relative-caret-position="1479">
           <caret line="87" column="0" lean-forward="false" selection-start-line="87" selection-start-column="0" selection-end-line="87" selection-end-column="0" />
           <folding>
-            <marker date="1513117109094" expanded="true" signature="10379:10575" ph="{...}" />
-            <marker date="1513117109094" expanded="true" signature="10640:10808" ph="{...}" />
+            <marker date="1513117457710" expanded="true" signature="11215:11411" ph="{...}" />
+            <marker date="1513117457710" expanded="true" signature="11476:11644" ph="{...}" />
           </folding>
         </state>
       </provider>
@@ -3016,7 +3022,10 @@
       <provider selected="true" editor-type-id="text-editor">
         <state relative-caret-position="204">
           <caret line="17" column="0" lean-forward="true" selection-start-line="17" selection-start-column="0" selection-end-line="17" selection-end-column="0" />
-          <folding />
+          <folding>
+            <marker date="1513117916926" expanded="false" signature="2505:2516" ph=" { " />
+            <marker date="1513117916926" expanded="false" signature="2535:2541" ph=" }" />
+          </folding>
         </state>
       </provider>
     </entry>
@@ -3043,6 +3052,7 @@
             <element signature="e#1716#1717#0" expanded="true" />
             <element signature="e#1775#1776#0" expanded="true" />
             <element signature="e#1816#1817#0" expanded="true" />
+            <marker date="1513117457749" expanded="true" signature="3086:3187" ph="{...}" />
           </folding>
         </state>
       </provider>
@@ -3140,11 +3150,11 @@
     </entry>
     <entry file="file://$PROJECT_DIR$/src/main/java/de/hs_kl/imst/gatav/tilerenderer/TileLoader.java">
       <provider selected="true" editor-type-id="text-editor">
-        <state relative-caret-position="51">
-          <caret line="69" column="5" lean-forward="false" selection-start-line="69" selection-start-column="5" selection-end-line="69" selection-end-column="5" />
+        <state relative-caret-position="119">
+          <caret line="73" column="5" lean-forward="false" selection-start-line="73" selection-start-column="5" selection-end-line="73" selection-end-column="5" />
           <folding>
-            <marker date="1513117109094" expanded="true" signature="10379:10575" ph="{...}" />
-            <marker date="1513117109094" expanded="true" signature="10640:10808" ph="{...}" />
+            <marker date="1513117457710" expanded="true" signature="11215:11411" ph="{...}" />
+            <marker date="1513117457710" expanded="true" signature="11476:11644" ph="{...}" />
           </folding>
         </state>
       </provider>
@@ -3158,24 +3168,16 @@
     </entry>
     <entry file="file://$PROJECT_DIR$/src/main/java/de/hs_kl/imst/gatav/tilerenderer/GameView.java">
       <provider selected="true" editor-type-id="text-editor">
-        <state relative-caret-position="4471">
-          <caret line="278" column="5" lean-forward="false" selection-start-line="278" selection-start-column="5" selection-end-line="278" selection-end-column="5" />
+        <state relative-caret-position="4420">
+          <caret line="275" column="5" lean-forward="false" selection-start-line="275" selection-start-column="5" selection-end-line="275" selection-end-column="5" />
           <folding>
-            <marker date="1513117109092" expanded="true" signature="11662:11785" ph="{...}" />
-            <marker date="1513117109092" expanded="true" signature="11791:11949" ph="/**...*/" />
-            <marker date="1513117109092" expanded="false" signature="12006:12017" ph=" { " />
-            <marker date="1513117109092" expanded="false" signature="12029:12035" ph=" }" />
-            <marker date="1513117109092" expanded="true" signature="12180:12197" ph="{...}" />
-            <marker date="1513117109092" expanded="true" signature="12302:12319" ph="{...}" />
+            <marker date="1513117457770" expanded="true" signature="11430:11553" ph="{...}" />
+            <marker date="1513117457770" expanded="true" signature="11559:11717" ph="/**...*/" />
+            <marker date="1513117457770" expanded="false" signature="11774:11785" ph=" { " />
+            <marker date="1513117457770" expanded="false" signature="11797:11803" ph=" }" />
+            <marker date="1513117457770" expanded="true" signature="11948:11965" ph="{...}" />
+            <marker date="1513117457770" expanded="true" signature="12070:12087" ph="{...}" />
           </folding>
-        </state>
-      </provider>
-    </entry>
-    <entry file="file://$PROJECT_DIR$/src/main/java/de/hs_kl/imst/gatav/tilerenderer/drawable/Player.java">
-      <provider selected="true" editor-type-id="text-editor">
-        <state relative-caret-position="1003">
-          <caret line="71" column="103" lean-forward="false" selection-start-line="71" selection-start-column="103" selection-end-line="71" selection-end-column="103" />
-          <folding />
         </state>
       </provider>
     </entry>
@@ -3202,6 +3204,7 @@
             <element signature="e#1716#1717#0" expanded="true" />
             <element signature="e#1775#1776#0" expanded="true" />
             <element signature="e#1816#1817#0" expanded="true" />
+            <marker date="1513117457749" expanded="true" signature="3086:3187" ph="{...}" />
           </folding>
         </state>
       </provider>
@@ -3213,6 +3216,27 @@
           <folding>
             <marker date="1513117109096" expanded="true" signature="3187:3195" ph="{...}" />
             <marker date="1513117109096" expanded="true" signature="3228:3236" ph="{...}" />
+          </folding>
+        </state>
+      </provider>
+    </entry>
+    <entry file="file://$PROJECT_DIR$/src/main/java/de/hs_kl/imst/gatav/tilerenderer/util/PhysicsController.java">
+      <provider selected="true" editor-type-id="text-editor">
+        <state relative-caret-position="173">
+          <caret line="26" column="29" lean-forward="false" selection-start-line="26" selection-start-column="29" selection-end-line="26" selection-end-column="29" />
+          <folding>
+            <element signature="e#3233#3242#0" expanded="true" />
+          </folding>
+        </state>
+      </provider>
+    </entry>
+    <entry file="file://$PROJECT_DIR$/src/main/java/de/hs_kl/imst/gatav/tilerenderer/drawable/Player.java">
+      <provider selected="true" editor-type-id="text-editor">
+        <state relative-caret-position="187">
+          <caret line="38" column="44" lean-forward="false" selection-start-line="38" selection-start-column="44" selection-end-line="38" selection-end-column="44" />
+          <folding>
+            <marker date="1513117916926" expanded="false" signature="2505:2516" ph=" { " />
+            <marker date="1513117916926" expanded="false" signature="2535:2541" ph=" }" />
           </folding>
         </state>
       </provider>

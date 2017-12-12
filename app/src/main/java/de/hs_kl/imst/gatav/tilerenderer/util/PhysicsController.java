@@ -24,7 +24,7 @@ public class PhysicsController {
     }
 
     private ArrayList<MovableGraphics> physicals = new ArrayList<MovableGraphics>();
-    private float gravity = 4.5f;
+    private float gravity = 8.5f;
     private World world;
     private  List<Collidable> list;
 
