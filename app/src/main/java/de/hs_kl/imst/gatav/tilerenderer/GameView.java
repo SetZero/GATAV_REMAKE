@@ -25,6 +25,7 @@ import de.hs_kl.imst.gatav.tilerenderer.util.Direction;
 import de.hs_kl.imst.gatav.tilerenderer.util.FPSHelper;
 import de.hs_kl.imst.gatav.tilerenderer.util.GameCamera;
 import de.hs_kl.imst.gatav.tilerenderer.util.LevelHelper;
+import de.hs_kl.imst.gatav.tilerenderer.util.ScaleHelper;
 import de.hs_kl.imst.gatav.tilerenderer.util.TileInformation;
 
 
@@ -171,12 +172,8 @@ public class GameView extends SurfaceView implements SurfaceHolder.Callback, Run
         gameWidth = width - border;                                         // hinzufügen
         gameHeight = (int)((float)gameWidth / ((float) width / height));    // Höhe entsprechend anpassen
 
-        // Ermitteln der Größe der einzelnen Elemente
-        Pair<Integer, Integer> maxLevelSize = LevelHelper.getLargestLevelDimensions(getContext());
-        // minimale Breite hält alle quadratischen Kacheln sichbar im Spielfeld
-        TileGraphics.setTileSize(Math.min(gameWidth / maxLevelSize.first,
-                gameHeight / maxLevelSize.second));
 
+        ScaleHelper.calculateRatio((int)gameWidth, (int)gameHeight);
         gameContent = new GameContent(getContext(), levelName);
 
         // Reset der Zustände bei "onResume"

@@ -14,8 +14,6 @@ public class GameCamera {
     private MovableGraphics attachedTo;
     private int canvasWidth = 0;
     private int canvasHeight = 0;
-    private  int cameraViewWidth = 720;
-    private int cameraViewHeight = 0; // automatic
     private int cameraXCenter;
     private int cameraYCenter;
     private int levelHeight;
@@ -63,42 +61,36 @@ public class GameCamera {
         canvasWidth = canvas.getWidth();
         canvasHeight = canvas.getHeight();
 
-        /* Camera Scale Ratio */
-        float aspectRatio = canvasHeight / (float)canvasWidth;
-        cameraViewHeight = (int)(cameraViewWidth * aspectRatio);
-
-        float ratioX = canvasHeight / (float)cameraViewHeight;
-        float ratioY = canvasWidth / (float)cameraViewWidth;
-
         /* Real Camera Position */
-        int xPos = cameraXCenter - (cameraViewWidth/2);
-        int yPos = cameraYCenter - (cameraViewHeight/2);
+        int xPos = cameraXCenter - (canvasWidth/2);
+        int yPos = cameraYCenter - (canvasHeight/2);
 
         /* Out of Bounds Check */
         if(xPos < 0) {
-            cameraXCenter = cameraViewWidth/2;
+            cameraXCenter = canvasWidth/2;
             xPos = 0;
-        } else if(xPos > levelWidth - cameraViewWidth) {
-            cameraXCenter = levelWidth -  (cameraViewWidth/2);
-            xPos = levelWidth - cameraViewWidth;
+        } else if(xPos > levelWidth - canvasWidth) {
+            cameraXCenter = levelWidth -  (canvasWidth/2);
+            xPos = levelWidth - canvasWidth;
         }
         if(yPos < 0){
-            cameraYCenter = cameraViewHeight/2;
+            cameraYCenter = canvasHeight/2;
             yPos = 0;
-        } else if(yPos > levelHeight - cameraViewHeight) {
-            cameraYCenter = levelHeight -  (cameraViewHeight/2);
-            yPos = levelHeight - cameraViewHeight;
+        } else if(yPos > levelHeight - canvasHeight) {
+            cameraYCenter = levelHeight -  (canvasHeight/2);
+            yPos = levelHeight - canvasHeight;
         }
+        Log.d("Camera", "Level H: " + levelHeight + ", Canvas H: " + canvasHeight + ", yPos: " + yPos*ScaleHelper.getRatioY());
         //canvas.scale(ratioX, ratioY);
         canvas.translate(-xPos, -yPos);
     }
 
     public boolean isRectInView(Rect a) {
         //TODO: Make this less static, bind to Rec width!
-        int minX = cameraXCenter - ((cameraViewWidth/2));
-        int minY = cameraYCenter - ((cameraViewHeight/2));
-        int maxX = cameraXCenter + (cameraViewWidth/2);
-        int maxY = cameraYCenter + (cameraViewHeight/2);
+        int minX = cameraXCenter - ((canvasWidth/2));
+        int minY = cameraYCenter - ((canvasHeight/2));
+        int maxX = cameraXCenter + (canvasWidth/2);
+        int maxY = cameraYCenter + (canvasHeight/2);
         Rect b = new Rect(minX, minY, maxX, maxY);
         if(b.intersect(a))
             return true;

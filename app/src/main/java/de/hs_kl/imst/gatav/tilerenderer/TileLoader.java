@@ -40,6 +40,7 @@ import javax.xml.parsers.ParserConfigurationException;
 
 import de.hs_kl.imst.gatav.tilerenderer.util.Hitboxes.Collidable;
 import de.hs_kl.imst.gatav.tilerenderer.util.Hitboxes.Rectangle;
+import de.hs_kl.imst.gatav.tilerenderer.util.ScaleHelper;
 import de.hs_kl.imst.gatav.tilerenderer.util.TileInformation;
 
 public class TileLoader {
@@ -57,8 +58,8 @@ public class TileLoader {
     private Map<Integer, Bitmap> tiles = new HashMap<>();
     private Map<String, List<Collidable>> objectGroups = new HashMap<>();
 
-    private float ratioX = 2;
-    private float ratioY = 2;
+    private float ratioX = ScaleHelper.getRatioX();
+    private float ratioY = ScaleHelper.getRatioY();
 
     public int getWidth() {
         return width;
@@ -98,6 +99,11 @@ public class TileLoader {
 
 
     public TileLoader(Context context, String filename) {
+        assert (ratioX > 0) : "Scale Helper never initialized!";
+        assert (ratioY > 0) : "Scale Helper never initialized!";
+
+        Log.d("Tile Loader", "Ratio X: " + ratioX);
+
         this.context = context;
         this.assetManager = context.getAssets();
         this.filename = filename;
@@ -165,6 +171,8 @@ public class TileLoader {
             loadObjectGroups(doc);
             tileWidth = (int)(tileWidth*ratioX);
             tileHeight = (int)(tileWidth*ratioY);
+            width = (int)(width / ScaleHelper.getRatioX());
+            height = (int)(height / ScaleHelper.getRatioY());
             fis.close();
         } catch (FileNotFoundException e) {
             e.printStackTrace();
