@@ -256,14 +256,15 @@ public class TileLoader {
             for (int i = 0; i < objectAmount; i++) {
                 Element objectElement = (Element) objects.item(i);
                 int id = Integer.parseInt(objectElement.getAttribute("id"));
-                int x = (int) (Double.parseDouble(objectElement.getAttribute("x"))*ratioX);
-                int y = (int) (Double.parseDouble(objectElement.getAttribute("y"))*ratioY);
+                //If it's stupid but it works it isn't stupid
+                int x = (int)((int) (Double.parseDouble(objectElement.getAttribute("x")))*ratioX);
+                int y = (int)((int) (Double.parseDouble(objectElement.getAttribute("y")))*ratioY);
 
                 //Rect
                 String width = objectElement.getAttribute("width");
                 String height = objectElement.getAttribute("height");
                 if (width != null && height != null && !width.isEmpty() && !height.isEmpty()) {
-                    Rectangle tmpRect = new Rectangle(x, y, (int)( Double.parseDouble(width)*ratioX), (int) (Double.parseDouble(height)*ratioY));
+                    Rectangle tmpRect = new Rectangle(x, y, (int)((int)( Double.parseDouble(width))*ratioX), (int)((int) (Double.parseDouble(height))*ratioY));
                     tmpRect.setId(id);
                     objectGroups.get(name).add(tmpRect);
                 }
