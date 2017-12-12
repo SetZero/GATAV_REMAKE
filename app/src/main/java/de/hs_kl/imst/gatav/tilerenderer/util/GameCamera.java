@@ -14,7 +14,7 @@ public class GameCamera {
     private MovableGraphics attachedTo;
     private int canvasWidth = 0;
     private int canvasHeight = 0;
-    private  int cameraViewWidth = 1080;
+    private  int cameraViewWidth = 720;
     private int cameraViewHeight = 0; // automatic
     private int cameraXCenter;
     private int cameraYCenter;
@@ -89,7 +89,7 @@ public class GameCamera {
             cameraYCenter = levelHeight -  (cameraViewHeight/2);
             yPos = levelHeight - cameraViewHeight;
         }
-        canvas.scale(ratioX, ratioY);
+        //canvas.scale(ratioX, ratioY);
         canvas.translate(-xPos, -yPos);
     }
 
