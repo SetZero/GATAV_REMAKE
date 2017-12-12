@@ -9,8 +9,8 @@ public class ScaleHelper {
     private static int cameraViewWidth = 600;
     private static int cameraViewHeight = 0; //automatic
 
-    private static float ratioX = 2;
-    private static float ratioY = 2;
+    private static int ratioX = 2;
+    private static int ratioY = 2;
 
     //This is static!
     private ScaleHelper() {
@@ -29,7 +29,7 @@ public class ScaleHelper {
         float aspectRatio = canvasHeight / (float)canvasWidth;
         cameraViewHeight = (int)(cameraViewWidth * aspectRatio);
 
-        ratioX = canvasHeight / (float)cameraViewHeight;
-        ratioY = canvasWidth / (float)cameraViewWidth;
+        ratioX = (int)(canvasHeight / (float)cameraViewHeight);
+        ratioY = (int)(canvasWidth / (float)cameraViewWidth);
     }
 }

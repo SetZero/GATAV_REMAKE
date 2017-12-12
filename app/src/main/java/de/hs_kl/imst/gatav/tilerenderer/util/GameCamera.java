@@ -80,7 +80,6 @@ public class GameCamera {
             cameraYCenter = levelHeight -  (canvasHeight/2);
             yPos = levelHeight - canvasHeight;
         }
-        Log.d("Camera", "Level H: " + levelHeight + ", Canvas H: " + canvasHeight + ", yPos: " + yPos*ScaleHelper.getRatioY());
         //canvas.scale(ratioX, ratioY);
         canvas.translate(-xPos, -yPos);
     }

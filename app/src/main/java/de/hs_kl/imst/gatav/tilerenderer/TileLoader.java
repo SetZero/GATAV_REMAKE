@@ -58,8 +58,8 @@ public class TileLoader {
     private Map<Integer, Bitmap> tiles = new HashMap<>();
     private Map<String, List<Collidable>> objectGroups = new HashMap<>();
 
-    private float ratioX = ScaleHelper.getRatioX();
-    private float ratioY = ScaleHelper.getRatioY();
+    private int ratioX = (int)ScaleHelper.getRatioX();
+    private int ratioY = (int)ScaleHelper.getRatioY();
 
     public int getWidth() {
         return width;
@@ -169,10 +169,10 @@ public class TileLoader {
             }
 
             loadObjectGroups(doc);
-            tileWidth = (int)(tileWidth*ratioX);
-            tileHeight = (int)(tileWidth*ratioY);
-            width = (int)(width / ScaleHelper.getRatioX());
-            height = (int)(height / ScaleHelper.getRatioY());
+            tileWidth = tileWidth*ratioX;
+            tileHeight = tileWidth*ratioY;
+            width = width / (int)ScaleHelper.getRatioX();
+            height = height / (int)ScaleHelper.getRatioY();
             fis.close();
         } catch (FileNotFoundException e) {
             e.printStackTrace();
@@ -257,14 +257,18 @@ public class TileLoader {
                 Element objectElement = (Element) objects.item(i);
                 int id = Integer.parseInt(objectElement.getAttribute("id"));
                 //If it's stupid but it works it isn't stupid
-                int x = (int)((int) (Double.parseDouble(objectElement.getAttribute("x")))*ratioX);
-                int y = (int)((int) (Double.parseDouble(objectElement.getAttribute("y")))*ratioY);
+                int x = (int) (Double.parseDouble(objectElement.getAttribute("x"))* ratioX);
+                int y = (int) (Double.parseDouble(objectElement.getAttribute("y"))* ratioY);
 
                 //Rect
                 String width = objectElement.getAttribute("width");
                 String height = objectElement.getAttribute("height");
                 if (width != null && height != null && !width.isEmpty() && !height.isEmpty()) {
-                    Rectangle tmpRect = new Rectangle(x, y, (int)((int)( Double.parseDouble(width))*ratioX), (int)((int) (Double.parseDouble(height))*ratioY));
+                    int tmpWidth = (int) Double.parseDouble(width);
+                    int tmpHeight = (int) Double.parseDouble(height);
+                    tmpWidth  *= ratioX;
+                    tmpHeight *= ratioY;
+                    Rectangle tmpRect = new Rectangle(x, y, tmpWidth, tmpHeight);
                     tmpRect.setId(id);
                     objectGroups.get(name).add(tmpRect);
                 }
