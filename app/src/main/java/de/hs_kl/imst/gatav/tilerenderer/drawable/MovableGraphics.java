@@ -97,25 +97,27 @@ public abstract class MovableGraphics implements Drawable {
         move(delta);
         bmp.setBounds((int)Position.getX(), (int)Position.getY()+height, (int)Position.getX()+width, (int)Position.getY());
         hitbox.setX((int)Position.getX()); hitbox.setY((int)Position.getY());
-        hitbox.setWidth(width/10);
-        hitbox.setHeight(height/10);
+        hitbox.setWidth(width);
+        hitbox.setHeight(height);
     }
 
     protected void getDirection(){
 
     }
 
-    protected void loadGraphic(InputStream is,int widht, int height){
-        this.width = widht; this.height = height;
+    protected void loadGraphic(InputStream is,int width, int height, int scale){
         Bitmap bMap = BitmapFactory.decodeStream(is);
-        bMap = Bitmap.createBitmap(bMap,0,0,17,35);
-        bmp = new BitmapDrawable(bMap);
-        bmp.setBounds((int)Position.getX(), ((int)Position.getY())+height, ((int)Position.getX())+widht, (int)Position.getY());
+        bMap = Bitmap.createBitmap(bMap,0,0,width,height);
+        bmp = new BitmapDrawable(Bitmap.createScaledBitmap(bMap,width*scale,height*scale,false));
+        this.width = width*scale;
+        this.height = height*scale;
+        bmp.setBounds((int)Position.getX(), ((int)Position.getY())+this.height, ((int)Position.getX())+this.width, (int)Position.getY());
     } //left top right bottom
 
     public void draw(Canvas canvas) {
         if(bmp != null) {
             //bmp.draw(canvas);
+
             canvas.drawBitmap(bmp.getBitmap(),Position.getX(),Position.getY(),null);
         }
     }
