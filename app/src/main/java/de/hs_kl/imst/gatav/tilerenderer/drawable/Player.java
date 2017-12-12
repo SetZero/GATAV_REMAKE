@@ -21,8 +21,8 @@ public class Player extends MovableGraphics {
         super(x, y);
             try {
                 InputStream is = GameContent.context.getAssets().open("dynamics/player/Player.png");
-                loadGraphic(is,170,350);
-                hitbox = new Rectangle((int)x,(int)y,width/10,height/10);
+                loadGraphic(is,17,35,5);
+                hitbox = new Rectangle((int)x,(int)y,width,height);
                 isActive = true;
             } catch (IOException e) {
                 e.printStackTrace();

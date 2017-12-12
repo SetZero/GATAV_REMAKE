@@ -40,6 +40,7 @@ import javax.xml.parsers.ParserConfigurationException;
 
 import de.hs_kl.imst.gatav.tilerenderer.util.Hitboxes.Collidable;
 import de.hs_kl.imst.gatav.tilerenderer.util.Hitboxes.Rectangle;
+import de.hs_kl.imst.gatav.tilerenderer.util.ScaleHelper;
 import de.hs_kl.imst.gatav.tilerenderer.util.TileInformation;
 
 public class TileLoader {
@@ -56,6 +57,9 @@ public class TileLoader {
     private ArrayList<ArrayList<TileInformation>> map;
     private Map<Integer, Bitmap> tiles = new HashMap<>();
     private Map<String, List<Collidable>> objectGroups = new HashMap<>();
+
+    private int ratioX = (int)ScaleHelper.getRatioX();
+    private int ratioY = (int)ScaleHelper.getRatioY();
 
     public int getWidth() {
         return width;
@@ -95,6 +99,11 @@ public class TileLoader {
 
 
     public TileLoader(Context context, String filename) {
+        assert (ratioX > 0) : "Scale Helper never initialized!";
+        assert (ratioY > 0) : "Scale Helper never initialized!";
+
+        Log.d("Tile Loader", "Ratio X: " + ratioX);
+
         this.context = context;
         this.assetManager = context.getAssets();
         this.filename = filename;
@@ -137,8 +146,8 @@ public class TileLoader {
                             TileInformation tile = new TileInformation();
                             tile.setxPos(x);
                             tile.setyPos(y);
-                            tile.setWidth(tileWidth);
-                            tile.setHeight(tileHeight);
+                            tile.setWidth((int)(tileWidth*ratioX));
+                            tile.setHeight((int)(tileHeight*ratioY));
                             tile.generateRect();
                             tile.setTilesetPiece(tileID);
                             usedTilesInMap.add(tileID);
@@ -160,9 +169,10 @@ public class TileLoader {
             }
 
             loadObjectGroups(doc);
-            for(Collidable c: objectGroups.get("Kollisionen")){
-                Log.d("test","x "+c.getX()+" y "+c.getY());
-            }
+            tileWidth = tileWidth*ratioX;
+            tileHeight = tileWidth*ratioY;
+            width = width / (int)ScaleHelper.getRatioX();
+            height = height / (int)ScaleHelper.getRatioY();
             fis.close();
         } catch (FileNotFoundException e) {
             e.printStackTrace();
@@ -213,6 +223,7 @@ public class TileLoader {
                 int xPos = (realPosInTileset % columns) * tileWidth;
                 int yPos = (realPosInTileset / columns) * tileHeight;
                 Bitmap region = decoder.decodeRegion(new Rect(xPos, yPos, xPos + tileWidth, yPos + tileHeight), null);
+                region = Bitmap.createScaledBitmap(region, (int)(region.getWidth()*ratioX), (int)(region.getHeight()*ratioY), false);
                 this.tiles.put(i, region);
             }
             Log.d("TileLoader", "Finished Generating Bitmaps");
@@ -245,14 +256,19 @@ public class TileLoader {
             for (int i = 0; i < objectAmount; i++) {
                 Element objectElement = (Element) objects.item(i);
                 int id = Integer.parseInt(objectElement.getAttribute("id"));
-                int x = (int) Double.parseDouble(objectElement.getAttribute("x"));
-                int y = (int) Double.parseDouble(objectElement.getAttribute("y"));
+                //If it's stupid but it works it isn't stupid
+                int x = (int) (Double.parseDouble(objectElement.getAttribute("x"))* ratioX);
+                int y = (int) (Double.parseDouble(objectElement.getAttribute("y"))* ratioY);
 
                 //Rect
                 String width = objectElement.getAttribute("width");
                 String height = objectElement.getAttribute("height");
                 if (width != null && height != null && !width.isEmpty() && !height.isEmpty()) {
-                    Rectangle tmpRect = new Rectangle(x, y, (int) Double.parseDouble(width), (int) Double.parseDouble(height));
+                    int tmpWidth = (int) Double.parseDouble(width);
+                    int tmpHeight = (int) Double.parseDouble(height);
+                    tmpWidth  *= ratioX;
+                    tmpHeight *= ratioY;
+                    Rectangle tmpRect = new Rectangle(x, y, tmpWidth, tmpHeight);
                     tmpRect.setId(id);
                     objectGroups.get(name).add(tmpRect);
                 }
