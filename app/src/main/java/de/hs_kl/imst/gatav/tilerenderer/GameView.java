@@ -41,7 +41,7 @@ public class GameView extends SurfaceView implements SurfaceHolder.Callback, Run
     private Thread gameThread;
     private boolean runningRenderLoop = false;
     public boolean gameOver=false;
-
+    public static boolean isTouched = false;
     private String levelName;
 
     private Thread timeThread;
@@ -82,7 +82,7 @@ public class GameView extends SurfaceView implements SurfaceHolder.Callback, Run
         surfaceHolder.addCallback(this);
 
        gestureDetector = new GestureDetectorCompat(context, this);
-
+        gestureDetector.setIsLongpressEnabled(true);
         scoreAndTimePaint.setTextSize(20f * context.getResources().getDisplayMetrics().density);
         setSystemUiVisibility( View.SYSTEM_UI_FLAG_LAYOUT_STABLE
                 | View.SYSTEM_UI_FLAG_LAYOUT_HIDE_NAVIGATION
@@ -143,8 +143,10 @@ public class GameView extends SurfaceView implements SurfaceHolder.Callback, Run
      * @param fracsec Teil einer Sekunde, der seit dem letzten Update vergangen ist
      */
     void updateContent(float fracsec) {
-        if(gameContent != null)
+        if(gameContent != null) {
             gameContent.update(fracsec);
+        }
+
     }
 
     /**
@@ -194,7 +196,6 @@ public class GameView extends SurfaceView implements SurfaceHolder.Callback, Run
         runningTimeThread = false;
         gameMode=0;
         gameOver=false;
-        gameContent.resetPlayerDirection();
 
         try {
             gameThread.join();
@@ -266,8 +267,35 @@ public class GameView extends SurfaceView implements SurfaceHolder.Callback, Run
      * @param event Aktuelles {@link MotionEvent}
      * @return true wenn das Event verarbeitet wurde, andernfalls false
      */
+    private boolean leftmove = false;
+    private boolean rightmove = false;
     @Override
     public boolean onTouchEvent(MotionEvent event) {
+
+        int displayW = getWidth();
+        int displayH = getHeight();
+        
+        if(event.getAction() == MotionEvent.ACTION_UP){
+            if(leftmove){
+                leftmove = false;
+                gameContent.movePlayer(Direction.RIGHT);
+            }
+            if(rightmove){
+                rightmove = false;
+                gameContent.movePlayer(Direction.LEFT);
+            }
+        }
+        if(event.getAction() == MotionEvent.ACTION_DOWN){
+
+                if(event.getX()<displayW *0.25){
+                    gameContent.movePlayer(Direction.LEFT);
+                    leftmove = true;
+                }
+                if(event.getX() > displayW *0.75){
+                    gameContent.movePlayer(Direction.RIGHT);
+                    rightmove = true;
+                }
+        }
 
         if(gestureDetector.onTouchEvent(event))
             return true;
@@ -286,7 +314,7 @@ public class GameView extends SurfaceView implements SurfaceHolder.Callback, Run
      */
     @Override
     public boolean onFling(MotionEvent e1, MotionEvent e2, float velocityX, float velocityY) {
-
+        Log.d("fling","fling");
         float deg = (float) Math.toDegrees(
                 Math.acos(velocityX/Math.sqrt(velocityX * velocityX + velocityY * velocityY))
         );
@@ -314,8 +342,9 @@ public class GameView extends SurfaceView implements SurfaceHolder.Callback, Run
      * @param e {@link MotionEvent} aktuelles Event
      * @return true.
      */
-    //@Override
+    @Override
     public boolean onDown(MotionEvent e) {
+        isTouched = true;
         return true;
     }
 
@@ -323,6 +352,7 @@ public class GameView extends SurfaceView implements SurfaceHolder.Callback, Run
     @Override public void onShowPress(MotionEvent e) {}
     @Override public boolean onSingleTapUp(MotionEvent e) { return false; }
     @Override public boolean onScroll(MotionEvent e1, MotionEvent e2, float distanceX, float distanceY) { return false; }
-    @Override public void onLongPress(MotionEvent e) {}
+    @Override public void onLongPress(MotionEvent e) {
+    }
 
 }
