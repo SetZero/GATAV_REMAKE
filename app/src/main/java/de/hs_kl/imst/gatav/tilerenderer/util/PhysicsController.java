@@ -74,14 +74,23 @@ public class PhysicsController {
                 if(leftCollision ){
                     if(item.getVelocity().x<0f)
                     item.setVelocity(new Vector2(0f,item.getVelocity().y));
+                    if(!item.isOnGround){
+                        item.impact(new Vector2(0f, gravity));
+                    }
                 }
                 if(rightCollision ){
                     if(item.getVelocity().x>0f)
                         item.setVelocity(new Vector2(0f,item.getVelocity().y));
+                    if(!item.isOnGround){
+                        item.impact(new Vector2(0f, gravity));
+                    }
                 }
                 if(topCollision){
                     if (item.getVelocity().y < 0){
-                        item.setVelocity(new Vector2(item.getVelocity().x,gravity));
+                        item.setVelocity(new Vector2(item.getVelocity().x,0f));
+                    }
+                    if(!item.isOnGround){
+                        item.impact(new Vector2(0f, gravity));
                     }
                 }
                 if (groundCollision) {

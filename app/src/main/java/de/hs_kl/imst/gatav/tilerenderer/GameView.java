@@ -287,11 +287,11 @@ public class GameView extends SurfaceView implements SurfaceHolder.Callback, Run
         }
         if(event.getAction() == MotionEvent.ACTION_DOWN){
 
-                if(event.getX()<displayW *0.25){
+                if(event.getX()<displayW *0.3){
                     gameContent.movePlayer(Direction.LEFT);
                     leftmove = true;
                 }
-                if(event.getX() > displayW *0.75){
+                if(event.getX() > displayW *0.70){
                     gameContent.movePlayer(Direction.RIGHT);
                     rightmove = true;
                 }
@@ -317,17 +317,20 @@ public class GameView extends SurfaceView implements SurfaceHolder.Callback, Run
      */
     @Override
     public boolean onFling(MotionEvent e1, MotionEvent e2, float velocityX, float velocityY) {
-        Log.d("fling","fling");
+
         float deg = (float) Math.toDegrees(
                 Math.acos(velocityX/Math.sqrt(velocityX * velocityX + velocityY * velocityY))
         );
         if(velocityY > 0)
             deg = 180f + (180f - deg);
-
+        //Log.d("velY",""+velocityY);
+        //Log.d("velX",""+velocityX);
         /*if(deg > 315 || deg < 45){
             gameContent.movePlayer(Direction.RIGHT);}*/
-        if(deg >= 45 && deg <= 135){
-            gameContent.movePlayer(Direction.UP);}
+        if(deg >= 45 && deg <= 135 ) {
+            if(velocityY < -6000f);
+            gameContent.movePlayer(Direction.UP);
+        }
         /*else if(deg > 135 && deg < 225){
             gameContent.movePlayer(Direction.LEFT);}
         else if(deg >= 225 && deg < 315)*/

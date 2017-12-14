@@ -1,7 +1,7 @@
 <?xml version="1.0" encoding="UTF-8"?>
 <project version="4">
   <component name="AndroidLogFilters">
-    <option name="TOOL_WINDOW_CONFIGURED_FILTER" value="Show only selected application" />
+    <option name="TOOL_WINDOW_CONFIGURED_FILTER" value="Firebase" />
   </component>
   <component name="BookmarkManager">
     <bookmark url="file://$PROJECT_DIR$/src/main/java/de/hs_kl/imst/gatav/tilerenderer/TileLoader.java" line="98" />
@@ -73,11 +73,11 @@
           </provider>
         </entry>
       </file>
-      <file leaf-file-name="PhysicsController.java" pinned="false" current-in-tab="false">
+      <file leaf-file-name="PhysicsController.java" pinned="false" current-in-tab="true">
         <entry file="file://$PROJECT_DIR$/src/main/java/de/hs_kl/imst/gatav/tilerenderer/util/PhysicsController.java">
           <provider selected="true" editor-type-id="text-editor">
-            <state relative-caret-position="241">
-              <caret line="69" column="40" lean-forward="false" selection-start-line="69" selection-start-column="40" selection-end-line="69" selection-end-column="40" />
+            <state relative-caret-position="292">
+              <caret line="93" column="21" lean-forward="false" selection-start-line="93" selection-start-column="21" selection-end-line="93" selection-end-column="21" />
               <folding />
             </state>
           </provider>
@@ -99,13 +99,13 @@
       <file leaf-file-name="Player.java" pinned="false" current-in-tab="false">
         <entry file="file://$PROJECT_DIR$/src/main/java/de/hs_kl/imst/gatav/tilerenderer/drawable/Player.java">
           <provider selected="true" editor-type-id="text-editor">
-            <state relative-caret-position="17">
-              <caret line="74" column="36" lean-forward="false" selection-start-line="74" selection-start-column="36" selection-end-line="74" selection-end-column="36" />
+            <state relative-caret-position="289">
+              <caret line="88" column="73" lean-forward="false" selection-start-line="88" selection-start-column="73" selection-end-line="88" selection-end-column="73" />
               <folding>
                 <element signature="e#2356#2357#0" expanded="true" />
                 <element signature="e#2397#2398#0" expanded="true" />
-                <element signature="e#3422#3423#0" expanded="true" />
-                <element signature="e#3455#3456#0" expanded="true" />
+                <element signature="e#3470#3471#0" expanded="true" />
+                <element signature="e#3503#3504#0" expanded="true" />
               </folding>
             </state>
           </provider>
@@ -166,11 +166,11 @@
           </provider>
         </entry>
       </file>
-      <file leaf-file-name="GameView.java" pinned="false" current-in-tab="true">
+      <file leaf-file-name="GameView.java" pinned="false" current-in-tab="false">
         <entry file="file://$PROJECT_DIR$/src/main/java/de/hs_kl/imst/gatav/tilerenderer/GameView.java">
           <provider selected="true" editor-type-id="text-editor">
-            <state relative-caret-position="224">
-              <caret line="284" column="59" lean-forward="false" selection-start-line="284" selection-start-column="59" selection-end-line="284" selection-end-column="59" />
+            <state relative-caret-position="312">
+              <caret line="330" column="29" lean-forward="false" selection-start-line="330" selection-start-column="29" selection-end-line="330" selection-end-column="29" />
               <folding />
             </state>
           </provider>
@@ -1918,9 +1918,9 @@
         <option value="$PROJECT_DIR$/src/main/java/de/hs_kl/imst/gatav/tilerenderer/util/DynamicBody.java" />
         <option value="$PROJECT_DIR$/src/main/java/de/hs_kl/imst/gatav/tilerenderer/drawable/Destroyable.java" />
         <option value="$PROJECT_DIR$/src/main/java/de/hs_kl/imst/gatav/tilerenderer/drawable/MovableGraphics.java" />
-        <option value="$PROJECT_DIR$/src/main/java/de/hs_kl/imst/gatav/tilerenderer/util/PhysicsController.java" />
         <option value="$PROJECT_DIR$/src/main/java/de/hs_kl/imst/gatav/tilerenderer/drawable/Player.java" />
         <option value="$PROJECT_DIR$/src/main/java/de/hs_kl/imst/gatav/tilerenderer/GameView.java" />
+        <option value="$PROJECT_DIR$/src/main/java/de/hs_kl/imst/gatav/tilerenderer/util/PhysicsController.java" />
       </list>
     </option>
   </component>
@@ -2340,7 +2340,7 @@
       <option name="ACTIVITY_CLASS" value="" />
       <method>
         <option name="Android.Gradle.BeforeRunTask" enabled="true" />
-        <option name="com.android.instantApps.provision.BeforeRunTask" enabled="true" clearCache="false" clearProvisionedDevices="false" myTimestamp="1513258423750" />
+        <option name="com.android.instantApps.provision.BeforeRunTask" enabled="true" clearCache="false" clearProvisionedDevices="false" myTimestamp="1513261679253" />
       </method>
     </configuration>
     <configuration default="true" type="AndroidTestRunConfigurationType" factoryName="Android Instrumented Tests">
@@ -2388,7 +2388,7 @@
       </Profilers>
       <method>
         <option name="Android.Gradle.BeforeRunTask" enabled="true" />
-        <option name="com.android.instantApps.provision.BeforeRunTask" enabled="true" clearCache="false" clearProvisionedDevices="false" myTimestamp="1513258423751" />
+        <option name="com.android.instantApps.provision.BeforeRunTask" enabled="true" clearCache="false" clearProvisionedDevices="false" myTimestamp="1513261679253" />
       </method>
     </configuration>
     <configuration default="true" type="Application" factoryName="Application">
@@ -2571,7 +2571,7 @@
       <option name="ACTIVITY_CLASS" value="" />
       <method>
         <option name="Android.Gradle.BeforeRunTask" enabled="true" />
-        <option name="com.android.instantApps.provision.BeforeRunTask" enabled="true" clearCache="false" clearProvisionedDevices="false" myTimestamp="1513258423755" />
+        <option name="com.android.instantApps.provision.BeforeRunTask" enabled="true" clearCache="false" clearProvisionedDevices="false" myTimestamp="1513261679260" />
       </method>
     </configuration>
     <list size="1">
@@ -2604,7 +2604,7 @@
     <servers />
   </component>
   <component name="ToolWindowManager">
-    <frame x="-8" y="-8" width="1382" height="744" extended-state="6" />
+    <frame x="-8" y="-8" width="1382" height="744" extended-state="7" />
     <editor active="true" />
     <layout>
       <window_info id="Android Profiler" active="false" anchor="bottom" auto_hide="false" internal_type="DOCKED" type="DOCKED" visible="false" show_stripe_button="true" weight="0.32879046" sideWeight="0.47579426" order="7" side_tool="false" content_ui="tabs" />
@@ -2787,8 +2787,8 @@
           <folding>
             <element signature="e#2356#2357#0" expanded="true" />
             <element signature="e#2397#2398#0" expanded="true" />
-            <element signature="e#3422#3423#0" expanded="true" />
-            <element signature="e#3455#3456#0" expanded="true" />
+            <element signature="e#3470#3471#0" expanded="true" />
+            <element signature="e#3503#3504#0" expanded="true" />
           </folding>
         </state>
       </provider>
@@ -2828,8 +2828,8 @@
           <folding>
             <element signature="e#2356#2357#0" expanded="true" />
             <element signature="e#2397#2398#0" expanded="true" />
-            <element signature="e#3422#3423#0" expanded="true" />
-            <element signature="e#3455#3456#0" expanded="true" />
+            <element signature="e#3470#3471#0" expanded="true" />
+            <element signature="e#3503#3504#0" expanded="true" />
           </folding>
         </state>
       </provider>
@@ -2950,8 +2950,8 @@
           <folding>
             <element signature="e#2356#2357#0" expanded="true" />
             <element signature="e#2397#2398#0" expanded="true" />
-            <element signature="e#3422#3423#0" expanded="true" />
-            <element signature="e#3455#3456#0" expanded="true" />
+            <element signature="e#3470#3471#0" expanded="true" />
+            <element signature="e#3503#3504#0" expanded="true" />
           </folding>
         </state>
       </provider>
@@ -3106,14 +3106,6 @@
         </state>
       </provider>
     </entry>
-    <entry file="file://$PROJECT_DIR$/src/main/java/de/hs_kl/imst/gatav/tilerenderer/util/PhysicsController.java">
-      <provider selected="true" editor-type-id="text-editor">
-        <state relative-caret-position="241">
-          <caret line="69" column="40" lean-forward="false" selection-start-line="69" selection-start-column="40" selection-end-line="69" selection-end-column="40" />
-          <folding />
-        </state>
-      </provider>
-    </entry>
     <entry file="file://$PROJECT_DIR$/src/main/java/de/hs_kl/imst/gatav/tilerenderer/drawable/GameContent.java">
       <provider selected="true" editor-type-id="text-editor">
         <state relative-caret-position="765">
@@ -3126,21 +3118,29 @@
     </entry>
     <entry file="file://$PROJECT_DIR$/src/main/java/de/hs_kl/imst/gatav/tilerenderer/drawable/Player.java">
       <provider selected="true" editor-type-id="text-editor">
-        <state relative-caret-position="17">
-          <caret line="74" column="36" lean-forward="false" selection-start-line="74" selection-start-column="36" selection-end-line="74" selection-end-column="36" />
+        <state relative-caret-position="289">
+          <caret line="88" column="73" lean-forward="false" selection-start-line="88" selection-start-column="73" selection-end-line="88" selection-end-column="73" />
           <folding>
             <element signature="e#2356#2357#0" expanded="true" />
             <element signature="e#2397#2398#0" expanded="true" />
-            <element signature="e#3422#3423#0" expanded="true" />
-            <element signature="e#3455#3456#0" expanded="true" />
+            <element signature="e#3470#3471#0" expanded="true" />
+            <element signature="e#3503#3504#0" expanded="true" />
           </folding>
         </state>
       </provider>
     </entry>
     <entry file="file://$PROJECT_DIR$/src/main/java/de/hs_kl/imst/gatav/tilerenderer/GameView.java">
       <provider selected="true" editor-type-id="text-editor">
-        <state relative-caret-position="224">
-          <caret line="284" column="59" lean-forward="false" selection-start-line="284" selection-start-column="59" selection-end-line="284" selection-end-column="59" />
+        <state relative-caret-position="312">
+          <caret line="330" column="29" lean-forward="false" selection-start-line="330" selection-start-column="29" selection-end-line="330" selection-end-column="29" />
+          <folding />
+        </state>
+      </provider>
+    </entry>
+    <entry file="file://$PROJECT_DIR$/src/main/java/de/hs_kl/imst/gatav/tilerenderer/util/PhysicsController.java">
+      <provider selected="true" editor-type-id="text-editor">
+        <state relative-caret-position="292">
+          <caret line="93" column="21" lean-forward="false" selection-start-line="93" selection-start-column="21" selection-end-line="93" selection-end-column="21" />
           <folding />
         </state>
       </provider>
