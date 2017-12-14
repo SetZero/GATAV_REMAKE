@@ -14,9 +14,12 @@ import de.hs_kl.imst.gatav.tilerenderer.util.Direction;
 import de.hs_kl.imst.gatav.tilerenderer.util.Hitboxes.Rectangle;
 import de.hs_kl.imst.gatav.tilerenderer.util.Vector2;
 
-public class Player extends MovableGraphics {
+public class Player extends MovableGraphics implements Destroyable{
     private Direction previous;
     private byte doublejump = 0;
+    private float lifePoints =150;
+    private Direction stopDirection = Direction.IDLE;
+
     public Player(float x, float y) {
         super(x, y);
             try {
@@ -44,14 +47,14 @@ public class Player extends MovableGraphics {
             }
             case LEFT:{
                 if(velocity.getY() == 0 && velocity.getX() > -200f){
-                    impact(new Vector2(-100f,0f));
+                    impact(new Vector2(-200f,0f));
                     currentDirection = Direction.LEFT;
                 }
                 break;
             }
             case RIGHT:{
                 if(velocity.getY() == 0 && velocity.getX() < 200f) {
-                    impact(new Vector2(100f, 0f));
+                    impact(new Vector2(200f, 0f));
                     currentDirection = Direction.RIGHT;
                 }
                 break;
@@ -60,6 +63,14 @@ public class Player extends MovableGraphics {
         }
     }
 
+    /**
+     * interrupts LEFT or RIGHT movement the correct way (is the player on Ground?)
+     * this interrupt will occur on the next possible update
+     * @param direction
+     */
+    public void stopMove(Direction direction){
+        stopDirection = direction;
+    }
     @Override
     public void update(float delta){
         super.update(delta);
@@ -70,10 +81,32 @@ public class Player extends MovableGraphics {
         if(doublejump != 0 && velocity.getY() == 0) doublejump = 0;
         //DOWN == FALLING
         if(velocity.getY() != 0 && currentDirection != Direction.UP) currentDirection = Direction.DOWN;
+        if(isOnGround && stopDirection != Direction.IDLE){
+            if(stopDirection == Direction.LEFT){
+                impact(new Vector2(200f, 0f));
+                currentDirection = Direction.IDLE;
+            }
+            else if(stopDirection == Direction.RIGHT){
+                impact(new Vector2(-200f, 0f));
+                currentDirection = Direction.IDLE;
+            }
+            stopDirection = Direction.IDLE;
+        }
     }
 
     @Override
     public void draw(Canvas canvas) {
         super.draw(canvas);
+    }
+
+    @Override
+    public void processHit(float hit) {
+        lifePoints -= hit;
+    }
+
+    @Override
+    public boolean isDestroyed() {
+        if(lifePoints > 0f) return false;
+        return true;
     }
 }

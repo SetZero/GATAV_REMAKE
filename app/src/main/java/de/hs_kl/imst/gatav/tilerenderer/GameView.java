@@ -275,14 +275,14 @@ public class GameView extends SurfaceView implements SurfaceHolder.Callback, Run
         int displayW = getWidth();
         int displayH = getHeight();
         
-        if(event.getAction() == MotionEvent.ACTION_UP){
+        if(event.getAction() == MotionEvent.ACTION_UP && event.getPointerCount() < 2){
             if(leftmove){
                 leftmove = false;
-                gameContent.movePlayer(Direction.RIGHT);
+                gameContent.player.stopMove(Direction.LEFT);
             }
             if(rightmove){
                 rightmove = false;
-                gameContent.movePlayer(Direction.LEFT);
+                gameContent.player.stopMove(Direction.RIGHT);
             }
         }
         if(event.getAction() == MotionEvent.ACTION_DOWN){
@@ -296,7 +296,10 @@ public class GameView extends SurfaceView implements SurfaceHolder.Callback, Run
                     rightmove = true;
                 }
         }
-
+        if(event.getPointerCount() > 1){
+            if(event.getAction() == 262)
+            gameContent.movePlayer(Direction.UP);
+        }
         if(gestureDetector.onTouchEvent(event))
             return true;
         else
@@ -321,13 +324,13 @@ public class GameView extends SurfaceView implements SurfaceHolder.Callback, Run
         if(velocityY > 0)
             deg = 180f + (180f - deg);
 
-        if(deg > 315 || deg < 45){
-            gameContent.movePlayer(Direction.RIGHT);}
-        else if(deg >= 45 && deg <= 135){
+        /*if(deg > 315 || deg < 45){
+            gameContent.movePlayer(Direction.RIGHT);}*/
+        if(deg >= 45 && deg <= 135){
             gameContent.movePlayer(Direction.UP);}
-        else if(deg > 135 && deg < 225){
+        /*else if(deg > 135 && deg < 225){
             gameContent.movePlayer(Direction.LEFT);}
-        else if(deg >= 225 && deg < 315)
+        else if(deg >= 225 && deg < 315)*/
 
 
         // erster Fling startet den Zeitzähler

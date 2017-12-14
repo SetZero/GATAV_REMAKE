@@ -83,11 +83,12 @@ public abstract class MovableGraphics implements Drawable {
 
     @Override
     public void update(float delta) {
+        if(isActive){
         move(delta);
         bmp.setBounds((int)Position.getX(), (int)Position.getY()+height, (int)Position.getX()+width, (int)Position.getY());
         hitbox.setX((int)Position.getX()); hitbox.setY((int)Position.getY());
         hitbox.setWidth(width);
-        hitbox.setHeight(height);
+        hitbox.setHeight(height);}
     }
 
     protected void getDirection(){
@@ -104,7 +105,7 @@ public abstract class MovableGraphics implements Drawable {
     } //left top right bottom
 
     public void draw(Canvas canvas) {
-        if(bmp != null) {
+        if(bmp != null && isActive) {
             //bmp.draw(canvas);
 
             canvas.drawBitmap(bmp.getBitmap(),Position.getX(),Position.getY(),null);

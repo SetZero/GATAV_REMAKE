@@ -67,6 +67,7 @@ public class PhysicsController {
             }
             if ( noCollision ) {
                 item.impact(new Vector2(0f, gravity));
+                item.isOnGround = false;
             } else
                 {
                 if(leftCollision ){
@@ -84,6 +85,7 @@ public class PhysicsController {
                     }
                 }
                 if (groundCollision) {
+                    item.isOnGround =true;
                     if(item.getVelocity().y > 0)
                     item.setVelocity(new Vector2(item.getVelocity().x, 0f));
                 }
