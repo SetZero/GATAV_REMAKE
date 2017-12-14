@@ -2,25 +2,17 @@ package de.hs_kl.imst.gatav.tilerenderer.drawable;
 
 import android.content.Context;
 import android.content.res.AssetManager;
-import android.graphics.Bitmap;
 import android.graphics.Canvas;
-import android.graphics.Rect;
-import android.support.annotation.Nullable;
-import android.util.Log;
 
-import java.io.IOException;
-import java.io.InputStream;
 import java.util.ArrayList;
 import java.util.Random;
 
 import de.hs_kl.imst.gatav.tilerenderer.TileLoader;
 import de.hs_kl.imst.gatav.tilerenderer.util.Direction;
 import de.hs_kl.imst.gatav.tilerenderer.util.GameCamera;
-import de.hs_kl.imst.gatav.tilerenderer.util.TileInformation;
-import de.hs_kl.imst.gatav.tilerenderer.util.Vector2;
 import de.hs_kl.imst.gatav.tilerenderer.util.World;
 
-public class GameContent implements Drawable {
+public class GameContent implements Drawables {
     /**
      * Breite und Höhe des Levels in Pixel
      */
@@ -73,9 +65,7 @@ public class GameContent implements Drawable {
 
 
     public boolean movePlayer(Direction direction) {
-
         player.move(direction);
-
         return true;
     }
 

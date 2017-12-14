@@ -16,7 +16,7 @@ import java.io.InputStream;
  * Die endgültige (Pixel-)Position des Blocks ergibt sich durch Multiplikation der Gitterkoordinaten
  * mit dem vor Instanziierung (hoffentlich) sinnvoll gesetzten Attribut {@link TileGraphics#tileSize}
  */
-public abstract class TileGraphics implements Drawable {
+public abstract class TileGraphics implements Drawables {
     protected int x;
     protected int y;
 

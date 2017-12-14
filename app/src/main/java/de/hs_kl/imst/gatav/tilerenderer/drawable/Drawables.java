@@ -2,7 +2,7 @@ package de.hs_kl.imst.gatav.tilerenderer.drawable;
 
 import android.graphics.Canvas;
 
-public interface Drawable {
+public interface Drawables {
     /**
      * Element zeichnen
      * @param canvas Zeichenfläche, auf die zu zeichnen ist
