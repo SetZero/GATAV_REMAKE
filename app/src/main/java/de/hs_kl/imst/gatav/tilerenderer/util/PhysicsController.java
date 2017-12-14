@@ -70,10 +70,10 @@ public class PhysicsController {
                 item.isOnGround = false;
             } else
                 {
+                    item.isOnGround = groundCollision;
                 if(leftCollision ){
                     if(item.getVelocity().x<0f)
                     item.setVelocity(new Vector2(0f,item.getVelocity().y));
-
                 }
                 if(rightCollision ){
                     if(item.getVelocity().x>0f)
@@ -81,11 +81,10 @@ public class PhysicsController {
                 }
                 if(topCollision){
                     if (item.getVelocity().y < 0){
-                        item.setVelocity(new Vector2(item.getVelocity().x,8.8f));
+                        item.setVelocity(new Vector2(item.getVelocity().x,gravity));
                     }
                 }
                 if (groundCollision) {
-                    item.isOnGround =true;
                     if(item.getVelocity().y > 0)
                     item.setVelocity(new Vector2(item.getVelocity().x, 0f));
                 }

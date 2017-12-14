@@ -82,11 +82,11 @@ public class Player extends MovableGraphics implements Destroyable{
         //DOWN == FALLING
         if(velocity.getY() != 0 && currentDirection != Direction.UP) currentDirection = Direction.DOWN;
         if(isOnGround && stopDirection != Direction.IDLE){
-            if(stopDirection == Direction.LEFT){
+            if(stopDirection == Direction.LEFT && velocity.getX() < 0f){
                 impact(new Vector2(200f, 0f));
                 currentDirection = Direction.IDLE;
             }
-            else if(stopDirection == Direction.RIGHT){
+            else if(stopDirection == Direction.RIGHT && velocity.getX() > 0f){
                 impact(new Vector2(-200f, 0f));
                 currentDirection = Direction.IDLE;
             }
