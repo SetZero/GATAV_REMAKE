@@ -57,7 +57,7 @@ public class GameContent implements Drawables {
 
         loadLevel();
         world = new World(tileLoader,1f/60f);
-        player = new Player(350, 550);
+        player = new Player(350, 1550);
         world.addGameObject(player);
 
         camera.attach(player);
