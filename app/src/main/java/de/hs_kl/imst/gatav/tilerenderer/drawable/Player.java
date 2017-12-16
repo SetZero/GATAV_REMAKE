@@ -4,6 +4,7 @@ import android.content.res.AssetManager;
 import android.graphics.Canvas;
 import android.graphics.Color;
 import android.graphics.Matrix;
+import android.graphics.Paint;
 import android.graphics.drawable.BitmapDrawable;
 import android.graphics.drawable.Drawable;
 import android.util.Log;
@@ -37,7 +38,7 @@ public class Player extends MovableGraphics implements Destroyable{
                 is = GameContent.context.getAssets().open("dynamics/player/Player.png");
                 run.addAnimation(super.loadTextures(is,17,35,1,4,5));
                 idle = run.getDrawable(0f);
-                hitbox = new Rectangle((int)x,(int)y,width,height);
+                hitbox = new Rectangle((int)x,(int)y,width-35,height);
                 isActive = true;
             } catch (IOException e) {
                 e.printStackTrace();
@@ -114,6 +115,7 @@ public class Player extends MovableGraphics implements Destroyable{
         }
         if(velocity.getY() != 0 && currentDirection != Direction.UP) currentDirection = Direction.DOWN;
     }
+
     private void animationHandle(float delta){
         //noFlip
         if(run.isFinished(animTime)) animTime = 0;
@@ -124,7 +126,6 @@ public class Player extends MovableGraphics implements Destroyable{
         }
         // running right
         if(currentDirection == Direction.RIGHT && velocity.x > 0){
-            Log.d("animtime",""+animTime);
             bmp = run.getDrawable(animTime);
             isFlipped = false;
         }
@@ -140,9 +141,15 @@ public class Player extends MovableGraphics implements Destroyable{
     @Override
     public void draw(Canvas canvas) {
         if(bmp != null && isActive && !isFlipped) {
+            Paint p = new Paint();
+            p.setColor(Color.argb(128, 0, 65, 200));
+            canvas.drawRect(hitbox.getRect(),p);
             canvas.drawBitmap(bmp.getBitmap(),Position.getX(),Position.getY(),null);
         }
         else if (isFlipped){
+            Paint p = new Paint();
+            p.setColor(Color.argb(128, 0, 65, 200));
+            canvas.drawRect(hitbox.getRect(),p);
             BitmapDrawable bmp = flip(this.bmp);
             canvas.drawBitmap(bmp.getBitmap(),Position.getX(),Position.getY(),null);
         }

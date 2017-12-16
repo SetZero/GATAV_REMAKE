@@ -6,7 +6,6 @@ import android.graphics.BitmapFactory;
 import android.graphics.Canvas;
 import android.graphics.Matrix;
 import android.graphics.drawable.BitmapDrawable;
-import android.graphics.drawable.Drawable;
 import android.util.DisplayMetrics;
 import android.util.Log;
 
@@ -90,15 +89,24 @@ public abstract class MovableGraphics implements Drawables {
         if(isActive){
         move(delta);
         bmp.setBounds((int)Position.getX(), (int)Position.getY()+height, (int)Position.getX()+width, (int)Position.getY());
-        hitbox.setX((int)Position.getX()); hitbox.setY((int)Position.getY());
-        hitbox.setWidth(width);
-        hitbox.setHeight(height);}
+        //offset for hitbox
+            int offset = 0;
+            if(width -hitbox.getWidth() != 0)
+            offset = (width -hitbox.getWidth())/2;
+        hitbox.setX((int)Position.getX()+offset); hitbox.setY((int)Position.getY());
+        }
     }
 
     protected void getDirection(){
 
     }
 
+    /**
+     * @param is
+     * @param width
+     * @param height
+     * @param scale also scales Player Hitbox
+     */
     protected void loadGraphic(InputStream is,int width, int height, int scale){
         Bitmap bMap = BitmapFactory.decodeStream(is);
         bMap = Bitmap.createBitmap(bMap,0,0,width,height);

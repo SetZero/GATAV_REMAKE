@@ -42,6 +42,7 @@ public class PhysicsController {
             ArrayList<Contact> collision = isColliding(item);
             boolean groundCollision = false;
             boolean noCollision = true;
+            float groundY=0.0f;
             boolean rightCollision = false;
             boolean topCollision = false;
             boolean leftCollision = false;
@@ -49,6 +50,7 @@ public class PhysicsController {
             for(Contact c : collision) {
                // Log.d("proof", ""+c.siteHidden.name());
                 if(c.siteHidden == intersectDirection.BOTTOM){
+                    groundY = ((Rectangle)c.collisions).getRect().top;
                     groundCollision = true;
                     noCollision = false;
                 }
@@ -74,7 +76,7 @@ public class PhysicsController {
                 if(leftCollision ){
                     if(item.getVelocity().x<0f)
                     item.setVelocity(new Vector2(0f,item.getVelocity().y));
-                    if(!item.isOnGround){
+                    if(!item.isOnGround ){
                         item.impact(new Vector2(0f, gravity));
                     }
                 }
@@ -94,8 +96,11 @@ public class PhysicsController {
                     }
                 }
                 if (groundCollision) {
-                    if(item.getVelocity().y > 0)
-                    item.setVelocity(new Vector2(item.getVelocity().x, 0f));
+                    if(item.getVelocity().y > 0) {
+                        item.setVelocity(new Vector2(item.getVelocity().x, 0f));
+                        item.setPosition(new Vector2(item.getPosition().x,groundY-item.getHitbox().getHeight()+1));
+                    }
+
                 }
             }
 
@@ -110,6 +115,7 @@ public class PhysicsController {
 
         for(Collidable c : list){
             rectB = ((Rectangle) c).getRect();
+
             if(item.getHitbox().isCollidingWith(c)) {
 
                 float wy = (rectA.width()+rectB.width())*(rectA.centerY()-rectB.centerY());
@@ -124,7 +130,6 @@ public class PhysicsController {
                 else if (wy<hx) {
                     if(wy> -hx){
                         contacts.add(new Contact(intersectDirection.LEFT,c));
-                        Log.d("contact", "left side");
                     }
                     if(wy< -hx){
                         contacts.add(new Contact(intersectDirection.BOTTOM,c));

@@ -5,6 +5,7 @@ import android.graphics.Canvas;
 import android.graphics.Color;
 import android.graphics.Paint;
 import android.graphics.Rect;
+import android.util.Log;
 
 import java.util.ArrayList;
 import java.util.List;
@@ -62,8 +63,6 @@ public class World {
 
         //2. Draw all Debug Hitboxes
         List<Collidable> collision = objects.get("Kollisionen");
-       // Log.d("objectgroup size", ""+tileLoader.getObjectGroups().get("Kollisionen").size());
-        //collision.add(GameContent.player.getHitbox());
         Paint p = new Paint();
         p.setColor(Color.argb(128, 0, 65, 200));
         if(collision != null) {

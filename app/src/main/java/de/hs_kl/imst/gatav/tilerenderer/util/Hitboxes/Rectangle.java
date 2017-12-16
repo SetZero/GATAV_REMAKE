@@ -25,12 +25,14 @@ public class Rectangle extends Collidable {
     public void setX(int x) {
         super.setX(x);
         rect.left = super.getX();
+        rect.right = rect.left+width;
     }
 
     @Override
     public void setY(int y) {
         super.setY(y);
         rect.top = super.getY();
+        rect.bottom = rect.top + height;
     }
 
     public Rect getRect() {
