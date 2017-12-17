@@ -34,113 +34,119 @@ public class PhysicsController {
         for(Collidable c: world.getObjects().get("Kollisionen")) list.add(c);
     }
 
-    public void Update(float delta){
+    public void Update(float delta, GameCamera cam){
+        for(MovableGraphics item: physicals) {
+            if (cam.isRectInView(item.getHitbox().getRect())) {
+                //gravity
+                //Log.d("velocity",item.getVelocity().x+"");
+                ArrayList<Contact> collision = isColliding(item);
+                boolean groundCollision = false;
+                boolean noCollision = true;
+                float groundY = 0.0f;
+                boolean rightCollision = false;
+                boolean topCollision = false;
+                boolean leftCollision = false;
 
-        for(MovableGraphics item: physicals){
-            //gravity
-            //Log.d("velocity",item.getVelocity().x+"");
-            ArrayList<Contact> collision = isColliding(item);
-            boolean groundCollision = false;
-            boolean noCollision = true;
-            float groundY=0.0f;
-            boolean rightCollision = false;
-            boolean topCollision = false;
-            boolean leftCollision = false;
-
-            for(Contact c : collision) {
-               // Log.d("proof", ""+c.siteHidden.name());
-                if(c.siteHidden == intersectDirection.BOTTOM){
-                    groundY = ((Rectangle)c.collisions).getRect().top;
-                    groundCollision = true;
-                    noCollision = false;
+                for (Contact c : collision) {
+                    // Log.d("proof", ""+c.siteHidden.name());
+                    if (c.siteHidden == intersectDirection.BOTTOM) {
+                        groundY = ((Rectangle) c.collisions).getRect().top;
+                        groundCollision = true;
+                        noCollision = false;
+                    }
+                    if (c.siteHidden == intersectDirection.TOP) {
+                        topCollision = true;
+                        noCollision = false;
+                    }
+                    if (c.siteHidden == intersectDirection.LEFT) {
+                        leftCollision = true;
+                        noCollision = false;
+                    }
+                    if (c.siteHidden == intersectDirection.RIGHT) {
+                        rightCollision = true;
+                        noCollision = false;
+                    }
                 }
-                if(c.siteHidden == intersectDirection.TOP){
-                    topCollision = true;
-                    noCollision = false;
-                }
-                if(c.siteHidden == intersectDirection.LEFT){
-                    leftCollision = true;
-                    noCollision = false;
-                }
-                if(c.siteHidden == intersectDirection.RIGHT){
-                    rightCollision = true;
-                    noCollision = false;
-                }
-            }
-            if ( noCollision ) {
-                item.impact(new Vector2(0f, gravity));
-                item.isOnGround = false;
-            } else
-                {
+                if (noCollision) {
+                    item.impact(new Vector2(0f, gravity));
+                    item.isOnGround = false;
+                } else {
                     item.isOnGround = groundCollision;
-                if(leftCollision ){
-                    if(item.getVelocity().x<0f)
-                    item.setVelocity(new Vector2(0f,item.getVelocity().y));
-                    if(!item.isOnGround ){
-                        item.impact(new Vector2(0f, gravity));
+                    if (leftCollision) {
+                        if (item.getVelocity().x < 0f)
+                            item.setVelocity(new Vector2(0f, item.getVelocity().y));
+                        if (!item.isOnGround) {
+                            item.impact(new Vector2(0f, gravity));
+                        }
                     }
-                }
-                if(rightCollision ){
-                    if(item.getVelocity().x>0f)
-                        item.setVelocity(new Vector2(0f,item.getVelocity().y));
-                    if(!item.isOnGround){
-                        item.impact(new Vector2(0f, gravity));
+                    if (rightCollision) {
+                        if (item.getVelocity().x > 0f)
+                            item.setVelocity(new Vector2(0f, item.getVelocity().y));
+                        if (!item.isOnGround) {
+                            item.impact(new Vector2(0f, gravity));
+                        }
                     }
-                }
-                if(topCollision){
-                    if (item.getVelocity().y < 0){
-                        item.setVelocity(new Vector2(item.getVelocity().x,0f));
+                    if (topCollision) {
+                        if (item.getVelocity().y < 0) {
+                            item.setVelocity(new Vector2(item.getVelocity().x, 0f));
+                        }
+                        if (!item.isOnGround) {
+                            item.impact(new Vector2(0f, gravity));
+                        }
                     }
-                    if(!item.isOnGround){
-                        item.impact(new Vector2(0f, gravity));
-                    }
-                }
-                if (groundCollision) {
-                    if(item.getVelocity().y > 0) {
-                        item.setVelocity(new Vector2(item.getVelocity().x, 0f));
-                        item.setPosition(new Vector2(item.getPosition().x,groundY-item.getHitbox().getHeight()+1));
-                    }
+                    if (groundCollision) {
+                        if (item.getVelocity().y > 0) {
+                            item.setVelocity(new Vector2(item.getVelocity().x, 0f));
+                            item.setPosition(new Vector2(item.getPosition().x, groundY - item.getHitbox().getHeight() + 1));
+                        }
 
+                    }
+                    for (MovableGraphics other : physicals) {
+                        if (item != other) {
+                            Contact c = collisionDirection(other.getHitbox(), item);
+                            item.react(c);
+                        }
+                    }
                 }
+
             }
-
         }
     }
 
 
     public ArrayList<Contact> isColliding(MovableGraphics item) {
         ArrayList<Contact> contacts = new ArrayList<Contact>();
-        Rect rectA = item.getHitbox().getRect();
-        Rect rectB;
 
         for(Collidable c : list){
-            rectB = ((Rectangle) c).getRect();
-
-            if(item.getHitbox().isCollidingWith(c)) {
-
-                float wy = (rectA.width()+rectB.width())*(rectA.centerY()-rectB.centerY());
-                float hx = (rectA.height()+rectB.height())*(rectA.centerX()-rectB.centerX());
-
-                if(wy>hx){
-                    if(wy> -hx){
-                        contacts.add(new Contact(intersectDirection.TOP,c));
-                    }
-                    if(wy<-hx) contacts.add(new Contact(intersectDirection.RIGHT,c));
-                }
-                else if (wy<hx) {
-                    if(wy> -hx){
-                        contacts.add(new Contact(intersectDirection.LEFT,c));
-                    }
-                    if(wy< -hx){
-                        contacts.add(new Contact(intersectDirection.BOTTOM,c));
-                    }
-                }
-            }
-            else{
-                contacts.add(new Contact(intersectDirection.DONT,null));
-            }
+            contacts.add(collisionDirection(c,item));
         }
         return contacts;
+    }
+
+    private Contact collisionDirection(Collidable c, MovableGraphics item){
+        Rect rectA = item.getHitbox().getRect();
+        Rect rectB = ((Rectangle) c).getRect();
+        if(item.getHitbox().isCollidingWith(c)) {
+
+            float wy = (rectA.width()+rectB.width())*(rectA.centerY()-rectB.centerY());
+            float hx = (rectA.height()+rectB.height())*(rectA.centerX()-rectB.centerX());
+
+            if(wy>hx){
+                if(wy> -hx){
+                    return new Contact(intersectDirection.TOP,c);
+                }
+                if(wy<-hx) return new Contact(intersectDirection.RIGHT,c);
+            }
+            else if (wy<hx) {
+                if(wy> -hx){
+                    return new Contact(intersectDirection.LEFT,c);
+                }
+                if(wy< -hx){
+                    return new Contact(intersectDirection.BOTTOM,c);
+                }
+            }
+        }
+        return new Contact(intersectDirection.DONT,null);
     }
 
     public enum intersectDirection {

@@ -77,7 +77,7 @@ public class GameContent implements Drawables {
 
     @Override
     public void update(float delta) {
-        world.update(delta);
+        world.update(delta,camera);
    }
 
     private void loadLevel() {

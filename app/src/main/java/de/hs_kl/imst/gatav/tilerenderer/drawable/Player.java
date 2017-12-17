@@ -16,14 +16,17 @@ import java.net.URL;
 import java.util.ArrayList;
 
 import de.hs_kl.imst.gatav.tilerenderer.util.Animations;
+import de.hs_kl.imst.gatav.tilerenderer.util.Contact;
 import de.hs_kl.imst.gatav.tilerenderer.util.Direction;
 import de.hs_kl.imst.gatav.tilerenderer.util.Hitboxes.Rectangle;
+import de.hs_kl.imst.gatav.tilerenderer.util.PhysicsController;
 import de.hs_kl.imst.gatav.tilerenderer.util.Vector2;
 
-public class Player extends MovableGraphics implements Destroyable{
+public final class Player extends MovableGraphics implements Destroyable, CollisionReactive{
     private Direction previous;
     private byte doublejump = 0;
     private float lifePoints =150;
+    public static int hitPoints = 40;
     private Direction stopDirection = Direction.IDLE;
     private BitmapDrawable idle;
     private Animations run;
@@ -59,15 +62,29 @@ public class Player extends MovableGraphics implements Destroyable{
                 break;
             }
             case LEFT:{
-                if(velocity.getY() == 0 && velocity.getX() > -200f){
+                if(velocity.getX() > 0 && velocity.x <= 200f && !isOnGround){
+                    velocity.x = 0f;
                     impact(new Vector2(-200f,0f));
+                    if(velocity.y == 0)
+                        currentDirection = Direction.LEFT;
+                }
+                if(velocity.getX() > -200f){
+                    impact(new Vector2(-200f,0f));
+                    if(velocity.y == 0)
                     currentDirection = Direction.LEFT;
                 }
                 break;
             }
             case RIGHT:{
-                if(velocity.getY() == 0 && velocity.getX() < 200f) {
+                if(velocity.getX() < 0 && velocity.x >= -200f && !isOnGround){
+                    velocity.x = 0f;
+                    impact(new Vector2(200f,0f));
+                    if(velocity.y == 0)
+                        currentDirection = Direction.LEFT;
+                }
+                if(velocity.getX() < 200f) {
                     impact(new Vector2(200f, 0f));
+                    if(velocity.y == 0)
                     currentDirection = Direction.RIGHT;
                 }
                 break;
@@ -164,5 +181,12 @@ public class Player extends MovableGraphics implements Destroyable{
     public boolean isDestroyed() {
         if(lifePoints > 0f) return false;
         return true;
+    }
+
+    @Override
+    public void react(Contact c) {
+        if(c.params.equals("Enemy1") && c.siteHidden != PhysicsController.intersectDirection.BOTTOM){
+           // this.lifePoints -= Enemy1.hitPoints;
+        }
     }
 }

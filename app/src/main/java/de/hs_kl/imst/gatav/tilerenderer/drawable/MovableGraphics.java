@@ -16,7 +16,7 @@ import de.hs_kl.imst.gatav.tilerenderer.util.Direction;
 import de.hs_kl.imst.gatav.tilerenderer.util.Hitboxes.Rectangle;
 import de.hs_kl.imst.gatav.tilerenderer.util.Vector2;
 
-public abstract class MovableGraphics implements Drawables {
+public abstract class MovableGraphics implements Drawables,CollisionReactive {
 
     protected BitmapDrawable bmp = null;
     protected boolean isFlipped = false;
