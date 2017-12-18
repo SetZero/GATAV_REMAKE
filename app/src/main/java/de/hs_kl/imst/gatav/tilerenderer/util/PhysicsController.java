@@ -36,18 +36,21 @@ public class PhysicsController {
 
     public void Update(float delta, GameCamera cam){
         for(MovableGraphics item: physicals) {
-            if (cam.isRectInView(item.getHitbox().getRect())) {
+            boolean groundCollision = false;
+            boolean noCollision = true;
+            float groundY = 0.0f;
+            boolean rightCollision = false;
+            boolean topCollision = false;
+            boolean leftCollision = false;
+            item.isRightColliding = false;
+            item.isLeftColliding = false;
+            Rect r = new Rect(item.getHitbox().getRect().left,item.getHitbox().getRect().top,item.getHitbox().getRect().right,item.getHitbox().getRect().bottom);
+            if (cam.isRectInView(r)) {
                 //gravity
                 //Log.d("velocity",item.getVelocity().x+"");
-                ArrayList<Contact> collision = isColliding(item);
-                boolean groundCollision = false;
-                boolean noCollision = true;
-                float groundY = 0.0f;
-                boolean rightCollision = false;
-                boolean topCollision = false;
-                boolean leftCollision = false;
-
+                ArrayList<Contact> collision = isColliding(item,cam);
                 for (Contact c : collision) {
+                    Log.d("size of isColl",""+c.siteHidden.name());
                     // Log.d("proof", ""+c.siteHidden.name());
                     if (c.siteHidden == intersectDirection.BOTTOM) {
                         groundY = ((Rectangle) c.collisions).getRect().top;
@@ -61,10 +64,12 @@ public class PhysicsController {
                     if (c.siteHidden == intersectDirection.LEFT) {
                         leftCollision = true;
                         noCollision = false;
+                        item.isLeftColliding = true;
                     }
                     if (c.siteHidden == intersectDirection.RIGHT) {
                         rightCollision = true;
                         noCollision = false;
+                        item.isRightColliding =true;
                     }
                 }
                 if (noCollision) {
@@ -80,8 +85,10 @@ public class PhysicsController {
                         }
                     }
                     if (rightCollision) {
-                        if (item.getVelocity().x > 0f)
+                        if (item.getVelocity().x > 0f){
                             item.setVelocity(new Vector2(0f, item.getVelocity().y));
+                            Log.d("right collision detect","aa");
+                        }
                         if (!item.isOnGround) {
                             item.impact(new Vector2(0f, gravity));
                         }
@@ -114,19 +121,20 @@ public class PhysicsController {
     }
 
 
-    public ArrayList<Contact> isColliding(MovableGraphics item) {
+    public ArrayList<Contact> isColliding(MovableGraphics item,GameCamera cam) {
         ArrayList<Contact> contacts = new ArrayList<Contact>();
 
         for(Collidable c : list){
+            if(cam.isRectInView(((Rectangle)c).getRect()))
             contacts.add(collisionDirection(c,item));
         }
         return contacts;
     }
 
     private Contact collisionDirection(Collidable c, MovableGraphics item){
-        Rect rectA = item.getHitbox().getRect();
-        Rect rectB = ((Rectangle) c).getRect();
-        if(item.getHitbox().isCollidingWith(c)) {
+        Rect rectA = new Rect(item.getHitbox().getRect().left,item.getHitbox().getRect().top,item.getHitbox().getRect().right,item.getHitbox().getRect().bottom);
+        Rect rectB = new Rect(((Rectangle) c).getRect().left,((Rectangle) c).getRect().top,((Rectangle) c).getRect().right,((Rectangle) c).getRect().bottom);
+        if(rectA.intersect(rectB)) {
 
             float wy = (rectA.width()+rectB.width())*(rectA.centerY()-rectB.centerY());
             float hx = (rectA.height()+rectB.height())*(rectA.centerX()-rectB.centerX());

@@ -24,6 +24,8 @@ public abstract class MovableGraphics implements Drawables,CollisionReactive {
     protected Vector2 Position = new Vector2();
     //aktuelle Geschwindigkeit des Objekts
     public boolean isOnGround = false;
+    public boolean isRightColliding = false;
+    public boolean isLeftColliding = false;
     protected int width, height;
     public boolean isActive = false;
 

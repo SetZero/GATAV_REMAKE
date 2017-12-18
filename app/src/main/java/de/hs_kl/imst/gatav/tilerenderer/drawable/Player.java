@@ -62,30 +62,34 @@ public final class Player extends MovableGraphics implements Destroyable, Collis
                 break;
             }
             case LEFT:{
-                if(velocity.getX() > 0 && velocity.x <= 200f && !isOnGround){
-                    velocity.x = 0f;
-                    impact(new Vector2(-200f,0f));
-                    if(velocity.y == 0)
-                        currentDirection = Direction.LEFT;
-                }
-                if(velocity.getX() > -200f){
-                    impact(new Vector2(-200f,0f));
-                    if(velocity.y == 0)
-                    currentDirection = Direction.LEFT;
+                if(!isLeftColliding) {
+                    if (velocity.getX() > 0 && velocity.x <= 200f && !isOnGround) {
+                        velocity.x = 0f;
+                        impact(new Vector2(-200f, 0f));
+                        if (velocity.y == 0)
+                            currentDirection = Direction.LEFT;
+                    }
+                    if (velocity.getX() > -200f) {
+                        impact(new Vector2(-200f, 0f));
+                        if (velocity.y == 0)
+                            currentDirection = Direction.LEFT;
+                    }
                 }
                 break;
             }
             case RIGHT:{
-                if(velocity.getX() < 0 && velocity.x >= -200f && !isOnGround){
-                    velocity.x = 0f;
-                    impact(new Vector2(200f,0f));
-                    if(velocity.y == 0)
-                        currentDirection = Direction.LEFT;
-                }
-                if(velocity.getX() < 200f) {
-                    impact(new Vector2(200f, 0f));
-                    if(velocity.y == 0)
-                    currentDirection = Direction.RIGHT;
+                if(!isRightColliding) {
+                    if (velocity.getX() < 0 && velocity.x >= -200f && !isOnGround) {
+                        velocity.x = 0f;
+                        impact(new Vector2(200f, 0f));
+                        if (velocity.y == 0)
+                            currentDirection = Direction.RIGHT;
+                    }
+                    if (velocity.getX() < 200f) {
+                        impact(new Vector2(200f, 0f));
+                        if (velocity.y == 0)
+                            currentDirection = Direction.RIGHT;
+                    }
                 }
                 break;
             }
