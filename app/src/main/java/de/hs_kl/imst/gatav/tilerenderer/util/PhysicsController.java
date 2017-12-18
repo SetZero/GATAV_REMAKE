@@ -50,7 +50,6 @@ public class PhysicsController {
                 //Log.d("velocity",item.getVelocity().x+"");
                 ArrayList<Contact> collision = isColliding(item,cam);
                 for (Contact c : collision) {
-                    Log.d("size of isColl",""+c.siteHidden.name());
                     // Log.d("proof", ""+c.siteHidden.name());
                     if (c.siteHidden == intersectDirection.BOTTOM) {
                         groundY = ((Rectangle) c.collisions).getRect().top;
