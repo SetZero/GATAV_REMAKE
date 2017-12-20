@@ -23,7 +23,6 @@ import de.hs_kl.imst.gatav.tilerenderer.util.PhysicsController;
 import de.hs_kl.imst.gatav.tilerenderer.util.Vector2;
 
 public final class Player extends MovableGraphics implements Destroyable, CollisionReactive{
-    private Direction previous;
     private byte doublejump = 0;
     private float lifePoints =150;
     public static int hitPoints = 40;
@@ -66,13 +65,9 @@ public final class Player extends MovableGraphics implements Destroyable, Collis
                     if (velocity.getX() > 0 && velocity.x <= 200f && !isOnGround) {
                         velocity.x = 0f;
                         impact(new Vector2(-200f, 0f));
-                        if (velocity.y == 0)
-                            currentDirection = Direction.LEFT;
                     }
                     if (velocity.getX() > -200f) {
                         impact(new Vector2(-200f, 0f));
-                        if (velocity.y == 0)
-                            currentDirection = Direction.LEFT;
                     }
                 }
                 break;
@@ -82,13 +77,9 @@ public final class Player extends MovableGraphics implements Destroyable, Collis
                     if (velocity.getX() < 0 && velocity.x >= -200f && !isOnGround) {
                         velocity.x = 0f;
                         impact(new Vector2(200f, 0f));
-                        if (velocity.y == 0)
-                            currentDirection = Direction.RIGHT;
                     }
                     if (velocity.getX() < 200f) {
                         impact(new Vector2(200f, 0f));
-                        if (velocity.y == 0)
-                            currentDirection = Direction.RIGHT;
                     }
                 }
                 break;
@@ -99,7 +90,7 @@ public final class Player extends MovableGraphics implements Destroyable, Collis
 
     /**
      * interrupts LEFT or RIGHT movement the correct way (is the player on Ground?)
-     * this interrupt will occur on the next possible update
+     * this interrupt will occur on the next update (if interrupt is possible)
      * @param direction
      */
     public void stopMove(Direction direction){
@@ -146,7 +137,7 @@ public final class Player extends MovableGraphics implements Destroyable, Collis
             bmp = idle;
         }
         // running right
-        if(currentDirection == Direction.RIGHT && velocity.x > 0){
+        if(currentDirection == Direction.RIGHT ){
             bmp = run.getDrawable(animTime);
             isFlipped = false;
         }
@@ -156,6 +147,12 @@ public final class Player extends MovableGraphics implements Destroyable, Collis
         }
         if(currentDirection == Direction.UP || currentDirection == Direction.IDLE || currentDirection == Direction.IDLE || currentDirection == Direction.DOWN){
             bmp = idle;
+        }
+        if(velocity.getX() > 10){
+            isFlipped = false;
+        }
+        else if(velocity.getX() < -10){
+            isFlipped = true;
         }
     }
 
@@ -188,9 +185,26 @@ public final class Player extends MovableGraphics implements Destroyable, Collis
     }
 
     @Override
-    public void react(Contact c) {
-        if(c.params.equals("Enemy1") && c.siteHidden != PhysicsController.intersectDirection.BOTTOM){
-           // this.lifePoints -= Enemy1.hitPoints;
-        }
+    public void onCollision(Contact c) {
+        //if(c.movable instanceof Skeletton){
+            if(c.siteHidden != PhysicsController.intersectDirection.BOTTOM) {
+                this.lifePoints -= Skeletton.hitPoints;
+                if(c.siteHidden == PhysicsController.intersectDirection.LEFT) {
+                    applyLinearImpulse(new Vector2(630f,-280f));
+                    //stopMove(Direction.LEFT);
+                }
+                if(c.siteHidden == PhysicsController.intersectDirection.RIGHT) {
+                    applyLinearImpulse(new Vector2(-630f,-280f));
+                    //stopMove(Direction.RIGHT);
+                }
+
+            }
+            else if(c.siteHidden == PhysicsController.intersectDirection.BOTTOM){
+                velocity.y = 0.0f;
+                move(Direction.UP);Log.d("site hit", ""+c.siteHidden.name());
+
+            }
+
+            }
+
     }
-}

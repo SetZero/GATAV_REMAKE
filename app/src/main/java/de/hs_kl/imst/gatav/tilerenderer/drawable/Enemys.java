@@ -1,5 +1,11 @@
 package de.hs_kl.imst.gatav.tilerenderer.drawable;
 
+import android.graphics.Canvas;
+import android.graphics.Color;
+import android.graphics.Paint;
+import android.graphics.drawable.BitmapDrawable;
+import android.util.Log;
+
 import de.hs_kl.imst.gatav.tilerenderer.util.Contact;
 import de.hs_kl.imst.gatav.tilerenderer.util.PhysicsController;
 
@@ -28,9 +34,41 @@ public abstract class Enemys extends MovableGraphics implements Destroyable, Col
     }
 
     @Override
-    public void react(Contact c) {
-        if(c.params.equals("Player") && c.siteHidden == PhysicsController.intersectDirection.TOP){
+    public void update(float delta){
+        if(this.lifePoints <= 0) isActive =false;
+        if(isActive) {
+            super.update(delta);
+            aIHandle();
+            stateHandle();
+            animationHandle(delta);
+        }
+    }
+
+    public abstract void stateHandle();
+    public abstract void animationHandle(float delta);
+    public abstract void aIHandle();
+
+    @Override
+    public void onCollision(Contact c) {
+        if(c.movable instanceof Player && c.siteHidden == PhysicsController.intersectDirection.TOP){
             this.lifePoints -= Player.hitPoints;
+        }
+    }
+
+    @Override
+    public void draw(Canvas canvas){
+        if(bmp != null && isActive && !isFlipped) {
+            Paint p = new Paint();
+            p.setColor(Color.argb(128, 0, 65, 200));
+            canvas.drawRect(hitbox.getRect(),p);
+            canvas.drawBitmap(bmp.getBitmap(),Position.getX(),Position.getY(),null);
+        }
+        else if (isFlipped){
+            Paint p = new Paint();
+            p.setColor(Color.argb(128, 0, 65, 200));
+            canvas.drawRect(hitbox.getRect(),p);
+            BitmapDrawable bmp = flip(this.bmp);
+            canvas.drawBitmap(bmp.getBitmap(),Position.getX(),Position.getY(),null);
         }
     }
 }

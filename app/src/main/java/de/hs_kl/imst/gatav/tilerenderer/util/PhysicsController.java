@@ -7,6 +7,7 @@ import java.util.ArrayList;
 import java.util.List;
 
 import de.hs_kl.imst.gatav.tilerenderer.drawable.MovableGraphics;
+import de.hs_kl.imst.gatav.tilerenderer.drawable.Skeletton;
 import de.hs_kl.imst.gatav.tilerenderer.util.Hitboxes.Collidable;
 import de.hs_kl.imst.gatav.tilerenderer.util.Hitboxes.Rectangle;
 
@@ -44,11 +45,11 @@ public class PhysicsController {
             boolean leftCollision = false;
             item.isRightColliding = false;
             item.isLeftColliding = false;
-            Rect r = new Rect(item.getHitbox().getRect().left,item.getHitbox().getRect().top,item.getHitbox().getRect().right,item.getHitbox().getRect().bottom);
+            Rect r = new Rect(item.getHitbox().getRect().left, item.getHitbox().getRect().top, item.getHitbox().getRect().right, item.getHitbox().getRect().bottom);
             if (cam.isRectInView(r)) {
                 //gravity
                 //Log.d("velocity",item.getVelocity().x+"");
-                ArrayList<Contact> collision = isColliding(item,cam);
+                ArrayList<Contact> collision = isColliding(item, cam);
                 for (Contact c : collision) {
                     // Log.d("proof", ""+c.siteHidden.name());
                     if (c.siteHidden == intersectDirection.BOTTOM) {
@@ -68,7 +69,7 @@ public class PhysicsController {
                     if (c.siteHidden == intersectDirection.RIGHT) {
                         rightCollision = true;
                         noCollision = false;
-                        item.isRightColliding =true;
+                        item.isRightColliding = true;
                     }
                 }
                 if (noCollision) {
@@ -84,9 +85,8 @@ public class PhysicsController {
                         }
                     }
                     if (rightCollision) {
-                        if (item.getVelocity().x > 0f){
+                        if (item.getVelocity().x > 0f) {
                             item.setVelocity(new Vector2(0f, item.getVelocity().y));
-                            Log.d("right collision detect","aa");
                         }
                         if (!item.isOnGround) {
                             item.impact(new Vector2(0f, gravity));
@@ -107,14 +107,15 @@ public class PhysicsController {
                         }
 
                     }
-                    for (MovableGraphics other : physicals) {
-                        if (item != other) {
-                            Contact c = collisionDirection(other.getHitbox(), item);
-                            item.react(c);
-                        }
-                    }
                 }
 
+            }
+        }
+        for(MovableGraphics item : physicals) {
+            for (MovableGraphics other : physicals) {
+                if (item != other) {
+                    item.onCollision(collisionDirection(other.getHitbox(), item).setMovable(other));
+                }
             }
         }
     }
@@ -124,8 +125,9 @@ public class PhysicsController {
         ArrayList<Contact> contacts = new ArrayList<Contact>();
 
         for(Collidable c : list){
-            if(cam.isRectInView(((Rectangle)c).getRect()))
-            contacts.add(collisionDirection(c,item));
+            //if(cam.isRectInView(((Rectangle)c).getRect())) andere möglichkeit finden, porblematisch wenn
+            //gegner noch in sicht und der grund unter diesem nicht (gegner fällt durch)
+                contacts.add(collisionDirection(c,item));
         }
         return contacts;
     }

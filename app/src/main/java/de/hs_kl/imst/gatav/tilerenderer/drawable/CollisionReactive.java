@@ -7,5 +7,5 @@ import de.hs_kl.imst.gatav.tilerenderer.util.Contact;
  */
 
 public interface CollisionReactive {
-    void react(Contact c);
+    void onCollision(Contact c);
 }
