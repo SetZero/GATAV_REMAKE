@@ -58,8 +58,8 @@ public class GameContent implements Drawables {
 
         loadLevel();
         world = new World(tileLoader,1f/60f);
-        player = new Player(350, 1550);
-        skelett = new Skeletton(900,1550);
+        player = new Player(350, 650);
+        skelett = new Skeletton(900,650);
         world.addGameObject(player);
         world.addGameObject(skelett);
         camera.attach(player);

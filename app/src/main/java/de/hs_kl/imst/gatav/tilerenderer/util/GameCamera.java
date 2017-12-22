@@ -84,14 +84,16 @@ public class GameCamera {
         canvas.translate(-xPos, -yPos);
     }
 
-    public boolean isRectInView(Rect a) {
-        //TODO: Make this less static, bind to Rec width!
+    public Rect getCameraViewRect() {
         int minX = cameraXCenter - ((canvasWidth/2));
         int minY = cameraYCenter - ((canvasHeight/2));
         int maxX = cameraXCenter + (canvasWidth/2);
         int maxY = cameraYCenter + (canvasHeight/2);
-        Rect b = new Rect(minX, minY, maxX, maxY);
-        if(b.intersect(a))
+        return  new Rect(minX, minY, maxX, maxY);
+    }
+
+    public boolean isRectInView(Rect a) {
+        if(getCameraViewRect().intersect(a))
             return true;
         return false;
     }
