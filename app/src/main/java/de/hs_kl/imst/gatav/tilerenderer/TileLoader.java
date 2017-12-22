@@ -7,6 +7,7 @@ import android.content.res.AssetManager;
 import android.graphics.Bitmap;
 import android.graphics.BitmapRegionDecoder;
 import android.graphics.Rect;
+import android.util.ArraySet;
 import android.util.Log;
 
 import org.w3c.dom.Document;
@@ -30,6 +31,10 @@ import java.util.LinkedList;
 import java.util.List;
 import java.util.Map;
 import java.util.Set;
+import java.util.concurrent.ConcurrentHashMap;
+import java.util.concurrent.CopyOnWriteArrayList;
+import java.util.concurrent.CopyOnWriteArraySet;
+import java.util.concurrent.atomic.AtomicInteger;
 import java.util.stream.Collector;
 import java.util.stream.Collectors;
 import java.util.stream.IntStream;
@@ -54,7 +59,7 @@ public class TileLoader {
     private int tileHeight = 0;
     private int layers = 0;
     //private int[][][] map;
-    private ArrayList<ArrayList<TileInformation>> map;
+    private ArrayList<List<TileInformation>> map;
     private Map<Integer, Bitmap> tiles = new HashMap<>();
     private Map<String, List<Collidable>> objectGroups = new HashMap<>();
 
@@ -81,11 +86,11 @@ public class TileLoader {
         return layers;
     }
 
-    public ArrayList<ArrayList<TileInformation>> getMap() {
+    public List<List<TileInformation>> getMap() {
         return map;
     }
 
-    public ArrayList<TileInformation> getLayer(int layer) {
+    public List<TileInformation> getLayer(int layer) {
         return map.get(layer);
     }
 
@@ -129,32 +134,36 @@ public class TileLoader {
             NodeList layerList = doc.getElementsByTagName("layer");
             layers = layerList.getLength();
             this.map = new ArrayList<>(layers);//new int[layers][width][height];
-            Set<Integer> usedTilesInMap = new LinkedHashSet<>();
+            Set<Integer> usedTilesInMap = new ArraySet<>();
 
             Log.d("TileLoader", "Layers: " + this.map.size());
             for (int layer = 0; layer < layers; layer++) {
                 Element layerElement = (Element) layerList.item(layer);
                 String layerString = layerElement.getElementsByTagName("data").item(0).getTextContent();
-                List<String> items = Arrays.asList(layerString.split("\\s*,\\s*"));
-                this.map.add(new ArrayList<TileInformation>());
-
+                //List<String> items = Arrays.asList(layerString.split("\\s*,\\s*"));
+                this.map.add(new ArrayList<>());
+                String[] elements = layerString.split(",");
                 Log.d("TileLoader", "Start Loading Tiles");
-                for (int y = 0; y < height; y++) {
-                    for (int x = 0; x < width; x++) {
-                        int tileID = Integer.parseInt(items.get(x + (y * width)).trim());
-                        if (tileID != 0) {
-                            TileInformation tile = new TileInformation();
-                            tile.setxPos(x);
-                            tile.setyPos(y);
-                            tile.setWidth((int)(tileWidth*ratioX));
-                            tile.setHeight((int)(tileHeight*ratioY));
-                            tile.generateRect();
-                            tile.setTilesetPiece(tileID);
-                            usedTilesInMap.add(tileID);
-                            this.map.get(layer).add(tile);
-                        }
-                    }
-                }
+                final int tmpLayer =layer;
+                IntStream.range(0, elements.length)
+                        .mapToObj(i -> {
+                            int tileID = Integer.parseInt(elements[i].trim());
+                            int x = i % width;
+                            int y = i / width;
+                            if (tileID != 0) {
+                                TileInformation tile = new TileInformation();
+                                tile.setxPos(x);
+                                tile.setyPos(y);
+                                tile.setWidth(tileWidth * ratioX);
+                                tile.setHeight(tileHeight * ratioY);
+                                tile.generateRect();
+                                tile.setTilesetPiece(tileID);
+                                usedTilesInMap.add(tileID);
+                                return tile;
+                            }
+                            return null;
+                        }).filter(i -> i != null).collect(Collectors.toCollection(() -> this.map.get(tmpLayer)));
+
 
                 Log.d("TileLoader", "Finished Loading Tiles");
             }

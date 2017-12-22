@@ -49,9 +49,9 @@ public class World {
 
     public void draw(GameCamera camera, Canvas canvas) {
         //1. Load All Tiles
-        ArrayList<ArrayList<TileInformation>> map = tileLoader.getMap();
+        List<List<TileInformation>> map = tileLoader.getMap();
         camera.draw(canvas);
-        for(ArrayList<TileInformation> currentLayerTiles : map) {
+        for(List<TileInformation> currentLayerTiles : map) {
             for(TileInformation currentTile : currentLayerTiles) {
                 Rect test = currentTile.getTileRect();
                 if(camera.isRectInView(test)) {
