@@ -16,14 +16,16 @@ import java.net.URL;
 import java.util.ArrayList;
 
 import de.hs_kl.imst.gatav.tilerenderer.util.Animations;
+import de.hs_kl.imst.gatav.tilerenderer.util.Contact;
 import de.hs_kl.imst.gatav.tilerenderer.util.Direction;
 import de.hs_kl.imst.gatav.tilerenderer.util.Hitboxes.Rectangle;
+import de.hs_kl.imst.gatav.tilerenderer.util.PhysicsController;
 import de.hs_kl.imst.gatav.tilerenderer.util.Vector2;
 
-public class Player extends MovableGraphics implements Destroyable{
-    private Direction previous;
+public final class Player extends MovableGraphics implements Destroyable, CollisionReactive{
     private byte doublejump = 0;
     private float lifePoints =150;
+    public static int hitPoints = 40;
     private Direction stopDirection = Direction.IDLE;
     private BitmapDrawable idle;
     private Animations run;
@@ -59,16 +61,26 @@ public class Player extends MovableGraphics implements Destroyable{
                 break;
             }
             case LEFT:{
-                if(velocity.getY() == 0 && velocity.getX() > -200f){
-                    impact(new Vector2(-200f,0f));
-                    currentDirection = Direction.LEFT;
+                if(!isLeftColliding) {
+                    if (velocity.getX() > 0 && velocity.x <= 200f && !isOnGround) {
+                        velocity.x = 0f;
+                        impact(new Vector2(-200f, 0f));
+                    }
+                    if (velocity.getX() > -200f) {
+                        impact(new Vector2(-200f, 0f));
+                    }
                 }
                 break;
             }
             case RIGHT:{
-                if(velocity.getY() == 0 && velocity.getX() < 200f) {
-                    impact(new Vector2(200f, 0f));
-                    currentDirection = Direction.RIGHT;
+                if(!isRightColliding) {
+                    if (velocity.getX() < 0 && velocity.x >= -200f && !isOnGround) {
+                        velocity.x = 0f;
+                        impact(new Vector2(200f, 0f));
+                    }
+                    if (velocity.getX() < 200f) {
+                        impact(new Vector2(200f, 0f));
+                    }
                 }
                 break;
             }
@@ -78,7 +90,7 @@ public class Player extends MovableGraphics implements Destroyable{
 
     /**
      * interrupts LEFT or RIGHT movement the correct way (is the player on Ground?)
-     * this interrupt will occur on the next possible update
+     * this interrupt will occur on the next update (if interrupt is possible)
      * @param direction
      */
     public void stopMove(Direction direction){
@@ -125,7 +137,7 @@ public class Player extends MovableGraphics implements Destroyable{
             bmp = idle;
         }
         // running right
-        if(currentDirection == Direction.RIGHT && velocity.x > 0){
+        if(currentDirection == Direction.RIGHT ){
             bmp = run.getDrawable(animTime);
             isFlipped = false;
         }
@@ -135,6 +147,12 @@ public class Player extends MovableGraphics implements Destroyable{
         }
         if(currentDirection == Direction.UP || currentDirection == Direction.IDLE || currentDirection == Direction.IDLE || currentDirection == Direction.DOWN){
             bmp = idle;
+        }
+        if(velocity.getX() > 10){
+            isFlipped = false;
+        }
+        else if(velocity.getX() < -10){
+            isFlipped = true;
         }
     }
 
@@ -165,4 +183,28 @@ public class Player extends MovableGraphics implements Destroyable{
         if(lifePoints > 0f) return false;
         return true;
     }
-}
+
+    @Override
+    public void onCollision(Contact c) {
+        //if(c.movable instanceof Skeletton){
+            if(c.siteHidden != PhysicsController.intersectDirection.BOTTOM) {
+                this.lifePoints -= Skeletton.hitPoints;
+                if(c.siteHidden == PhysicsController.intersectDirection.LEFT) {
+                    applyLinearImpulse(new Vector2(630f,-280f));
+                    //stopMove(Direction.LEFT);
+                }
+                if(c.siteHidden == PhysicsController.intersectDirection.RIGHT) {
+                    applyLinearImpulse(new Vector2(-630f,-280f));
+                    //stopMove(Direction.RIGHT);
+                }
+
+            }
+            else if(c.siteHidden == PhysicsController.intersectDirection.BOTTOM){
+                velocity.y = 0.0f;
+                move(Direction.UP);Log.d("site hit", ""+c.siteHidden.name());
+
+            }
+
+            }
+
+    }

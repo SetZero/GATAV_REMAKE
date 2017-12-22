@@ -40,11 +40,11 @@ public class World {
         return objects;
     }
 
-    public void update(float delta){
+    public void update(float delta,GameCamera cam){
         for(Drawables x: dynamicObjects){
             x.update(delta);
         }
-        physics.Update(step);
+        physics.Update(step,cam);
     }
 
     public void draw(GameCamera camera, Canvas canvas) {

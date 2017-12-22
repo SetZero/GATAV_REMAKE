@@ -5,6 +5,6 @@ package de.hs_kl.imst.gatav.tilerenderer.drawable;
  */
 
 public interface Destroyable {
-    public abstract void processHit(float hit);
-    public abstract boolean isDestroyed();
+    void processHit(float hit);
+    boolean isDestroyed();
 }

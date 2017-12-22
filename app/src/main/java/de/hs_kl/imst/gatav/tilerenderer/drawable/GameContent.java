@@ -38,6 +38,7 @@ public class GameContent implements Drawables {
     synchronized public boolean isPlayerDirectionIDLE() { return playerDirection == Direction.IDLE; }
     synchronized public void setPlayerDirection(Direction newDirection) { playerDirection = newDirection;}
     synchronized public Direction getPlayerDirection() { return playerDirection; }
+    Skeletton skelett;
 
     private Random random = new Random();
     public static Context context;
@@ -57,9 +58,10 @@ public class GameContent implements Drawables {
 
         loadLevel();
         world = new World(tileLoader,1f/60f);
-        player = new Player(450, 1050);
+        player = new Player(350, 1550);
+        skelett = new Skeletton(900,1550);
         world.addGameObject(player);
-
+        world.addGameObject(skelett);
         camera.attach(player);
     }
 
@@ -77,7 +79,7 @@ public class GameContent implements Drawables {
 
     @Override
     public void update(float delta) {
-        world.update(delta);
+        world.update(delta,camera);
    }
 
     private void loadLevel() {

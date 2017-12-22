@@ -16,7 +16,7 @@ import de.hs_kl.imst.gatav.tilerenderer.util.Direction;
 import de.hs_kl.imst.gatav.tilerenderer.util.Hitboxes.Rectangle;
 import de.hs_kl.imst.gatav.tilerenderer.util.Vector2;
 
-public abstract class MovableGraphics implements Drawables {
+public abstract class MovableGraphics implements Drawables,CollisionReactive {
 
     protected BitmapDrawable bmp = null;
     protected boolean isFlipped = false;
@@ -24,10 +24,17 @@ public abstract class MovableGraphics implements Drawables {
     protected Vector2 Position = new Vector2();
     //aktuelle Geschwindigkeit des Objekts
     public boolean isOnGround = false;
+    public boolean isRightColliding = false;
+    public boolean isLeftColliding = false;
+    protected Vector2 linearImpulse = new Vector2();
     protected int width, height;
     public boolean isActive = false;
-
+    protected boolean isBouncing = false;
+    protected  boolean recentYImpulse = false;
+    protected Direction previous;
     protected Rectangle hitbox = null;
+    protected volatile Vector2 velocity = new Vector2();
+    protected volatile Direction currentDirection = Direction.IDLE;
 
 	public void setPosition(Vector2 position) {
         Position = position;
@@ -63,31 +70,39 @@ public abstract class MovableGraphics implements Drawables {
         return Position;
     }
 
-
-    protected volatile Vector2 velocity = new Vector2();
-    protected volatile Direction currentDirection = Direction.IDLE;
-
     public MovableGraphics(Vector2 pos) {
         this.Position = pos;
-    }
-
-    @Deprecated
-    public void move(Vector2 direction) {
-        this.velocity = direction;
     }
 
     public void impact(Vector2 direction){
         this.velocity = Vector2.add(direction,this.velocity);
     }
 
+    public void applyLinearImpulse(Vector2 v){
+        this.linearImpulse = v;
+    }
+
     private void move(float delta) {
             Position = Vector2.add(Vector2.skalarMul(velocity,delta),Position);
+    }
+
+    private void impulse(float delta){
+        if(isOnGround && recentYImpulse && !isBouncing) {
+            recentYImpulse =false;
+            linearImpulse.y = 0;
+        }
+        if(linearImpulse.y < -40 || linearImpulse.y > 40) recentYImpulse = true;
+        Position = Vector2.add(Vector2.skalarMul(linearImpulse,delta),Position);
+        linearImpulse  = Vector2.skalarMul(linearImpulse,0.96f);
+        if(linearImpulse.y > -10 && linearImpulse.y < 10) linearImpulse.y = 0;
+        if(linearImpulse.x > -10 && linearImpulse.x < 10) linearImpulse.x = 0;
     }
 
     @Override
     public void update(float delta) {
         if(isActive){
         move(delta);
+        impulse(delta);
         bmp.setBounds((int)Position.getX(), (int)Position.getY()+height, (int)Position.getX()+width, (int)Position.getY());
         //offset for hitbox
             int offset = 0;
