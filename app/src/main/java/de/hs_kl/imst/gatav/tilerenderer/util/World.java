@@ -5,7 +5,6 @@ import android.graphics.Canvas;
 import android.graphics.Color;
 import android.graphics.Paint;
 import android.graphics.Rect;
-import android.util.Log;
 
 import java.util.ArrayList;
 import java.util.List;
@@ -22,12 +21,11 @@ import de.hs_kl.imst.gatav.tilerenderer.util.Hitboxes.Rectangle;
  */
 
 public class World {
+    TileLoader tileLoader;
     private List<Drawables> dynamicObjects = new ArrayList<>();
-    private Map<String, List<Collidable>> objects ;
+    private Map<String, List<Collidable>> objects;
     private float step;
     private PhysicsController physics;
-
-    TileLoader tileLoader;
 
     public World(TileLoader tileLoader, float step) {
         this.tileLoader = tileLoader;
@@ -40,21 +38,21 @@ public class World {
         return objects;
     }
 
-    public void update(float delta,GameCamera cam){
-        for(Drawables x: dynamicObjects){
+    public void update(float delta, GameCamera cam) {
+        for (Drawables x : dynamicObjects) {
             x.update(delta);
         }
-        physics.Update(step,cam);
+        physics.Update(step, cam);
     }
 
     public void draw(GameCamera camera, Canvas canvas) {
         //1. Load All Tiles
         List<List<TileInformation>> map = tileLoader.getMap();
         camera.draw(canvas);
-        for(List<TileInformation> currentLayerTiles : map) {
-            for(TileInformation currentTile : currentLayerTiles) {
+        for (List<TileInformation> currentLayerTiles : map) {
+            for (TileInformation currentTile : currentLayerTiles) {
                 Rect test = currentTile.getTileRect();
-                if(camera.isRectInView(test)) {
+                if (camera.isRectInView(test)) {
                     Bitmap bmp = tileLoader.getTiles().get(currentTile.getTilesetPiece());
                     canvas.drawBitmap(bmp, test.left, test.top, null);
                 }
@@ -65,11 +63,11 @@ public class World {
         List<Collidable> collision = objects.get("Kollisionen");
         Paint p = new Paint();
         p.setColor(Color.argb(128, 0, 65, 200));
-        if(collision != null) {
-            for(Collidable collidable : collision) {
-                if(collidable instanceof Rectangle) {
+        if (collision != null) {
+            for (Collidable collidable : collision) {
+                if (collidable instanceof Rectangle) {
                     Rect r = ((Rectangle) collidable).getRect();
-                    if(camera.isRectInView(r)) {
+                    if (camera.isRectInView(r)) {
                         canvas.drawRect(r, p);
                     }
                 }
@@ -77,7 +75,7 @@ public class World {
         }
 
         //3. Draw all Dynamic Objects
-        for(Drawables object : dynamicObjects) {
+        for (Drawables object : dynamicObjects) {
             object.draw(canvas);
         }
 

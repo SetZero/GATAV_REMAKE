@@ -2,7 +2,6 @@ package de.hs_kl.imst.gatav.tilerenderer.util;
 
 import android.graphics.Canvas;
 import android.graphics.Rect;
-import android.util.Log;
 
 import de.hs_kl.imst.gatav.tilerenderer.drawable.MovableGraphics;
 
@@ -24,7 +23,7 @@ public class GameCamera {
     }
 
     public void setCameraXCenter(int cameraXCenter) {
-        assert(attachedTo == null) : "Camera can't be moved as long as it's attached to a Body!";
+        assert (attachedTo == null) : "Camera can't be moved as long as it's attached to a Body!";
         this.cameraXCenter = cameraXCenter;
     }
 
@@ -33,7 +32,7 @@ public class GameCamera {
     }
 
     public void setCameraYCenter(int cameraYCenter) {
-        assert(attachedTo == null) : "Camera can't be moved as long as it's attached to a Body!";
+        assert (attachedTo == null) : "Camera can't be moved as long as it's attached to a Body!";
         this.cameraYCenter = cameraYCenter;
     }
 
@@ -53,7 +52,7 @@ public class GameCamera {
 
     public void draw(Canvas canvas) {
         /* If attached to Graphic adjust values */
-        if(attachedTo != null) {
+        if (attachedTo != null) {
             cameraXCenter = (int) attachedTo.getPosition().getX();
             cameraYCenter = (int) attachedTo.getPosition().getY();
         }
@@ -62,22 +61,22 @@ public class GameCamera {
         canvasHeight = canvas.getHeight();
 
         /* Real Camera Position */
-        int xPos = cameraXCenter - (canvasWidth/2);
-        int yPos = cameraYCenter - (canvasHeight/2);
+        int xPos = cameraXCenter - (canvasWidth / 2);
+        int yPos = cameraYCenter - (canvasHeight / 2);
 
         /* Out of Bounds Check */
-        if(xPos < 0) {
-            cameraXCenter = canvasWidth/2;
+        if (xPos < 0) {
+            cameraXCenter = canvasWidth / 2;
             xPos = 0;
-        } else if(xPos > levelWidth - canvasWidth) {
-            cameraXCenter = levelWidth -  (canvasWidth/2);
+        } else if (xPos > levelWidth - canvasWidth) {
+            cameraXCenter = levelWidth - (canvasWidth / 2);
             xPos = levelWidth - canvasWidth;
         }
-        if(yPos < 0){
-            cameraYCenter = canvasHeight/2;
+        if (yPos < 0) {
+            cameraYCenter = canvasHeight / 2;
             yPos = 0;
-        } else if(yPos > levelHeight - canvasHeight) {
-            cameraYCenter = levelHeight -  (canvasHeight/2);
+        } else if (yPos > levelHeight - canvasHeight) {
+            cameraYCenter = levelHeight - (canvasHeight / 2);
             yPos = levelHeight - canvasHeight;
         }
         //canvas.scale(ratioX, ratioY);
@@ -85,15 +84,15 @@ public class GameCamera {
     }
 
     public Rect getCameraViewRect() {
-        int minX = cameraXCenter - ((canvasWidth/2));
-        int minY = cameraYCenter - ((canvasHeight/2));
-        int maxX = cameraXCenter + (canvasWidth/2);
-        int maxY = cameraYCenter + (canvasHeight/2);
-        return  new Rect(minX, minY, maxX, maxY);
+        int minX = cameraXCenter - ((canvasWidth / 2));
+        int minY = cameraYCenter - ((canvasHeight / 2));
+        int maxX = cameraXCenter + (canvasWidth / 2);
+        int maxY = cameraYCenter + (canvasHeight / 2);
+        return new Rect(minX, minY, maxX, maxY);
     }
 
     public boolean isRectInView(Rect a) {
-        if(getCameraViewRect().intersect(a))
+        if (getCameraViewRect().intersect(a))
             return true;
         return false;
     }

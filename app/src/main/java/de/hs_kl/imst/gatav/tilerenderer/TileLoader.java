@@ -1,4 +1,3 @@
-
 package de.hs_kl.imst.gatav.tilerenderer;
 
 
@@ -18,25 +17,14 @@ import org.w3c.dom.NodeList;
 import org.xml.sax.InputSource;
 import org.xml.sax.SAXException;
 
-import java.io.FileInputStream;
 import java.io.FileNotFoundException;
 import java.io.IOException;
 import java.io.InputStream;
-import java.io.Reader;
-import java.io.StringReader;
 import java.util.ArrayList;
-import java.util.Arrays;
 import java.util.HashMap;
-import java.util.LinkedHashSet;
-import java.util.LinkedList;
 import java.util.List;
 import java.util.Map;
 import java.util.Set;
-import java.util.concurrent.ConcurrentHashMap;
-import java.util.concurrent.CopyOnWriteArrayList;
-import java.util.concurrent.CopyOnWriteArraySet;
-import java.util.concurrent.atomic.AtomicInteger;
-import java.util.stream.Collector;
 import java.util.stream.Collectors;
 import java.util.stream.IntStream;
 
@@ -64,8 +52,20 @@ public class TileLoader {
     private Map<Integer, Bitmap> tiles = new HashMap<>();
     private Map<String, List<Collidable>> objectGroups = new HashMap<>();
 
-    private int ratioX = (int)ScaleHelper.getRatioX();
-    private int ratioY = (int)ScaleHelper.getRatioY();
+    private int ratioX = (int) ScaleHelper.getRatioX();
+    private int ratioY = (int) ScaleHelper.getRatioY();
+
+    public TileLoader(Context context, String filename) {
+        assert (ratioX > 0) : "Scale Helper never initialized!";
+        assert (ratioY > 0) : "Scale Helper never initialized!";
+
+        Log.d("Tile Loader", "Ratio X: " + ratioX);
+
+        this.context = context;
+        this.assetManager = context.getAssets();
+        this.filename = filename;
+        xmlLoadMap();
+    }
 
     public int getWidth() {
         return width;
@@ -103,19 +103,6 @@ public class TileLoader {
         return objectGroups;
     }
 
-
-    public TileLoader(Context context, String filename) {
-        assert (ratioX > 0) : "Scale Helper never initialized!";
-        assert (ratioY > 0) : "Scale Helper never initialized!";
-
-        Log.d("Tile Loader", "Ratio X: " + ratioX);
-
-        this.context = context;
-        this.assetManager = context.getAssets();
-        this.filename = filename;
-        xmlLoadMap();
-    }
-
     private void xmlLoadMap() {
         try {
             DocumentBuilderFactory factory = DocumentBuilderFactory.newInstance();
@@ -145,10 +132,10 @@ public class TileLoader {
                 this.map.add(new ArrayList<>());
                 String[] elements = layerString.split(",");
                 Log.d("TileLoader", "Start Loading Tiles");
-                final int tmpLayer =layer;
+                final int tmpLayer = layer;
                 IntStream.range(0, elements.length)
-                        .mapToObj( i -> new Pair<>(i, Integer.parseInt(elements[i].trim())))
-                        .filter( i -> i.second != 0)
+                        .mapToObj(i -> new Pair<>(i, Integer.parseInt(elements[i].trim())))
+                        .filter(i -> i.second != 0)
                         .map(i -> {
                             int x = i.first % width;
                             int y = i.first / width;
@@ -177,10 +164,10 @@ public class TileLoader {
             }
 
             loadObjectGroups(doc);
-            tileWidth = tileWidth*ratioX;
-            tileHeight = tileWidth*ratioY;
-            width = width / (int)ScaleHelper.getRatioX();
-            height = height / (int)ScaleHelper.getRatioY();
+            tileWidth = tileWidth * ratioX;
+            tileHeight = tileWidth * ratioY;
+            width = width / (int) ScaleHelper.getRatioX();
+            height = height / (int) ScaleHelper.getRatioY();
             fis.close();
         } catch (FileNotFoundException e) {
             e.printStackTrace();
@@ -221,7 +208,7 @@ public class TileLoader {
                 int xPos = (realPosInTileset % columns) * tileWidth;
                 int yPos = (realPosInTileset / columns) * tileHeight;
                 Bitmap region = decoder.decodeRegion(new Rect(xPos, yPos, xPos + tileWidth, yPos + tileHeight), null);
-                region = Bitmap.createScaledBitmap(region, region.getWidth()*ratioX, region.getHeight()*ratioY, false);
+                region = Bitmap.createScaledBitmap(region, region.getWidth() * ratioX, region.getHeight() * ratioY, false);
                 this.tiles.put(i, region);
             }
             Log.d("TileLoader", "Finished Generating Bitmaps" + this.tiles.size());
@@ -255,8 +242,8 @@ public class TileLoader {
                 Element objectElement = (Element) objects.item(i);
                 int id = Integer.parseInt(objectElement.getAttribute("id"));
                 //If it's stupid but it works it isn't stupid
-                int x = (int) (Double.parseDouble(objectElement.getAttribute("x"))* ratioX);
-                int y = (int) (Double.parseDouble(objectElement.getAttribute("y"))* ratioY);
+                int x = (int) (Double.parseDouble(objectElement.getAttribute("x")) * ratioX);
+                int y = (int) (Double.parseDouble(objectElement.getAttribute("y")) * ratioY);
 
                 //Rect
                 String width = objectElement.getAttribute("width");
@@ -264,7 +251,7 @@ public class TileLoader {
                 if (width != null && height != null && !width.isEmpty() && !height.isEmpty()) {
                     int tmpWidth = (int) Double.parseDouble(width);
                     int tmpHeight = (int) Double.parseDouble(height);
-                    tmpWidth  *= ratioX;
+                    tmpWidth *= ratioX;
                     tmpHeight *= ratioY;
                     Rectangle tmpRect = new Rectangle(x, y, tmpWidth, tmpHeight);
                     tmpRect.setId(id);
