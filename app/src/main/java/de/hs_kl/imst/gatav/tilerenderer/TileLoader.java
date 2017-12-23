@@ -9,6 +9,7 @@ import android.graphics.BitmapRegionDecoder;
 import android.graphics.Rect;
 import android.util.ArraySet;
 import android.util.Log;
+import android.util.Pair;
 
 import org.w3c.dom.Document;
 import org.w3c.dom.Element;
@@ -146,23 +147,21 @@ public class TileLoader {
                 Log.d("TileLoader", "Start Loading Tiles");
                 final int tmpLayer =layer;
                 IntStream.range(0, elements.length)
-                        .mapToObj(i -> {
-                            int tileID = Integer.parseInt(elements[i].trim());
-                            int x = i % width;
-                            int y = i / width;
-                            if (tileID != 0) {
-                                TileInformation tile = new TileInformation();
-                                tile.setxPos(x);
-                                tile.setyPos(y);
-                                tile.setWidth(tileWidth * ratioX);
-                                tile.setHeight(tileHeight * ratioY);
-                                tile.generateRect();
-                                tile.setTilesetPiece(tileID);
-                                usedTilesInMap.add(tileID);
-                                return tile;
-                            }
-                            return null;
-                        }).filter(i -> i != null).collect(Collectors.toCollection(() -> this.map.get(tmpLayer)));
+                        .mapToObj( i -> new Pair<>(i, Integer.parseInt(elements[i].trim())))
+                        .filter( i -> i.second != 0)
+                        .map(i -> {
+                            int x = i.first % width;
+                            int y = i.first / width;
+                            TileInformation tile = new TileInformation();
+                            tile.setxPos(x);
+                            tile.setyPos(y);
+                            tile.setWidth(tileWidth * ratioX);
+                            tile.setHeight(tileHeight * ratioY);
+                            tile.generateRect();
+                            tile.setTilesetPiece(i.second);
+                            usedTilesInMap.add(i.second);
+                            return tile;
+                        }).collect(Collectors.toCollection(() -> this.map.get(tmpLayer)));
 
 
                 Log.d("TileLoader", "Finished Loading Tiles");
@@ -216,26 +215,16 @@ public class TileLoader {
             BitmapRegionDecoder decoder = BitmapRegionDecoder.newInstance(getGraphicsStream(sourceImage), false);
 
             Log.d("TileLoader", "Start Splitting " + usedTilesInTileset.size() + " Tiles");
-            //TODO: List to Map?!
-            /*usedTilesInTileset.parallelStream().filter(i -> (i<firstGID || i > firstGID+tiles)).map(
-                    i -> {
-                        int realPosInTileset = i - firstGID;
-                        int xPos = (realPosInTileset % columns) * tileWidth;
-                        int yPos = (realPosInTileset / columns) * tileHeight;
-                        Bitmap region = decoder.decodeRegion(new Rect( xPos, yPos, xPos+tileWidth, yPos+tileHeight), null);
-                        return region;
-                    }
-            ).collect(Collectors.toMap())*/
             for (Integer i : usedTilesInTileset) {
                 if (i < firstGID || i > firstGID + tiles) continue;
                 int realPosInTileset = i - firstGID;
                 int xPos = (realPosInTileset % columns) * tileWidth;
                 int yPos = (realPosInTileset / columns) * tileHeight;
                 Bitmap region = decoder.decodeRegion(new Rect(xPos, yPos, xPos + tileWidth, yPos + tileHeight), null);
-                region = Bitmap.createScaledBitmap(region, (int)(region.getWidth()*ratioX), (int)(region.getHeight()*ratioY), false);
+                region = Bitmap.createScaledBitmap(region, region.getWidth()*ratioX, region.getHeight()*ratioY, false);
                 this.tiles.put(i, region);
             }
-            Log.d("TileLoader", "Finished Generating Bitmaps");
+            Log.d("TileLoader", "Finished Generating Bitmaps" + this.tiles.size());
 
         } catch (FileNotFoundException e) {
             e.printStackTrace();
