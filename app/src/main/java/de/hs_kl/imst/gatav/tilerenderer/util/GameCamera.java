@@ -66,16 +66,20 @@ public class GameCamera {
 
         /* Out of Bounds Check */
         if (xPos < 0) {
+            // Links
             cameraXCenter = canvasWidth / 2;
             xPos = 0;
         } else if (xPos > levelWidth - canvasWidth) {
+            // rechts
             cameraXCenter = levelWidth - (canvasWidth / 2);
             xPos = levelWidth - canvasWidth;
         }
         if (yPos < 0) {
+            //oben
             cameraYCenter = canvasHeight / 2;
             yPos = 0;
         } else if (yPos > levelHeight - canvasHeight) {
+            //unten
             cameraYCenter = levelHeight - (canvasHeight / 2);
             yPos = levelHeight - canvasHeight;
         }

@@ -54,7 +54,8 @@ public class World {
                 Rect test = currentTile.getTileRect();
                 if (camera.isRectInView(test)) {
                     Bitmap bmp = tileLoader.getTiles().get(currentTile.getTilesetPiece());
-                    canvas.drawBitmap(bmp, test.left, test.top, null);
+                    if (bmp != null)
+                        canvas.drawBitmap(bmp, test.left, test.top, null);
                 }
             }
         }
