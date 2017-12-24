@@ -24,11 +24,12 @@ var Particle = function () {
     this.vx = 0;
     this.vy = 2 * Math.random() + 2;
     this.Color = GetRandomColor();
+    this.width = 2 + 8 * Math.random();
 }
 //Ading two methods
 Particle.prototype.Draw = function (ctx) {
     ctx.fillStyle = this.Color;
-    ctx.fillRect(this.x, this.y, 2, 2 + 8 * Math.random());
+    ctx.fillRect(this.x, this.y, 2, this.width);
 }
 Particle.prototype.Update = function () {
     this.y += this.vy;
