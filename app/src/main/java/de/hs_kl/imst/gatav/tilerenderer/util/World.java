@@ -26,11 +26,13 @@ public class World {
     private Map<String, List<Collidable>> objects;
     private float step;
     private PhysicsController physics;
+    private GameEventHandler gameEvents;
 
     public World(TileLoader tileLoader, float step) {
         this.tileLoader = tileLoader;
         objects = tileLoader.getObjectGroups();
         physics = new PhysicsController(this);
+        gameEvents = new GameEventHandler(this.getObjects());
         this.step = step;
     }
 
@@ -43,6 +45,7 @@ public class World {
             x.update(delta);
         }
         physics.Update(step, cam);
+        gameEvents.update(cam);
     }
 
     public void draw(GameCamera camera, Canvas canvas) {
@@ -75,6 +78,19 @@ public class World {
             }
         }
 
+        //3. Draw finish
+        Collidable finish = objects.get("Ziel").get(0);
+        Paint goalP = new Paint();
+        goalP.setColor(Color.argb(128, 255, 255, 0));
+        if (finish != null) {
+            if (finish instanceof Rectangle) {
+                Rect r = ((Rectangle) finish).getRect();
+                if (camera.isRectInView(r)) {
+                    canvas.drawRect(r, goalP);
+                }
+            }
+        }
+
         //3. Draw all Dynamic Objects
         for (Drawables object : dynamicObjects) {
             object.draw(canvas);
@@ -85,5 +101,6 @@ public class World {
     public void addGameObject(MovableGraphics object) {
         dynamicObjects.add(object);
         physics.addPhysical(object);
+        gameEvents.addDynamicObject(object);
     }
 }

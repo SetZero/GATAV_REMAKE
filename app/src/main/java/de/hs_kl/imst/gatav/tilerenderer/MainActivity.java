@@ -4,6 +4,7 @@ import android.content.Intent;
 import android.content.res.AssetManager;
 import android.support.v7.app.AppCompatActivity;
 import android.os.Bundle;
+import android.view.View;
 import android.webkit.WebSettings;
 import android.webkit.WebView;
 
@@ -25,6 +26,10 @@ public class MainActivity extends AppCompatActivity {
         mainMenuView.loadUrl("file:///android_asset/webView/index.html");
         WebSettings webSettings = mainMenuView.getSettings();
         webSettings.setJavaScriptEnabled(true);
+        mainMenuView.setLongClickable(false);
+        mainMenuView.setHapticFeedbackEnabled(false);
+        mainMenuView.setOnLongClickListener(v -> true);
+
         mainMenuView.addJavascriptInterface(new WebAppInterface(this, am), "Android");
     }
 

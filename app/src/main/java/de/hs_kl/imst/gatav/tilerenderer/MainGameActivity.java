@@ -2,8 +2,8 @@ package de.hs_kl.imst.gatav.tilerenderer;
 
 import android.support.v7.app.AppCompatActivity;
 import android.os.Bundle;
-import android.view.Menu;
-import android.view.MenuItem;
+
+import de.hs_kl.imst.gatav.tilerenderer.util.GameEventExecutioner;
 
 public class MainGameActivity extends AppCompatActivity {
 
@@ -12,6 +12,7 @@ public class MainGameActivity extends AppCompatActivity {
     @Override
     protected void onCreate(Bundle savedInstanceState) {
         super.onCreate(savedInstanceState);
+        GameEventExecutioner ctrl = new GameEventExecutioner(this);
 
         String level=getIntent().getExtras().getString("level");
 

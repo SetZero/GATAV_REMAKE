@@ -69,7 +69,7 @@ public class GameCamera {
             // Links
             cameraXCenter = canvasWidth / 2;
             xPos = 0;
-        } else if (xPos > levelWidth - canvasWidth) {
+        } else if (xPos > (levelWidth*ScaleHelper.getRatioY()) - canvasWidth) {
             // rechts
             cameraXCenter = levelWidth - (canvasWidth / 2);
             xPos = levelWidth - canvasWidth;
