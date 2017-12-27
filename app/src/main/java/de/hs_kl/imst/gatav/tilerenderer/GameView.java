@@ -244,18 +244,17 @@ public class GameView extends SurfaceView implements SurfaceHolder.Callback, Run
         if(runningTimeThread) return;
         runningTimeThread = true;
         resetElapsedTime();
-        timeThread = new Thread(new Runnable() {
-            public void run() {
-                while (runningTimeThread) {
-                    increaseElapsedTime(0.01);
+        timeThread = new Thread(() -> {
+            while (runningTimeThread) {
+                increaseElapsedTime(0.01);
 
-                    try {
-                        Thread.sleep(10);
-                    } catch (InterruptedException ex) {
-                        runningTimeThread=false;
-                    }
+                try {
+                    Thread.sleep(10);
+                } catch (InterruptedException ex) {
+                    runningTimeThread=false;
                 }
-            }});
+            }
+        });
         timeThread.start();
     }
 

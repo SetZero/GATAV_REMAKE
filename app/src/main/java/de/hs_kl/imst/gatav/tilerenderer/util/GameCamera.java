@@ -41,6 +41,12 @@ public class GameCamera {
         this.cameraYCenter = y;
     }
 
+    public boolean isAttachedToObject() {
+        if(attachedTo == null)
+            return false;
+        return true;
+    }
+
 
     public void setLevelHeight(int levelHeight) {
         this.levelHeight = levelHeight;
