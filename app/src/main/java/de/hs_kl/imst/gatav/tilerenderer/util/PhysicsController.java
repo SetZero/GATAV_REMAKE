@@ -30,7 +30,7 @@ public class PhysicsController {
     public PhysicsController(World world){
         this.world = world;
         list = new ArrayList<Collidable>();
-        for(Collidable c: world.getObjects().get("Kollisionen")) list.add(c);
+        for(Collidable c: world.getObjects().get(Constants.collisionObjectGroupString)) list.add(c);
     }
     public void removePhysical(MovableGraphics x){
         list.remove(x.getHitbox());

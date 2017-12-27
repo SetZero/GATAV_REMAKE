@@ -32,6 +32,7 @@ import javax.xml.parsers.DocumentBuilder;
 import javax.xml.parsers.DocumentBuilderFactory;
 import javax.xml.parsers.ParserConfigurationException;
 
+import de.hs_kl.imst.gatav.tilerenderer.util.Constants;
 import de.hs_kl.imst.gatav.tilerenderer.util.Hitboxes.Collidable;
 import de.hs_kl.imst.gatav.tilerenderer.util.Hitboxes.Rectangle;
 import de.hs_kl.imst.gatav.tilerenderer.util.ScaleHelper;
@@ -107,7 +108,7 @@ public class TileLoader {
         try {
             DocumentBuilderFactory factory = DocumentBuilderFactory.newInstance();
             DocumentBuilder builder = factory.newDocumentBuilder();
-            InputStream fis = assetManager.open("levels/" + filename + ".tmx");
+            InputStream fis = assetManager.open(Constants.worldSaveLocation + "/" + filename + ".tmx");
             InputSource is = new InputSource(fis);
             Document doc = builder.parse(is);
             Node map = doc.getElementsByTagName("map").item(0);

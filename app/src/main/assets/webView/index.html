@@ -23,14 +23,14 @@
         <script src="js/vendor/jquery-1.11.2.min.js"></script>
         <script>
             $( "#level-selector" ).on("click", "a", function() {
-                Android.loadLevel($(this).text());
+                Android.loadLevel($(this).attr("href").replace('#',''));
             });
             $( document ).ready(function() {
                 var levels = Android.showLevel();
                 var obj = jQuery.parseJSON(levels);
-                obj.forEach(function(element) {
-                    $('#level-selector').append('<li><a href="#' + element + '">' + element + '</a></li>');
-                });
+               obj["maps"].forEach(function(element) {
+                    $('#level-selector').append('<li><a href="#' + element["saveLocation"] + '">' + element["name"] + '</a></li>');
+               });
             });
         </script>
 

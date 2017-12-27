@@ -56,7 +56,8 @@ public class GameEventHandler {
 
     private boolean hasReachedFinish(GameCamera cam) {
         if (player == null) return false;
-        Collidable finish = objects.get("Ziel").get(0);
+
+        Collidable finish = objects.get(Constants.finishObjectGroupString).get(0);
         if (finish instanceof Rectangle) {
             Rect finishRect = ((Rectangle) finish).getRect();
             if (cam.isRectInView(finishRect)) {
@@ -71,7 +72,7 @@ public class GameEventHandler {
     }
 
     public boolean hasReachCheckpoint() {
-        List<Collidable> checkpoints = objects.get("Checkpoints");
+        List<Collidable> checkpoints = objects.get(Constants.checkpointsObjectGroupString);
         for(Collidable checkpoint: checkpoints) {
             if (checkpoint instanceof Rectangle) {
                 Rect checkpointRect = ((Rectangle) checkpoint).getRect();
