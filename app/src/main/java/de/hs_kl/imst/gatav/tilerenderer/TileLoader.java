@@ -24,6 +24,7 @@ import java.util.ArrayList;
 import java.util.HashMap;
 import java.util.List;
 import java.util.Map;
+import java.util.Observable;
 import java.util.Set;
 import java.util.stream.Collectors;
 import java.util.stream.IntStream;
@@ -38,7 +39,7 @@ import de.hs_kl.imst.gatav.tilerenderer.util.Hitboxes.Rectangle;
 import de.hs_kl.imst.gatav.tilerenderer.util.ScaleHelper;
 import de.hs_kl.imst.gatav.tilerenderer.util.TileInformation;
 
-public class TileLoader {
+public class TileLoader extends Observable implements Runnable{
     private AssetManager assetManager;
     private Context context;
 
@@ -56,6 +57,8 @@ public class TileLoader {
     private int ratioX = (int) ScaleHelper.getRatioX();
     private int ratioY = (int) ScaleHelper.getRatioY();
 
+    private boolean finishedLoading = false;
+
     public TileLoader(Context context, String filename) {
         assert (ratioX > 0) : "Scale Helper never initialized!";
         assert (ratioY > 0) : "Scale Helper never initialized!";
@@ -65,7 +68,16 @@ public class TileLoader {
         this.context = context;
         this.assetManager = context.getAssets();
         this.filename = filename;
+    }
+
+    @Override
+    public void run() {
         xmlLoadMap();
+
+        finishedLoading = true;
+        setChanged();
+        notifyObservers( true );
+        Log.d("TileLoader", "Finished!");
     }
 
     public int getWidth() {
@@ -102,6 +114,10 @@ public class TileLoader {
 
     public Map<String, List<Collidable>> getObjectGroups() {
         return objectGroups;
+    }
+
+    synchronized public boolean isFinishedLoading() {
+        return finishedLoading;
     }
 
     private void xmlLoadMap() {
@@ -181,7 +197,7 @@ public class TileLoader {
         }
     }
 
-    synchronized private void generateBitmaps(String src, int firstGID, Set<Integer> usedTilesInTileset) {
+    private void generateBitmaps(String src, int firstGID, Set<Integer> usedTilesInTileset) {
         Log.d("TileLoader", "Start Generating Bitmaps");
         try {
             DocumentBuilderFactory factory = DocumentBuilderFactory.newInstance();
@@ -212,7 +228,7 @@ public class TileLoader {
                 region = Bitmap.createScaledBitmap(region, region.getWidth() * ratioX, region.getHeight() * ratioY, false);
                 this.tiles.put(i, region);
             }
-            Log.d("TileLoader", "Finished Generating Bitmaps" + this.tiles.size());
+            Log.d("TileLoader", "Finished Generating Bitmaps " + this.tiles.size());
 
         } catch (FileNotFoundException e) {
             e.printStackTrace();
@@ -225,7 +241,7 @@ public class TileLoader {
         }
     }
 
-    synchronized private void loadObjectGroups(Document doc) {
+    private void loadObjectGroups(Document doc) {
         Log.d("TileLoader", "Start Loading Hitboxes ");
         NodeList objectgroups = doc.getElementsByTagName("objectgroup");
         int groups = objectgroups.getLength();

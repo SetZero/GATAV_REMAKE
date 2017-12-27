@@ -68,13 +68,13 @@ public class World {
             for (Map.Entry<String, List<Collidable>> entry : objects.entrySet()) {
                 Paint color = new Paint();
                 switch (entry.getKey()) {
-                    case "Kollisionen":
+                    case Constants.collisionObjectGroupString:
                         color.setColor(Color.argb(128, 0, 65, 200));
                         break;
-                    case "Ziel":
+                    case Constants.finishObjectGroupString:
                         color.setColor(Color.argb(128, 255, 255, 0));
                         break;
-                    case "Checkpoints":
+                    case Constants.checkpointsObjectGroupString:
                         color.setColor(Color.argb(128, 0, 185, 0));
                         break;
                     default:

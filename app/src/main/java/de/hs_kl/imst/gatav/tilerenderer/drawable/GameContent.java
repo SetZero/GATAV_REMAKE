@@ -3,8 +3,14 @@ package de.hs_kl.imst.gatav.tilerenderer.drawable;
 import android.content.Context;
 import android.content.res.AssetManager;
 import android.graphics.Canvas;
+import android.graphics.Color;
+import android.graphics.Paint;
+import android.service.quicksettings.Tile;
+import android.util.Log;
 
 import java.util.ArrayList;
+import java.util.Observable;
+import java.util.Observer;
 import java.util.Random;
 
 import de.hs_kl.imst.gatav.tilerenderer.TileLoader;
@@ -12,7 +18,7 @@ import de.hs_kl.imst.gatav.tilerenderer.util.Direction;
 import de.hs_kl.imst.gatav.tilerenderer.util.GameCamera;
 import de.hs_kl.imst.gatav.tilerenderer.util.World;
 
-public class GameContent implements Drawables {
+public class GameContent implements Drawables, Observer {
     /**
      * Breite und Höhe des Levels in Pixel
      */
@@ -41,6 +47,8 @@ public class GameContent implements Drawables {
     private AssetManager assetManager;
     private String levelName;
 
+    private boolean finishedSetup = false;
+
 
     public GameContent(Context context, String levelName) {
         this.context = context;
@@ -53,40 +61,68 @@ public class GameContent implements Drawables {
         //camera.setCameraXCenter(700);
 
         loadLevel();
-        world = new World(tileLoader,1f/60f);
-        player = new Player(350, 1050);
-        skelett = new Robotic(600,1050);
-        world.addGameObject(player);
-        world.addGameObject(skelett);
-        camera.attach(player);
     }
 
 
     public boolean movePlayer(Direction direction) {
-        player.move(direction);
+        if(finishedSetup)
+            player.move(direction);
         return true;
     }
 
 
     @Override
     public void draw(Canvas canvas) {
-        world.draw(camera,canvas);
+        if(finishedSetup) {
+            world.draw(camera, canvas);
+        } else {
+            String fpsText = String.format("Loading...");
+
+            Paint paint = new Paint();
+
+            paint.setColor(Color.BLACK);
+            paint.setTextSize(20);
+            canvas.drawText(fpsText, 10, 50, paint);
+        }
     }
 
     @Override
     public void update(float delta) {
-        world.update(delta,camera);
+        if(finishedSetup)
+            world.update(delta,camera);
    }
 
     private void loadLevel() {
         tileLoader = new TileLoader(context, levelName);
+        tileLoader.addObserver(this);
+        new Thread(tileLoader).start();
+    }
+
+    private void finishLoading() {
         gameHeight = tileLoader.getHeight();
         gameWidth = tileLoader.getWidth();
         camera.setLevelHeight(gameHeight * tileLoader.getTileHeight());
         camera.setLevelWidth(gameWidth * tileLoader.getTileWidth());
+
+        world = new World(tileLoader,1f/60f);
+        player = new Player(350, 1050);
+        skelett = new Robotic(600,1050);
+        world.addGameObject(player);
+        world.addGameObject(skelett);
+        camera.attach(player);
+
+        finishedSetup = true;
     }
 
-    private void spawnEnemys() {
-
+    @Override
+    public void update(Observable o, Object arg) {
+        Log.d("GameContent", "Got Update!");
+        if(o instanceof TileLoader) {
+            TileLoader tl = (TileLoader) o;
+            if(tl.isFinishedLoading()) {
+                Log.d("GameContent", "Finishing Loading...");
+                finishLoading();
+            }
+        }
     }
 }
