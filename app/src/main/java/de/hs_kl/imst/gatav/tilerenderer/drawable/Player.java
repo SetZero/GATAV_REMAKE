@@ -62,24 +62,24 @@ public final class Player extends MovableGraphics implements Destroyable, Collis
             }
             case LEFT:{
                 if(!isLeftColliding) {
-                    if (velocity.getX() > 0 && velocity.x <= 200f && !isOnGround) {
+                    if (velocity.getX() > 0 && velocity.x <= 400f && !isOnGround) {
                         velocity.x = 0f;
-                        impact(new Vector2(-200f, 0f));
+                        impact(new Vector2(-400f, 0f));
                     }
-                    if (velocity.getX() > -200f) {
-                        impact(new Vector2(-200f, 0f));
+                    if (velocity.getX() > -400f) {
+                        impact(new Vector2(-400f, 0f));
                     }
                 }
                 break;
             }
             case RIGHT:{
                 if(!isRightColliding) {
-                    if (velocity.getX() < 0 && velocity.x >= -200f && !isOnGround) {
+                    if (velocity.getX() < 0 && velocity.x >= -400f && !isOnGround) {
                         velocity.x = 0f;
-                        impact(new Vector2(200f, 0f));
+                        impact(new Vector2(400f, 0f));
                     }
-                    if (velocity.getX() < 200f) {
-                        impact(new Vector2(200f, 0f));
+                    if (velocity.getX() < 400f) {
+                        impact(new Vector2(400f, 0f));
                     }
                 }
                 break;
@@ -110,11 +110,11 @@ public final class Player extends MovableGraphics implements Destroyable, Collis
         if(doublejump != 0 && velocity.getY() == 0) doublejump = 0;
         if(isOnGround && stopDirection != Direction.IDLE){
             if(stopDirection == Direction.LEFT && velocity.getX() < 0f){
-                impact(new Vector2(200f, 0f));
+                impact(new Vector2(400f, 0f));
                 currentDirection = Direction.IDLE;
             }
             else if(stopDirection == Direction.RIGHT && velocity.getX() > 0f){
-                impact(new Vector2(-200f, 0f));
+                impact(new Vector2(-400f, 0f));
                 currentDirection = Direction.IDLE;
             }
             stopDirection = Direction.IDLE;

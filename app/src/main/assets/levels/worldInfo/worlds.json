@@ -1,0 +1,25 @@
+{
+  "version": "0.1",
+  "maps": [
+    {
+      "name": "Welt 1",
+      "description": "Aller Anfang ist Schwer",
+      "saveLocation": "Welt1"
+    },
+    {
+      "name": "Fertige Welt",
+      "description": "Zum Testen",
+      "saveLocation": "finished"
+    },
+    {
+      "name": "Test Welt",
+      "description": "Zum Testen",
+      "saveLocation": "test"
+    },
+    {
+      "name": "Test Backup",
+      "description": "Backup von test",
+      "saveLocation": "test_backup"
+    }
+  ]
+}
