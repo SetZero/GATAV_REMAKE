@@ -1,19 +1,13 @@
 package de.hs_kl.imst.gatav.tilerenderer.drawable;
 
-import android.content.res.AssetManager;
 import android.graphics.Canvas;
 import android.graphics.Color;
-import android.graphics.Matrix;
 import android.graphics.Paint;
 import android.graphics.drawable.BitmapDrawable;
-import android.graphics.drawable.Drawable;
 import android.util.Log;
 
 import java.io.IOException;
 import java.io.InputStream;
-import java.net.MalformedURLException;
-import java.net.URL;
-import java.util.ArrayList;
 
 import de.hs_kl.imst.gatav.tilerenderer.util.Animations;
 import de.hs_kl.imst.gatav.tilerenderer.util.Contact;
@@ -26,6 +20,7 @@ public final class Player extends MovableGraphics implements Destroyable, Collis
     private byte doublejump = 0;
     private float lifePoints =150;
     public static int hitPoints = 40;
+    private float speed = 300f;
     private Direction stopDirection = Direction.IDLE;
     private BitmapDrawable idle;
     private Animations run;
@@ -37,11 +32,13 @@ public final class Player extends MovableGraphics implements Destroyable, Collis
                 InputStream is = GameContent.context.getAssets().open("dynamics/player/Player.png");
                 loadGraphic(is,17,35,5);
                 run = new Animations(1f/4f);
+                is.close();
                 is = GameContent.context.getAssets().open("dynamics/player/Player.png");
                 run.addAnimation(super.loadTextures(is,17,35,1,4,5));
                 idle = run.getDrawable(0f);
                 hitbox = new Rectangle((int)x,(int)y,width-35,height);
                 isActive = true;
+                is.close();
             } catch (IOException e) {
                 e.printStackTrace();
             }
@@ -62,24 +59,24 @@ public final class Player extends MovableGraphics implements Destroyable, Collis
             }
             case LEFT:{
                 if(!isLeftColliding) {
-                    if (velocity.getX() > 0 && velocity.x <= 200f && !isOnGround) {
+                    if (velocity.getX() > 0 && velocity.x <= speed && !isOnGround) {
                         velocity.x = 0f;
-                        impact(new Vector2(-200f, 0f));
+                        impact(new Vector2(-speed, 0f));
                     }
-                    if (velocity.getX() > -200f) {
-                        impact(new Vector2(-200f, 0f));
+                    if (velocity.getX() > -speed) {
+                        impact(new Vector2(-speed, 0f));
                     }
                 }
                 break;
             }
             case RIGHT:{
                 if(!isRightColliding) {
-                    if (velocity.getX() < 0 && velocity.x >= -200f && !isOnGround) {
+                    if (velocity.getX() < 0 && velocity.x >= -speed && !isOnGround) {
                         velocity.x = 0f;
-                        impact(new Vector2(200f, 0f));
+                        impact(new Vector2(speed, 0f));
                     }
-                    if (velocity.getX() < 200f) {
-                        impact(new Vector2(200f, 0f));
+                    if (velocity.getX() < speed) {
+                        impact(new Vector2(speed, 0f));
                     }
                 }
                 break;
@@ -110,11 +107,11 @@ public final class Player extends MovableGraphics implements Destroyable, Collis
         if(doublejump != 0 && velocity.getY() == 0) doublejump = 0;
         if(isOnGround && stopDirection != Direction.IDLE){
             if(stopDirection == Direction.LEFT && velocity.getX() < 0f){
-                impact(new Vector2(200f, 0f));
+                impact(new Vector2(speed, 0f));
                 currentDirection = Direction.IDLE;
             }
             else if(stopDirection == Direction.RIGHT && velocity.getX() > 0f){
-                impact(new Vector2(-200f, 0f));
+                impact(new Vector2(-speed, 0f));
                 currentDirection = Direction.IDLE;
             }
             stopDirection = Direction.IDLE;
@@ -186,22 +183,24 @@ public final class Player extends MovableGraphics implements Destroyable, Collis
 
     @Override
     public void onCollision(Contact c) {
-        //if(c.movable instanceof Skeletton){
-            if(c.siteHidden != PhysicsController.intersectDirection.BOTTOM) {
-                this.lifePoints -= Skeletton.hitPoints;
-                if(c.siteHidden == PhysicsController.intersectDirection.LEFT) {
+        //if(c.movable instanceof Robotic){
+            if(c.siteHidden != PhysicsController.intersectDirection.BOTTOM && c.movable instanceof Enemys) {
+                this.lifePoints -= Robotic.hitPoints;
+                if(c.siteHidden == PhysicsController.intersectDirection.LEFT && ((Enemys)c.movable).isAlive()) {
                     applyLinearImpulse(new Vector2(630f,-280f));
                     //stopMove(Direction.LEFT);
                 }
-                if(c.siteHidden == PhysicsController.intersectDirection.RIGHT) {
+                if(c.siteHidden == PhysicsController.intersectDirection.RIGHT && ((Enemys)c.movable).isAlive()) {
                     applyLinearImpulse(new Vector2(-630f,-280f));
                     //stopMove(Direction.RIGHT);
                 }
 
             }
-            else if(c.siteHidden == PhysicsController.intersectDirection.BOTTOM){
-                velocity.y = 0.0f;
-                move(Direction.UP);Log.d("site hit", ""+c.siteHidden.name());
+            else if(c.siteHidden == PhysicsController.intersectDirection.BOTTOM && c.movable instanceof  Enemys){
+                if(((Enemys)c.movable).isAlive()) {
+                    velocity.y = 0.0f;
+                    impact(new Vector2(0f, -400f));
+                }
 
             }
 

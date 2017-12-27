@@ -56,7 +56,6 @@ public class GameEventHandler {
 
     private boolean hasReachedFinish(GameCamera cam) {
         if (player == null) return false;
-
         Collidable finish = objects.get("Ziel").get(0);
         if (finish instanceof Rectangle) {
             Rect finishRect = ((Rectangle) finish).getRect();

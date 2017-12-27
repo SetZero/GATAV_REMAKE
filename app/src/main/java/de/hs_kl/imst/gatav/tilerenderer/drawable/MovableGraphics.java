@@ -5,6 +5,7 @@ import android.graphics.Bitmap;
 import android.graphics.BitmapFactory;
 import android.graphics.Canvas;
 import android.graphics.Matrix;
+import android.graphics.Rect;
 import android.graphics.drawable.BitmapDrawable;
 import android.util.DisplayMetrics;
 import android.util.Log;
@@ -28,6 +29,15 @@ public abstract class MovableGraphics implements Drawables,CollisionReactive {
     public boolean isLeftColliding = false;
     protected Vector2 linearImpulse = new Vector2();
     protected int width, height;
+
+    public boolean isActive() {
+        return isActive;
+    }
+
+    public void setActive(boolean active) {
+        isActive = active;
+    }
+
     public boolean isActive = false;
     protected boolean isBouncing = false;
     protected  boolean recentYImpulse = false;
@@ -79,7 +89,7 @@ public abstract class MovableGraphics implements Drawables,CollisionReactive {
     }
 
     public void applyLinearImpulse(Vector2 v){
-        this.linearImpulse = v;
+        this.linearImpulse = Vector2.add(v,linearImpulse);
     }
 
     private void move(float delta) {
@@ -100,6 +110,9 @@ public abstract class MovableGraphics implements Drawables,CollisionReactive {
 
     @Override
     public void update(float delta) {
+        Rect temp = new Rect(hitbox.getRect());
+        if(GameContent.camera.isRectInView(temp)) isActive = true;
+        else isActive = false;
         if(isActive){
         move(delta);
         impulse(delta);
@@ -110,10 +123,6 @@ public abstract class MovableGraphics implements Drawables,CollisionReactive {
             offset = (width -hitbox.getWidth())/2;
         hitbox.setX((int)Position.getX()+offset); hitbox.setY((int)Position.getY());
         }
-    }
-
-    protected void getDirection(){
-
     }
 
     /**
@@ -133,8 +142,6 @@ public abstract class MovableGraphics implements Drawables,CollisionReactive {
 
     public void draw(Canvas canvas) {
         if(bmp != null && isActive) {
-            //bmp.draw(canvas);
-
             canvas.drawBitmap(bmp.getBitmap(),Position.getX(),Position.getY(),null);
         }
     }
@@ -153,8 +160,6 @@ public abstract class MovableGraphics implements Drawables,CollisionReactive {
         Bitmap map;
         for(int i =0;i<rows;i++){
             for(int j = 0; j< columns ; j++){
-                //frames.add(new TextureRegion(getTexture(),j*width,i*height,width,height));
-                Log.d("ss","");
                 map = Bitmap.createBitmap(bMap,j*width,i*height,width,height);
                 frames.add(new BitmapDrawable(Bitmap.createScaledBitmap(map,width*scale,height*scale,false)));
             }
