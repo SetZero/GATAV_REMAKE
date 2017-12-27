@@ -103,4 +103,8 @@ public class World {
         physics.addPhysical(object);
         gameEvents.addDynamicObject(object);
     }
+    public void removeGameObject(MovableGraphics object) {
+        dynamicObjects.remove(object);
+        physics.removePhysical(object);
+    }
 }

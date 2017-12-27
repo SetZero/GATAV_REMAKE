@@ -1,13 +1,11 @@
 package de.hs_kl.imst.gatav.tilerenderer.util;
 
 import android.graphics.Rect;
-import android.util.Log;
 
 import java.util.ArrayList;
 import java.util.List;
 
 import de.hs_kl.imst.gatav.tilerenderer.drawable.MovableGraphics;
-import de.hs_kl.imst.gatav.tilerenderer.drawable.Skeletton;
 import de.hs_kl.imst.gatav.tilerenderer.util.Hitboxes.Collidable;
 import de.hs_kl.imst.gatav.tilerenderer.util.Hitboxes.Rectangle;
 
@@ -34,7 +32,10 @@ public class PhysicsController {
         list = new ArrayList<Collidable>();
         for(Collidable c: world.getObjects().get(Constants.collisionObjectGroupString)) list.add(c);
     }
-
+    public void removePhysical(MovableGraphics x){
+        list.remove(x.getHitbox());
+        physicals.remove(x);
+    }
     public void Update(float delta, GameCamera cam){
         for(MovableGraphics item: physicals) {
             boolean groundCollision = false;
@@ -123,10 +124,13 @@ public class PhysicsController {
 
     public ArrayList<Contact> isColliding(MovableGraphics item,GameCamera cam) {
         ArrayList<Contact> contacts = new ArrayList<Contact>();
-
+        Rect view = cam.getCameraViewRect();
+        view.bottom = view.bottom+view.height()/2;
+        view.top = view.top -view.height()/2;
+        view.left = view.left -view.width()/2;
+        view.right = view.right +view.width()/2;
         for(Collidable c : list){
-            //if(cam.isRectInView(((Rectangle)c).getRect())) andere möglichkeit finden, porblematisch wenn
-            //gegner noch in sicht und der grund unter diesem nicht (gegner fällt durch)
+            if(cam.isRectInView(view))
                 contacts.add(collisionDirection(c,item));
         }
         return contacts;
