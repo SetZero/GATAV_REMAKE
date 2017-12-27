@@ -86,4 +86,8 @@ public class World {
         dynamicObjects.add(object);
         physics.addPhysical(object);
     }
+    public void removeGameObject(MovableGraphics object) {
+        dynamicObjects.remove(object);
+        physics.removePhysical(object);
+    }
 }

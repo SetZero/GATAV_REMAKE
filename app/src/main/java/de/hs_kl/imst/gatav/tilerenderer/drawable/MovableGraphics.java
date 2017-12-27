@@ -112,10 +112,6 @@ public abstract class MovableGraphics implements Drawables,CollisionReactive {
         }
     }
 
-    protected void getDirection(){
-
-    }
-
     /**
      * @param is
      * @param width
@@ -133,8 +129,6 @@ public abstract class MovableGraphics implements Drawables,CollisionReactive {
 
     public void draw(Canvas canvas) {
         if(bmp != null && isActive) {
-            //bmp.draw(canvas);
-
             canvas.drawBitmap(bmp.getBitmap(),Position.getX(),Position.getY(),null);
         }
     }
@@ -153,8 +147,6 @@ public abstract class MovableGraphics implements Drawables,CollisionReactive {
         Bitmap map;
         for(int i =0;i<rows;i++){
             for(int j = 0; j< columns ; j++){
-                //frames.add(new TextureRegion(getTexture(),j*width,i*height,width,height));
-                Log.d("ss","");
                 map = Bitmap.createBitmap(bMap,j*width,i*height,width,height);
                 frames.add(new BitmapDrawable(Bitmap.createScaledBitmap(map,width*scale,height*scale,false)));
             }

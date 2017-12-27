@@ -1,19 +1,13 @@
 package de.hs_kl.imst.gatav.tilerenderer.drawable;
 
-import android.content.res.AssetManager;
 import android.graphics.Canvas;
 import android.graphics.Color;
-import android.graphics.Matrix;
 import android.graphics.Paint;
 import android.graphics.drawable.BitmapDrawable;
-import android.graphics.drawable.Drawable;
 import android.util.Log;
 
 import java.io.IOException;
 import java.io.InputStream;
-import java.net.MalformedURLException;
-import java.net.URL;
-import java.util.ArrayList;
 
 import de.hs_kl.imst.gatav.tilerenderer.util.Animations;
 import de.hs_kl.imst.gatav.tilerenderer.util.Contact;
@@ -37,11 +31,13 @@ public final class Player extends MovableGraphics implements Destroyable, Collis
                 InputStream is = GameContent.context.getAssets().open("dynamics/player/Player.png");
                 loadGraphic(is,17,35,5);
                 run = new Animations(1f/4f);
+                is.close();
                 is = GameContent.context.getAssets().open("dynamics/player/Player.png");
                 run.addAnimation(super.loadTextures(is,17,35,1,4,5));
                 idle = run.getDrawable(0f);
                 hitbox = new Rectangle((int)x,(int)y,width-35,height);
                 isActive = true;
+                is.close();
             } catch (IOException e) {
                 e.printStackTrace();
             }
@@ -186,14 +182,14 @@ public final class Player extends MovableGraphics implements Destroyable, Collis
 
     @Override
     public void onCollision(Contact c) {
-        //if(c.movable instanceof Skeletton){
-            if(c.siteHidden != PhysicsController.intersectDirection.BOTTOM) {
-                this.lifePoints -= Skeletton.hitPoints;
-                if(c.siteHidden == PhysicsController.intersectDirection.LEFT) {
+        //if(c.movable instanceof Robotic){
+            if(c.siteHidden != PhysicsController.intersectDirection.BOTTOM && c.movable instanceof Enemys) {
+                this.lifePoints -= Robotic.hitPoints;
+                if(c.siteHidden == PhysicsController.intersectDirection.LEFT && ((Enemys)c.movable).isAlive()) {
                     applyLinearImpulse(new Vector2(630f,-280f));
                     //stopMove(Direction.LEFT);
                 }
-                if(c.siteHidden == PhysicsController.intersectDirection.RIGHT) {
+                if(c.siteHidden == PhysicsController.intersectDirection.RIGHT && ((Enemys)c.movable).isAlive()) {
                     applyLinearImpulse(new Vector2(-630f,-280f));
                     //stopMove(Direction.RIGHT);
                 }

@@ -1,13 +1,11 @@
 package de.hs_kl.imst.gatav.tilerenderer.util;
 
 import android.graphics.Rect;
-import android.util.Log;
 
 import java.util.ArrayList;
 import java.util.List;
 
 import de.hs_kl.imst.gatav.tilerenderer.drawable.MovableGraphics;
-import de.hs_kl.imst.gatav.tilerenderer.drawable.Skeletton;
 import de.hs_kl.imst.gatav.tilerenderer.util.Hitboxes.Collidable;
 import de.hs_kl.imst.gatav.tilerenderer.util.Hitboxes.Rectangle;
 
@@ -34,7 +32,10 @@ public class PhysicsController {
         list = new ArrayList<Collidable>();
         for(Collidable c: world.getObjects().get("Kollisionen")) list.add(c);
     }
-
+    public void removePhysical(MovableGraphics x){
+        list.remove(x.getHitbox());
+        physicals.remove(x);
+    }
     public void Update(float delta, GameCamera cam){
         for(MovableGraphics item: physicals) {
             boolean groundCollision = false;
