@@ -1,27 +1,17 @@
 package de.hs_kl.imst.gatav.tilerenderer.drawable;
 
-
-import android.graphics.Canvas;
-import android.graphics.Color;
-import android.graphics.Paint;
-import android.graphics.drawable.BitmapDrawable;
-import android.view.animation.Animation;
-
 import java.io.InputStream;
 
 import de.hs_kl.imst.gatav.tilerenderer.util.Animations;
-import de.hs_kl.imst.gatav.tilerenderer.util.Direction;
 import de.hs_kl.imst.gatav.tilerenderer.util.Hitboxes.Rectangle;
-import de.hs_kl.imst.gatav.tilerenderer.util.Vector2;
 
 /**
- * Created by keven on 19.12.2017.
+ * Created by keven on 27.12.2017.
  */
 
-public final class Robotic extends Enemys implements CollisionReactive, Destroyable {
-
-    public Robotic(int x, int y){
-        super(x,y, 30, 20,120f);
+public final class Skeletton extends Enemys implements Destroyable,CollisionReactive{
+    public Skeletton(float x, float y){
+        super(x,y, 50, 50,140f);
         try {
             InputStream is = GameContent.context.getAssets().open("dynamics/enemys/robo/idle/Idle1.png");
             loadGraphic(is, 33, 33, 5);
@@ -44,5 +34,4 @@ public final class Robotic extends Enemys implements CollisionReactive, Destroya
             e.printStackTrace();
         }
     }
-
 }

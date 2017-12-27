@@ -20,6 +20,7 @@ public final class Player extends MovableGraphics implements Destroyable, Collis
     private byte doublejump = 0;
     private float lifePoints =150;
     public static int hitPoints = 40;
+    private float speed = 300f;
     private Direction stopDirection = Direction.IDLE;
     private BitmapDrawable idle;
     private Animations run;
@@ -58,24 +59,24 @@ public final class Player extends MovableGraphics implements Destroyable, Collis
             }
             case LEFT:{
                 if(!isLeftColliding) {
-                    if (velocity.getX() > 0 && velocity.x <= 200f && !isOnGround) {
+                    if (velocity.getX() > 0 && velocity.x <= speed && !isOnGround) {
                         velocity.x = 0f;
-                        impact(new Vector2(-200f, 0f));
+                        impact(new Vector2(-speed, 0f));
                     }
-                    if (velocity.getX() > -200f) {
-                        impact(new Vector2(-200f, 0f));
+                    if (velocity.getX() > -speed) {
+                        impact(new Vector2(-speed, 0f));
                     }
                 }
                 break;
             }
             case RIGHT:{
                 if(!isRightColliding) {
-                    if (velocity.getX() < 0 && velocity.x >= -200f && !isOnGround) {
+                    if (velocity.getX() < 0 && velocity.x >= -speed && !isOnGround) {
                         velocity.x = 0f;
-                        impact(new Vector2(200f, 0f));
+                        impact(new Vector2(speed, 0f));
                     }
-                    if (velocity.getX() < 200f) {
-                        impact(new Vector2(200f, 0f));
+                    if (velocity.getX() < speed) {
+                        impact(new Vector2(speed, 0f));
                     }
                 }
                 break;
@@ -106,11 +107,11 @@ public final class Player extends MovableGraphics implements Destroyable, Collis
         if(doublejump != 0 && velocity.getY() == 0) doublejump = 0;
         if(isOnGround && stopDirection != Direction.IDLE){
             if(stopDirection == Direction.LEFT && velocity.getX() < 0f){
-                impact(new Vector2(200f, 0f));
+                impact(new Vector2(speed, 0f));
                 currentDirection = Direction.IDLE;
             }
             else if(stopDirection == Direction.RIGHT && velocity.getX() > 0f){
-                impact(new Vector2(-200f, 0f));
+                impact(new Vector2(-speed, 0f));
                 currentDirection = Direction.IDLE;
             }
             stopDirection = Direction.IDLE;
@@ -195,9 +196,11 @@ public final class Player extends MovableGraphics implements Destroyable, Collis
                 }
 
             }
-            else if(c.siteHidden == PhysicsController.intersectDirection.BOTTOM){
-                velocity.y = 0.0f;
-                move(Direction.UP);Log.d("site hit", ""+c.siteHidden.name());
+            else if(c.siteHidden == PhysicsController.intersectDirection.BOTTOM && c.movable instanceof  Enemys){
+                if(((Enemys)c.movable).isAlive()) {
+                    velocity.y = 0.0f;
+                    impact(new Vector2(0f, -400f));
+                }
 
             }
 

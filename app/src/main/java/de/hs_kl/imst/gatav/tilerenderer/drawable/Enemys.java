@@ -24,7 +24,7 @@ public abstract class Enemys extends MovableGraphics implements Destroyable, Col
     protected Animations run;
     protected Animations dieng;
     protected BitmapDrawable idle;
-    protected int hitboxOffsetX,hitboxOffsetY;
+    //protected int hitboxOffsetX,hitboxOffsetY;
     protected boolean isAlive =true;
     public static int hitPoints;
 
@@ -51,8 +51,8 @@ public abstract class Enemys extends MovableGraphics implements Destroyable, Col
         if(this.lifePoints <= 0) isAlive =false;
         if(isAlive) {
             super.update(delta);
-            hitbox.setX(hitbox.getX()+hitboxOffsetX);
-            hitbox.setY(hitbox.getY()+hitboxOffsetY);
+            hitbox.setX(hitbox.getX()/*+hitboxOffsetX*/);
+            hitbox.setY(hitbox.getY()/*+hitboxOffsetY*/);
             aIHandle();
             stateHandle();
             animationHandle(delta);
@@ -90,7 +90,7 @@ public abstract class Enemys extends MovableGraphics implements Destroyable, Col
             bmp = idle;
         }
         // running right
-        if(currentDirection == Direction.RIGHT && velocity.x > 0){
+        if(currentDirection == Direction.RIGHT ){
             bmp = run.getDrawable(animTime);
             isFlipped = false;
         }

@@ -79,7 +79,7 @@ public abstract class MovableGraphics implements Drawables,CollisionReactive {
     }
 
     public void applyLinearImpulse(Vector2 v){
-        this.linearImpulse = v;
+        this.linearImpulse = Vector2.add(v,linearImpulse);
     }
 
     private void move(float delta) {
