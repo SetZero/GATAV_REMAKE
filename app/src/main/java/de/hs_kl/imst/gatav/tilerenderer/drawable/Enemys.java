@@ -48,6 +48,7 @@ public abstract class Enemys extends MovableGraphics implements Destroyable, Col
 
     @Override
     public void update(float delta){
+        if(isAlive())
         super.update(delta);
         if(this.lifePoints <= 0) isAlive =false;
         if(isActive) {
