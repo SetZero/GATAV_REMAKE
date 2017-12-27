@@ -5,6 +5,7 @@ package de.hs_kl.imst.gatav.tilerenderer.util;
  */
 
 public class Constants {
+    public static final boolean debugBuild = false;
     public static final String worldInfoSaveLocation = "levels/worldInfo/";
     public static final String worldInfoFileName = "worlds.json";
     public static final String worldSaveLocation = "levels/worlds";

@@ -64,27 +64,29 @@ public class World {
         }
 
         //2. Draw all Debug Hitboxes
-        for (Map.Entry<String, List<Collidable>> entry : objects.entrySet()) {
-            Paint color = new Paint();
-            switch(entry.getKey()) {
-                case "Kollisionen":
-                    color.setColor(Color.argb(128, 0, 65, 200));
-                    break;
-                case "Ziel":
-                    color.setColor(Color.argb(128, 255, 255, 0));
-                    break;
-                case "Checkpoints":
-                    color.setColor(Color.argb(128, 0, 185, 0));
-                    break;
-                default:
-                    color.setColor(Color.argb(128, 255, 255, 255));
-            }
-            if (entry.getValue() != null) {
-                for (Collidable collidable : entry.getValue()) {
-                    if (collidable instanceof Rectangle) {
-                        Rect r = ((Rectangle) collidable).getRect();
-                        if (camera.isRectInView(r)) {
-                            canvas.drawRect(r, color);
+        if(Constants.debugBuild) {
+            for (Map.Entry<String, List<Collidable>> entry : objects.entrySet()) {
+                Paint color = new Paint();
+                switch (entry.getKey()) {
+                    case "Kollisionen":
+                        color.setColor(Color.argb(128, 0, 65, 200));
+                        break;
+                    case "Ziel":
+                        color.setColor(Color.argb(128, 255, 255, 0));
+                        break;
+                    case "Checkpoints":
+                        color.setColor(Color.argb(128, 0, 185, 0));
+                        break;
+                    default:
+                        color.setColor(Color.argb(128, 255, 255, 255));
+                }
+                if (entry.getValue() != null) {
+                    for (Collidable collidable : entry.getValue()) {
+                        if (collidable instanceof Rectangle) {
+                            Rect r = ((Rectangle) collidable).getRect();
+                            if (camera.isRectInView(r)) {
+                                canvas.drawRect(r, color);
+                            }
                         }
                     }
                 }
