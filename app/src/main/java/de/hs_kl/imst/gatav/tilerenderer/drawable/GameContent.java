@@ -76,13 +76,7 @@ public class GameContent implements Drawables, Observer {
         if(finishedSetup) {
             world.draw(camera, canvas);
         } else {
-            String fpsText = String.format("Loading...");
-
-            Paint paint = new Paint();
-
-            paint.setColor(Color.BLACK);
-            paint.setTextSize(20);
-            canvas.drawText(fpsText, 10, 50, paint);
+            showLoadingScreen(canvas);
         }
     }
 
@@ -114,13 +108,21 @@ public class GameContent implements Drawables, Observer {
         finishedSetup = true;
     }
 
+    public void showLoadingScreen(Canvas canvas) {
+        String fpsText = String.format("Loading...");
+
+        Paint paint = new Paint();
+
+        paint.setColor(Color.BLACK);
+        paint.setTextSize(20);
+        canvas.drawText(fpsText, 10, 50, paint);
+    }
+
     @Override
     public void update(Observable o, Object arg) {
-        Log.d("GameContent", "Got Update!");
         if(o instanceof TileLoader) {
             TileLoader tl = (TileLoader) o;
             if(tl.isFinishedLoading()) {
-                Log.d("GameContent", "Finishing Loading...");
                 finishLoading();
             }
         }
