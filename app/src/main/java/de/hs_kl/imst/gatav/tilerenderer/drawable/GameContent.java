@@ -5,6 +5,7 @@ import android.content.res.AssetManager;
 import android.graphics.Canvas;
 import android.graphics.Color;
 import android.graphics.Paint;
+import android.graphics.Rect;
 import android.service.quicksettings.Tile;
 import android.util.Log;
 
@@ -16,6 +17,7 @@ import java.util.Random;
 import de.hs_kl.imst.gatav.tilerenderer.TileLoader;
 import de.hs_kl.imst.gatav.tilerenderer.util.Direction;
 import de.hs_kl.imst.gatav.tilerenderer.util.GameCamera;
+import de.hs_kl.imst.gatav.tilerenderer.util.ScaleHelper;
 import de.hs_kl.imst.gatav.tilerenderer.util.World;
 
 public class GameContent implements Drawables, Observer {
@@ -93,14 +95,15 @@ public class GameContent implements Drawables, Observer {
     }
 
     private void finishLoading() {
+        Log.d("GameCOntent", ""+tileLoader.getTileHeight() / (ScaleHelper.getRatioY()*2));
         gameHeight = tileLoader.getHeight();
         gameWidth = tileLoader.getWidth();
         camera.setLevelHeight(gameHeight * tileLoader.getTileHeight());
         camera.setLevelWidth(gameWidth * tileLoader.getTileWidth());
 
         world = new World(tileLoader,1f/60f);
-        player = new Player(350, 1050);
-        skelett = new Robotic(600,1050);
+        player = new Player(350, 0);
+        skelett = new Robotic(600,0);
         world.addGameObject(player);
         world.addGameObject(skelett);
         camera.attach(player);
@@ -109,13 +112,21 @@ public class GameContent implements Drawables, Observer {
     }
 
     public void showLoadingScreen(Canvas canvas) {
-        String fpsText = String.format("Loading...");
+        String fpsText = String.format("Loading... (%d / 100)", tileLoader.getLoadingPercentage());
 
         Paint paint = new Paint();
 
         paint.setColor(Color.BLACK);
         paint.setTextSize(20);
         canvas.drawText(fpsText, 10, 50, paint);
+
+        Rect loadingRect = new Rect();
+        loadingRect.top = (int)(100 * ScaleHelper.getRatioY());
+        loadingRect.left = (int)(40 * ScaleHelper.getRatioX());
+        loadingRect.bottom = (int)(120 * ScaleHelper.getRatioY());
+        loadingRect.right = (int)((40 + (560 * (tileLoader.getLoadingPercentage()/100f)) * ScaleHelper.getRatioY()));
+
+        canvas.drawRect(loadingRect, paint);
     }
 
     @Override

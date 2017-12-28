@@ -2,6 +2,7 @@ package de.hs_kl.imst.gatav.tilerenderer.util;
 
 import android.graphics.Canvas;
 import android.graphics.Rect;
+import android.util.Log;
 
 import de.hs_kl.imst.gatav.tilerenderer.drawable.MovableGraphics;
 
@@ -70,8 +71,22 @@ public class GameCamera {
         int xPos = cameraXCenter - (canvasWidth / 2);
         int yPos = cameraYCenter - (canvasHeight / 2);
 
-        /* Out of Bounds Check */
         if (xPos < 0) {
+            // Links
+            cameraXCenter = canvasWidth / 2;
+            xPos = 0;
+        }
+        if (yPos < 0) {
+            //oben
+            cameraYCenter = canvasHeight / 2;
+            yPos = 0;
+        } else if(cameraYCenter > (levelHeight * ScaleHelper.getRatioY() - canvasHeight/2) + attachedTo.getHitbox().getHeight()/2) {
+            //unten
+            cameraYCenter = (int)(levelHeight * ScaleHelper.getRatioY() - canvasHeight/2) + attachedTo.getHitbox().getHeight()/2;
+            yPos = cameraYCenter - (canvasHeight / 2);
+        }
+        /* Out of Bounds Check */
+        /*if (xPos < 0) {
             // Links
             cameraXCenter = canvasWidth / 2;
             xPos = 0;
@@ -88,7 +103,7 @@ public class GameCamera {
             //unten
             cameraYCenter = levelHeight - (canvasHeight / 2);
             yPos = levelHeight - canvasHeight;
-        }
+        }*/
         //canvas.scale(ratioX, ratioY);
         canvas.translate(-xPos, -yPos);
     }

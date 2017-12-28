@@ -5,6 +5,7 @@ import android.content.Context;
 import android.content.res.AssetManager;
 import android.graphics.Bitmap;
 import android.graphics.BitmapRegionDecoder;
+import android.graphics.Canvas;
 import android.graphics.Rect;
 import android.util.ArraySet;
 import android.util.Log;
@@ -58,6 +59,7 @@ public class TileLoader extends Observable implements Runnable{
     private int ratioY = (int) ScaleHelper.getRatioY();
 
     private boolean finishedLoading = false;
+    private int loadingPercentage = 0;
 
     public TileLoader(Context context, String filename) {
         assert (ratioX > 0) : "Scale Helper never initialized!";
@@ -74,6 +76,7 @@ public class TileLoader extends Observable implements Runnable{
     public void run() {
         xmlLoadMap();
 
+        loadingPercentage = 100;
         finishedLoading = true;
         setChanged();
         notifyObservers( true );
@@ -120,6 +123,10 @@ public class TileLoader extends Observable implements Runnable{
         return finishedLoading;
     }
 
+    synchronized public int getLoadingPercentage() {
+        return loadingPercentage;
+    }
+
     private void xmlLoadMap() {
         try {
             DocumentBuilderFactory factory = DocumentBuilderFactory.newInstance();
@@ -142,7 +149,9 @@ public class TileLoader extends Observable implements Runnable{
             Set<Integer> usedTilesInMap = new ArraySet<>();
 
             Log.d("TileLoader", "Layers: " + this.map.size());
+            loadingPercentage = 10;
             for (int layer = 0; layer < layers; layer++) {
+                loadingPercentage += 20 / layers;
                 Element layerElement = (Element) layerList.item(layer);
                 String layerString = layerElement.getElementsByTagName("data").item(0).getTextContent();
                 //List<String> items = Arrays.asList(layerString.split("\\s*,\\s*"));
@@ -170,19 +179,25 @@ public class TileLoader extends Observable implements Runnable{
 
                 Log.d("TileLoader", "Finished Loading Tiles");
             }
+            loadingPercentage = 30;
 
             NodeList tilesets = doc.getElementsByTagName("tileset");
             int tileAmount = tilesets.getLength();
             for (int i = 0; i < tileAmount; i++) {
+                loadingPercentage += 30 / tileAmount;
                 Element tileElement = (Element) tilesets.item(i);
                 String src = tileElement.getAttribute("source");
                 int firstGID = Integer.parseInt(tileElement.getAttribute("firstgid"));
                 generateBitmaps(src, firstGID, usedTilesInMap);
             }
 
+            loadingPercentage = 60;
+
             loadObjectGroups(doc);
+            loadingPercentage = 100;
+
             tileWidth = tileWidth * ratioX;
-            tileHeight = tileWidth * ratioY;
+            tileHeight = tileHeight * ratioY;
             width = width / (int) ScaleHelper.getRatioX();
             height = height / (int) ScaleHelper.getRatioY();
             fis.close();
@@ -246,10 +261,12 @@ public class TileLoader extends Observable implements Runnable{
         NodeList objectgroups = doc.getElementsByTagName("objectgroup");
         int groups = objectgroups.getLength();
         for (int group = 0; group < groups; group++) {
+            loadingPercentage += (40 / groups) * group;
+
             Log.d("TileLoader", "Hitbox Layer: " + group);
             Element groupElement = (Element) objectgroups.item(group);
             String name = groupElement.getAttribute("name");
-            objectGroups.put(name, new ArrayList<Collidable>());
+            objectGroups.put(name, new ArrayList<>());
 
             NodeList objects = groupElement.getElementsByTagName("object");
             int objectAmount = objects.getLength();
@@ -278,6 +295,24 @@ public class TileLoader extends Observable implements Runnable{
         }
         Log.d("TileLoader", "Finished Hitboxes");
     }
+
+    /*private void generateGameBitmap() {
+        int w = WIDTH_PX;
+        int h = HEIGHT_PX;
+        Bitmap.Config conf = Bitmap.Config.ARGB_8888; // see other conf types
+        Bitmap bmp = Bitmap.createBitmap(w, h, conf); // this creates a MUTABLE bitmap
+        Canvas canvas = new Canvas(bmp);
+
+        List<List<TileInformation>> map = getMap();
+        for (List<TileInformation> currentLayerTiles : map) {
+            for (TileInformation currentTile : currentLayerTiles) {
+                Rect test = currentTile.getTileRect();
+                Bitmap tmpBmp = getTiles().get(currentTile.getTilesetPiece());
+                if (tmpBmp != null)
+                    canvas.drawBitmap(tmpBmp, test.left, test.top, null);
+            }
+        }
+    }*/
 
     private InputStream getGraphicsStream(String graphicsName) {
         try {
