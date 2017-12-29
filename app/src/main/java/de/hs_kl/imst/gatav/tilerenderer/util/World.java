@@ -64,21 +64,23 @@ public class World {
             }
         }*/
         camera.draw(canvas);
-        /*if(camera.getCameraViewRect().width() != 0 && camera.getCameraViewRect().height() != 0) {
-            Bitmap scene = tileLoader.getSceneBitmap();
-            int cameraX = camera.getCameraViewRect().left;
-            int cameraY = camera.getCameraViewRect().top;
-            int cameraWidth = camera.getCameraViewRect().width();
-            int cameraHeight = camera.getCameraViewRect().height();
-            Bitmap croppedBitmap = Bitmap.createBitmap(scene, cameraX, cameraY, cameraWidth, cameraHeight);
-            canvas.drawBitmap(croppedBitmap, cameraX, cameraY, null);
-        }*/
-        //TODO: Use only areas, pre-calculated in TileLoader
-        Bitmap scene = tileLoader.getSceneBitmap();
-        canvas.drawBitmap(scene, 0, 0, null);
+        Rect tmpRect = camera.getCameraViewRect();
+        Bitmap[][] mapChunks = tileLoader.getChunkArray();
+        //TODO: Make 1024 variable of TileLoader
+        int startX = tmpRect.left / 1024;
+        int startY = tmpRect.top / 1024;
+        int endX = tmpRect.right / 1024;
+        int endY = tmpRect.bottom / 1024;
+
+        for (int x = startX; x <= endX; x++) {
+            for (int y = startY; y <= endY; y++) {
+                if(x >= mapChunks.length || y >= mapChunks[0].length) continue;
+                canvas.drawBitmap(mapChunks[x][y], x*1024, y*1024, null);
+            }
+        }
 
         //2. Draw all Debug Hitboxes
-        if(Constants.debugBuild) {
+        if (Constants.debugBuild) {
             for (Map.Entry<String, List<Collidable>> entry : objects.entrySet()) {
                 Paint color = new Paint();
                 switch (entry.getKey()) {
@@ -119,13 +121,10 @@ public class World {
         physics.addPhysical(object);
         gameEvents.addDynamicObject(object);
     }
+
     public void removeGameObject(MovableGraphics object) {
         dynamicObjects.remove(object);
         physics.removePhysical(object);
     }
 
-    //TODO: Add me!
-    public List<BitmapChunk> getBitmapChunks() {
-        return null;
-    }
 }
