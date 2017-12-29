@@ -24,12 +24,14 @@ public abstract class Enemys extends MovableGraphics implements Destroyable, Col
     protected Animations run;
     protected Animations dieng;
     protected BitmapDrawable idle;
+    protected int scorePoints;
     //protected int hitboxOffsetX,hitboxOffsetY;
     protected boolean isAlive =true;
     public static int hitPoints;
 
-    public Enemys(float x, float y, float lifePoints, int hitPoints, float speed){
+    public Enemys(float x, float y, float lifePoints, int hitPoints, float speed, int scorePoints){
         super(x,y);
+        this.scorePoints = scorePoints;
         this.lifePoints = lifePoints;
         this.hitPoints = hitPoints;
         this.speed = speed;

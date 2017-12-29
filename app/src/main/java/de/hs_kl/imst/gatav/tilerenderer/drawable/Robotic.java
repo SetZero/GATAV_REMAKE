@@ -21,7 +21,7 @@ import de.hs_kl.imst.gatav.tilerenderer.util.Vector2;
 public final class Robotic extends Enemys implements CollisionReactive, Destroyable {
 
     public Robotic(int x, int y){
-        super(x,y, 30, 20,120f);
+        super(x,y, 30, 20,120f,40);
         try {
             InputStream is = GameContent.context.getAssets().open("dynamics/enemys/robo/idle/Idle1.png");
             loadGraphic(is, 33, 33, 5);

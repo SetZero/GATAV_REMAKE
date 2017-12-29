@@ -11,7 +11,7 @@ import de.hs_kl.imst.gatav.tilerenderer.util.Hitboxes.Rectangle;
 
 public final class Skeletton extends Enemys implements Destroyable,CollisionReactive{
     public Skeletton(float x, float y){
-        super(x,y, 50, 50,140f);
+        super(x,y, 50, 50,140f,60);
         try {
             InputStream is = GameContent.context.getAssets().open("dynamics/enemys/robo/idle/Idle1.png");
             loadGraphic(is, 33, 33, 5);

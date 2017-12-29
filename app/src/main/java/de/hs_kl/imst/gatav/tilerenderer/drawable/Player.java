@@ -21,9 +21,28 @@ public final class Player extends MovableGraphics implements Destroyable, Collis
     private float lifePoints =150;
     public static int hitPoints = 40;
     private float speed = 300f;
+    private boolean isAlive = true;
     private Direction stopDirection = Direction.IDLE;
     private BitmapDrawable idle;
     private Animations run;
+    private int score;
+
+    public float getLifePoints() {
+        return lifePoints;
+    }
+
+    public void setLifePoints(float lifePoints) {
+        this.lifePoints = lifePoints;
+    }
+
+    public int getScore() {
+        return score;
+    }
+
+    public void setScore(int score) {
+        this.score = score;
+    }
+
     private float animTime = 0f;
 
     public Player(float x, float y) {
@@ -85,6 +104,11 @@ public final class Player extends MovableGraphics implements Destroyable, Collis
         }
     }
 
+    public boolean isAlive() {
+        return isAlive;
+    }
+
+
     /**
      * interrupts LEFT or RIGHT movement the correct way (is the player on Ground?)
      * this interrupt will occur on the next update (if interrupt is possible)
@@ -96,6 +120,8 @@ public final class Player extends MovableGraphics implements Destroyable, Collis
     @Override
     public void update(float delta){
         super.update(delta);
+        if(lifePoints <=0)
+            isAlive = false;
         stateHandle();
         animationHandle(delta);
     }
@@ -185,13 +211,15 @@ public final class Player extends MovableGraphics implements Destroyable, Collis
     public void onCollision(Contact c) {
         //if(c.movable instanceof Robotic){
             if(c.siteHidden != PhysicsController.intersectDirection.BOTTOM && c.movable instanceof Enemys) {
-                this.lifePoints -= Robotic.hitPoints;
+
                 if(c.siteHidden == PhysicsController.intersectDirection.LEFT && ((Enemys)c.movable).isAlive()) {
                     applyLinearImpulse(new Vector2(630f,-280f));
+                    this.lifePoints -= Robotic.hitPoints;
                     //stopMove(Direction.LEFT);
                 }
                 if(c.siteHidden == PhysicsController.intersectDirection.RIGHT && ((Enemys)c.movable).isAlive()) {
                     applyLinearImpulse(new Vector2(-630f,-280f));
+                    this.lifePoints -= Robotic.hitPoints;
                     //stopMove(Direction.RIGHT);
                 }
 

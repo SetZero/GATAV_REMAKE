@@ -42,7 +42,8 @@ public class GameContent implements Drawables, Observer {
     public int getCollectedScore() { return collectedScore; }
     public static Player player = null;
 
-    Robotic skelett;
+    public Robotic skelett;
+    private HUD hud;
 
     private Random random = new Random();
     public static Context context;
@@ -54,7 +55,6 @@ public class GameContent implements Drawables, Observer {
 
     public GameContent(Context context, String levelName) {
         this.context = context;
-
         this.assetManager = context.getAssets();
         this.levelName = levelName;
 
@@ -63,6 +63,7 @@ public class GameContent implements Drawables, Observer {
         //camera.setCameraXCenter(700);
 
         loadLevel();
+        hud = new HUD(camera);
     }
 
 
@@ -77,6 +78,7 @@ public class GameContent implements Drawables, Observer {
     public void draw(Canvas canvas) {
         if(finishedSetup) {
             world.draw(camera, canvas);
+            hud.draw(canvas);
         } else {
             showLoadingScreen(canvas);
         }
@@ -84,8 +86,11 @@ public class GameContent implements Drawables, Observer {
 
     @Override
     public void update(float delta) {
-        if(finishedSetup)
-            world.update(delta,camera);
+        if(finishedSetup) {
+            world.update(delta, camera);
+            hud.update(delta);
+            if (!player.isAlive()) hud.drawPopupMessage("You Died", 5);
+        }
    }
 
     private void loadLevel() {
@@ -100,14 +105,12 @@ public class GameContent implements Drawables, Observer {
         gameWidth = tileLoader.getWidth();
         camera.setLevelHeight(gameHeight * tileLoader.getTileHeight());
         camera.setLevelWidth(gameWidth * tileLoader.getTileWidth());
-
         world = new World(tileLoader,1f/60f);
-        player = new Player(350, 0);
-        skelett = new Robotic(600,0);
+        player = new Player(350, 1650);
+        skelett = new Robotic(600,1650);
         world.addGameObject(player);
         world.addGameObject(skelett);
         camera.attach(player);
-
         finishedSetup = true;
     }
 
