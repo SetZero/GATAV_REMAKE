@@ -44,14 +44,14 @@ public class GameEventHandler {
             }
         }
 
-        /*if(cam.isAttachedToObject() && isOutOfBounds(cam)) {
+        if(cam.isAttachedToObject() && isOutOfBounds(cam)) {
             //TODO: Add some Death Screen
             Log.d("GameEventHandler", "U diededed!");
             if(gameState.getLastCheckpoint() != null) {
                 Log.d("GameEventHandler", "Reset!");
                 player.setPosition(gameState.getLastCheckpoint());
             }
-        }*/
+        }
     }
 
     private boolean hasReachedFinish(GameCamera cam) {

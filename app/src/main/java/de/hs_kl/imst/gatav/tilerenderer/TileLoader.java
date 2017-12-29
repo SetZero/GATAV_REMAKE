@@ -40,6 +40,9 @@ import de.hs_kl.imst.gatav.tilerenderer.util.Hitboxes.Rectangle;
 import de.hs_kl.imst.gatav.tilerenderer.util.ScaleHelper;
 import de.hs_kl.imst.gatav.tilerenderer.util.TileInformation;
 
+/**
+ * Created by Sebastian on 2017-12-05.
+ */
 public class TileLoader extends Observable implements Runnable{
     private AssetManager assetManager;
     private Context context;
@@ -60,6 +63,8 @@ public class TileLoader extends Observable implements Runnable{
 
     private boolean finishedLoading = false;
     private int loadingPercentage = 0;
+
+    private Bitmap sceneBitmap;
 
     public TileLoader(Context context, String filename) {
         assert (ratioX > 0) : "Scale Helper never initialized!";
@@ -125,6 +130,10 @@ public class TileLoader extends Observable implements Runnable{
 
     synchronized public int getLoadingPercentage() {
         return loadingPercentage;
+    }
+
+    public Bitmap getSceneBitmap() {
+        return sceneBitmap;
     }
 
     private void xmlLoadMap() {
@@ -194,12 +203,17 @@ public class TileLoader extends Observable implements Runnable{
             loadingPercentage = 60;
 
             loadObjectGroups(doc);
-            loadingPercentage = 100;
+            loadingPercentage = 90;
+
 
             tileWidth = tileWidth * ratioX;
             tileHeight = tileHeight * ratioY;
-            width = width / (int) ScaleHelper.getRatioX();
-            height = height / (int) ScaleHelper.getRatioY();
+
+            generateGameBitmap();
+            loadingPercentage = 100;
+            //width = width / (int) ScaleHelper.getRatioX();
+            //height = height / (int) ScaleHelper.getRatioY();
+            Log.d("TileLoader", "Height: " + height);
             fis.close();
         } catch (FileNotFoundException e) {
             e.printStackTrace();
@@ -233,7 +247,6 @@ public class TileLoader extends Observable implements Runnable{
             String sourceImage = imageElement.getAttribute("source");
             BitmapRegionDecoder decoder = BitmapRegionDecoder.newInstance(getGraphicsStream(sourceImage), false);
 
-            Log.d("TileLoader", "Start Splitting " + usedTilesInTileset.size() + " Tiles");
             for (Integer i : usedTilesInTileset) {
                 if (i < firstGID || i > firstGID + tiles) continue;
                 int realPosInTileset = i - firstGID;
@@ -296,11 +309,11 @@ public class TileLoader extends Observable implements Runnable{
         Log.d("TileLoader", "Finished Hitboxes");
     }
 
-    /*private void generateGameBitmap() {
-        int w = WIDTH_PX;
-        int h = HEIGHT_PX;
-        Bitmap.Config conf = Bitmap.Config.ARGB_8888; // see other conf types
-        Bitmap bmp = Bitmap.createBitmap(w, h, conf); // this creates a MUTABLE bitmap
+    private void generateGameBitmap() {
+        int w = width * tileWidth;
+        int h = height * tileHeight;
+        Bitmap.Config conf = Bitmap.Config.ARGB_8888;
+        Bitmap bmp = Bitmap.createBitmap(w, h, conf);
         Canvas canvas = new Canvas(bmp);
 
         List<List<TileInformation>> map = getMap();
@@ -312,7 +325,8 @@ public class TileLoader extends Observable implements Runnable{
                     canvas.drawBitmap(tmpBmp, test.left, test.top, null);
             }
         }
-    }*/
+        sceneBitmap = bmp;
+    }
 
     private InputStream getGraphicsStream(String graphicsName) {
         try {

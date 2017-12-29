@@ -100,7 +100,7 @@ public class GameContent implements Drawables, Observer {
     }
 
     private void finishLoading() {
-        Log.d("GameCOntent", ""+tileLoader.getTileHeight() / (ScaleHelper.getRatioY()*2));
+        Log.d("GameContent", ""+tileLoader.getTileHeight()  * tileLoader.getTileHeight());
         gameHeight = tileLoader.getHeight();
         gameWidth = tileLoader.getWidth();
         camera.setLevelHeight(gameHeight * tileLoader.getTileHeight());
@@ -120,8 +120,8 @@ public class GameContent implements Drawables, Observer {
         Paint paint = new Paint();
 
         paint.setColor(Color.BLACK);
-        paint.setTextSize(20);
-        canvas.drawText(fpsText, 10, 50, paint);
+        paint.setTextSize(20 * ScaleHelper.getRatioY());
+        canvas.drawText(fpsText, 10 * ScaleHelper.getRatioY(), 50 * ScaleHelper.getRatioY(), paint);
 
         Rect loadingRect = new Rect();
         loadingRect.top = (int)(100 * ScaleHelper.getRatioY());

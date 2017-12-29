@@ -14,6 +14,7 @@ import de.hs_kl.imst.gatav.tilerenderer.util.Contact;
 import de.hs_kl.imst.gatav.tilerenderer.util.Direction;
 import de.hs_kl.imst.gatav.tilerenderer.util.Hitboxes.Rectangle;
 import de.hs_kl.imst.gatav.tilerenderer.util.PhysicsController;
+import de.hs_kl.imst.gatav.tilerenderer.util.ScaleHelper;
 import de.hs_kl.imst.gatav.tilerenderer.util.Vector2;
 
 public final class Player extends MovableGraphics implements Destroyable, CollisionReactive{
@@ -49,11 +50,11 @@ public final class Player extends MovableGraphics implements Destroyable, Collis
         super(x, y);
             try {
                 InputStream is = GameContent.context.getAssets().open("dynamics/player/Player.png");
-                loadGraphic(is,17,35,5);
+                loadGraphic(is,17,35,ScaleHelper.getEntitiyScale());
                 run = new Animations(1f/4f);
                 is.close();
                 is = GameContent.context.getAssets().open("dynamics/player/Player.png");
-                run.addAnimation(super.loadTextures(is,17,35,1,4,5));
+                run.addAnimation(super.loadTextures(is,17,35,1,4, ScaleHelper.getEntitiyScale()));
                 idle = run.getDrawable(0f);
                 hitbox = new Rectangle((int)x,(int)y,width-35,height);
                 isActive = true;

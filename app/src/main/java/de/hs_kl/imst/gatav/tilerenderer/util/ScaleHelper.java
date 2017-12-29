@@ -32,4 +32,8 @@ public class ScaleHelper {
         ratioX = (int)(canvasHeight / (float)cameraViewHeight);
         ratioY = (int)(canvasWidth / (float)cameraViewWidth);
     }
+
+    public static int getEntitiyScale() {
+        return (int)((5f / 3f) * getRatioY());
+    }
 }
