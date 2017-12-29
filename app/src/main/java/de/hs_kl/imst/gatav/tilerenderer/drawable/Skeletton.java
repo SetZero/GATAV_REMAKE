@@ -4,6 +4,7 @@ import java.io.InputStream;
 
 import de.hs_kl.imst.gatav.tilerenderer.util.Animations;
 import de.hs_kl.imst.gatav.tilerenderer.util.Hitboxes.Rectangle;
+import de.hs_kl.imst.gatav.tilerenderer.util.ScaleHelper;
 
 /**
  * Created by keven on 27.12.2017.
@@ -14,7 +15,7 @@ public final class Skeletton extends Enemys implements Destroyable,CollisionReac
         super(x,y, 50, 50,140f);
         try {
             InputStream is = GameContent.context.getAssets().open("dynamics/enemys/robo/idle/Idle1.png");
-            loadGraphic(is, 33, 33, 5);
+            loadGraphic(is, 33, 33, ScaleHelper.getEntitiyScale());
             is.close();
             run = new Animations(1f / 4f);
             run.addAnimation(Animations.frameLoad("dynamics/enemys/robo/run/Run", 8, 175, 175));

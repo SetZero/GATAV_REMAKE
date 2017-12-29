@@ -5,6 +5,7 @@ import android.graphics.Canvas;
 import android.graphics.Color;
 import android.graphics.Paint;
 import android.graphics.Rect;
+import android.util.Log;
 
 import java.util.ArrayList;
 import java.util.List;
@@ -50,7 +51,7 @@ public class World {
 
     public void draw(GameCamera camera, Canvas canvas) {
         //1. Load All Tiles
-        List<List<TileInformation>> map = tileLoader.getMap();
+        /*List<List<TileInformation>> map = tileLoader.getMap();
         camera.draw(canvas);
         for (List<TileInformation> currentLayerTiles : map) {
             for (TileInformation currentTile : currentLayerTiles) {
@@ -61,7 +62,20 @@ public class World {
                         canvas.drawBitmap(bmp, test.left, test.top, null);
                 }
             }
-        }
+        }*/
+        camera.draw(canvas);
+        /*if(camera.getCameraViewRect().width() != 0 && camera.getCameraViewRect().height() != 0) {
+            Bitmap scene = tileLoader.getSceneBitmap();
+            int cameraX = camera.getCameraViewRect().left;
+            int cameraY = camera.getCameraViewRect().top;
+            int cameraWidth = camera.getCameraViewRect().width();
+            int cameraHeight = camera.getCameraViewRect().height();
+            Bitmap croppedBitmap = Bitmap.createBitmap(scene, cameraX, cameraY, cameraWidth, cameraHeight);
+            canvas.drawBitmap(croppedBitmap, cameraX, cameraY, null);
+        }*/
+        //TODO: Use only areas, pre-calculated in TileLoader
+        Bitmap scene = tileLoader.getSceneBitmap();
+        canvas.drawBitmap(scene, 0, 0, null);
 
         //2. Draw all Debug Hitboxes
         if(Constants.debugBuild) {
