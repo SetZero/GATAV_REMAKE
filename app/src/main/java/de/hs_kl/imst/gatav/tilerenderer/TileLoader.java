@@ -198,8 +198,9 @@ public class TileLoader extends Observable implements Runnable{
 
             tileWidth = tileWidth * ratioX;
             tileHeight = tileHeight * ratioY;
-            width = width / (int) ScaleHelper.getRatioX();
-            height = height / (int) ScaleHelper.getRatioY();
+            //width = width / (int) ScaleHelper.getRatioX();
+            //height = height / (int) ScaleHelper.getRatioY();
+            Log.d("TileLoader", "Height: " + height);
             fis.close();
         } catch (FileNotFoundException e) {
             e.printStackTrace();
@@ -233,7 +234,6 @@ public class TileLoader extends Observable implements Runnable{
             String sourceImage = imageElement.getAttribute("source");
             BitmapRegionDecoder decoder = BitmapRegionDecoder.newInstance(getGraphicsStream(sourceImage), false);
 
-            Log.d("TileLoader", "Start Splitting " + usedTilesInTileset.size() + " Tiles");
             for (Integer i : usedTilesInTileset) {
                 if (i < firstGID || i > firstGID + tiles) continue;
                 int realPosInTileset = i - firstGID;

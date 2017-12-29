@@ -71,18 +71,21 @@ public class GameCamera {
         int xPos = cameraXCenter - (canvasWidth / 2);
         int yPos = cameraYCenter - (canvasHeight / 2);
 
+
         if (xPos < 0) {
             // Links
             cameraXCenter = canvasWidth / 2;
             xPos = 0;
+        } else if(cameraXCenter > (levelWidth - canvasWidth / 2)) {
+            cameraXCenter = (levelWidth - canvasWidth/2);
+            xPos = cameraXCenter - (canvasWidth / 2);
         }
         if (yPos < 0) {
             //oben
             cameraYCenter = canvasHeight / 2;
             yPos = 0;
-        } else if(cameraYCenter > (levelHeight * ScaleHelper.getRatioY() - canvasHeight/2) + attachedTo.getHitbox().getHeight()/2) {
-            //unten
-            cameraYCenter = (int)(levelHeight * ScaleHelper.getRatioY() - canvasHeight/2) + attachedTo.getHitbox().getHeight()/2;
+        } else if(cameraYCenter > (levelHeight - canvasHeight/2)) {
+            cameraYCenter = (levelHeight - canvasHeight/2);
             yPos = cameraYCenter - (canvasHeight / 2);
         }
         /* Out of Bounds Check */
