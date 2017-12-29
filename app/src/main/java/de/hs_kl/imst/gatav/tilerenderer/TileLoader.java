@@ -312,8 +312,8 @@ public class TileLoader extends Observable implements Runnable{
     private void generateGameBitmap() {
         int w = width * tileWidth;
         int h = height * tileHeight;
-        Bitmap.Config conf = Bitmap.Config.ARGB_8888; // see other conf types
-        Bitmap bmp = Bitmap.createBitmap(w, h, conf); // this creates a MUTABLE bitmap
+        Bitmap.Config conf = Bitmap.Config.ARGB_8888;
+        Bitmap bmp = Bitmap.createBitmap(w, h, conf);
         Canvas canvas = new Canvas(bmp);
 
         List<List<TileInformation>> map = getMap();

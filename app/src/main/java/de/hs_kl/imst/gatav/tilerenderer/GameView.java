@@ -134,7 +134,6 @@ public class GameView extends SurfaceView implements SurfaceHolder.Callback, Run
             canvas.translate(0, (int)(timeTextBounds.height()*1.5));
             canvas.drawText(timeText, 0, 0, scoreAndTimePaint);
         }
-        // TODO
         canvas.restore();*/
     }
 

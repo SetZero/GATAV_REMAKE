@@ -123,4 +123,9 @@ public class World {
         dynamicObjects.remove(object);
         physics.removePhysical(object);
     }
+
+    //TODO: Add me!
+    public List<BitmapChunk> getBitmapChunks() {
+        return null;
+    }
 }
