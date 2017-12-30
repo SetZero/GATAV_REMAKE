@@ -77,7 +77,7 @@ public final class Player extends MovableGraphics implements Destroyable, Collis
                 if (velocity.getY() != 0 && previous == Direction.DOWN) doublejump ++;
                 if(doublejump < 2){
                     velocity.setY(0f);
-                    impact(new Vector2(0f,-470f));
+                    impact(new Vector2(0f,-550f));
                     currentDirection = Direction.UP;
                     doublejump++;
                 }
