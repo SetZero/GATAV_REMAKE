@@ -32,14 +32,24 @@ public class GameContent implements Drawables, Observer {
      */
     private int gameWidth = -1;
     private int gameHeight = -1;
+	
+    //TODO wieder entfernen
+    private boolean test = true;
+    public int getGameWidth() { return gameWidth; }
+    public int getGameHeight() { return gameHeight; }
+
     /**
      * Der Tile Loader in welchem das Aktuelle Level geladen wird
      */
     private TileLoader tileLoader;
-    private ArrayList<MovableGraphics> dynamics = new ArrayList<>();
-    private int collectedTargets = 0;
-    private int collectedScore = 0;
-    private HUD hud;
+
+    public static GameCamera camera = new GameCamera();
+    public static World world;
+    public static Player player = null;
+
+    public Robotic skelett;
+    public  HUD hud;
+
     private Random random = new Random();
     private AssetManager assetManager;
     private String levelName;
@@ -73,10 +83,10 @@ public class GameContent implements Drawables, Observer {
         return collectedScore;
     }
 
-    public boolean movePlayer(Direction direction) {
-        if (finishedSetup)
+
+    public void movePlayer(Direction direction) {
+        if(finishedSetup)
             player.move(direction);
-        return true;
     }
 
 
@@ -84,7 +94,6 @@ public class GameContent implements Drawables, Observer {
     public void draw(Canvas canvas) {
         if (finishedSetup) {
             world.draw(camera, canvas);
-            hud.draw(canvas);
         } else {
             showLoadingScreen(canvas);
         }
@@ -95,7 +104,10 @@ public class GameContent implements Drawables, Observer {
         if (finishedSetup) {
             world.update(delta, camera);
             hud.update(delta);
-            if (!player.isAlive()) hud.drawPopupMessage("You Died", 5);
+            if (!player.isAlive()&& test){
+                test = false;
+                hud.drawPopupMessage("You Died", 5);
+            }
         }
     }
 

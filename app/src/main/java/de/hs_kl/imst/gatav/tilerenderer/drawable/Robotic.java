@@ -22,14 +22,14 @@ import de.hs_kl.imst.gatav.tilerenderer.util.Vector2;
 public final class Robotic extends Enemys implements CollisionReactive, Destroyable {
 
     public Robotic(int x, int y){
-        super(x,y, 30, 20,120f,40);
+        super(x,y, 60, 50,120f,40);
         try {
             InputStream is = GameContent.context.getAssets().open("dynamics/enemys/robo/idle/Idle1.png");
             loadGraphic(is, 33, 33, ScaleHelper.getEntitiyScale());
             is.close();
-            run = new Animations(1f / 4f);
+            run = new Animations(1f / 8f);
             run.addAnimation(Animations.frameLoad("dynamics/enemys/robo/run/Run", 8, 175, 175));
-            dieng = new Animations(1f / 4f);
+            dieng = new Animations(1f / 8f);
             try {
                 dieng.addAnimation(Animations.frameLoad("dynamics/enemys/robo/die/Dead", 10, 175, 175));
             }

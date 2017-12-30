@@ -26,7 +26,17 @@ public abstract class MovableGraphics implements Drawables,CollisionReactive {
     //aktuelle Geschwindigkeit des Objekts
     public boolean isOnGround = false;
     public boolean isRightColliding = false;
+
+    public Vector2 getLinearImpulse() {
+        return linearImpulse;
+    }
+
+    public void setLinearImpulse(Vector2 linearImpulse) {
+        this.linearImpulse = linearImpulse;
+    }
+
     public boolean isLeftColliding = false;
+    protected float friction = 0.0f;
     protected Vector2 linearImpulse = new Vector2();
     protected int width, height;
 
@@ -104,13 +114,18 @@ public abstract class MovableGraphics implements Drawables,CollisionReactive {
         if(linearImpulse.y < -40 || linearImpulse.y > 40) recentYImpulse = true;
         Position = Vector2.add(Vector2.skalarMul(linearImpulse,delta),Position);
         linearImpulse  = Vector2.skalarMul(linearImpulse,0.96f);
+        if(isOnGround && linearImpulse.y > -0.01f && linearImpulse.y < 0.01f){
+            linearImpulse = Vector2.skalarMul(linearImpulse,friction);
+        }
         if(linearImpulse.y > -10 && linearImpulse.y < 10) linearImpulse.y = 0;
         if(linearImpulse.x > -10 && linearImpulse.x < 10) linearImpulse.x = 0;
     }
 
+
     @Override
     public void update(float delta) {
         Rect temp = new Rect(hitbox.getRect());
+        if(velocity.x < 1 && velocity.x > -1) velocity.x = 0f;
         if(GameContent.camera.isRectInView(temp)) isActive = true;
         else isActive = false;
         if(isActive){

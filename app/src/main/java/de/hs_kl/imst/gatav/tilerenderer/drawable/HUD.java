@@ -36,6 +36,7 @@ public class HUD {
     }
 
     public void update(float delta){
+        Log.d("time, length","time "+popupTimer+" length "+popupLength);
         if(msg!= null)
             popupTimer += delta;
         if(popupTimer > popupLength){
@@ -59,7 +60,7 @@ public class HUD {
     private void drawScore(Canvas canvas){
             String scoreText = "Score: " + GameContent.player.getScore();
             //paint.getTextBounds(lpText, 0, 0, lp);
-            canvas.drawText(scoreText, lp.width()+20, 60, paint);
+            canvas.drawText(scoreText, lp.width()+60, 60, paint);
     }
 
     private void drawPopup(Canvas canvas){
