@@ -18,7 +18,6 @@ import de.hs_kl.imst.gatav.tilerenderer.util.Hitboxes.Rectangle;
  */
 
 public class GameEventHandler {
-
     private ArrayList<MovableGraphics> dynamics = new ArrayList<>();
     private Map<String, List<Collidable>> objects;
     private Player player;
@@ -26,6 +25,10 @@ public class GameEventHandler {
 
     public GameEventHandler(Map<String, List<Collidable>> objects) {
         this.objects = objects;
+    }
+
+    public ArrayList<MovableGraphics> getDynamics() {
+        return dynamics;
     }
 
     public void update(GameCamera cam) {

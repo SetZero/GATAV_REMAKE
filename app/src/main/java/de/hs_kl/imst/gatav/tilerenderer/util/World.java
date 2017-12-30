@@ -8,6 +8,7 @@ import android.graphics.Rect;
 import android.util.Log;
 
 import java.util.ArrayList;
+import java.util.Iterator;
 import java.util.List;
 import java.util.Map;
 
@@ -47,6 +48,10 @@ public class World {
         }
         physics.Update(step, cam);
         gameEvents.update(cam);
+
+        dynamicObjects.removeAll(physics.getToRemove());
+        gameEvents.getDynamics().removeAll(physics.getToRemove());
+        physics.cleanup();
     }
 
     public void draw(GameCamera camera, Canvas canvas) {
@@ -123,7 +128,6 @@ public class World {
     }
 
     public void removeGameObject(MovableGraphics object) {
-        dynamicObjects.remove(object);
         physics.removePhysical(object);
     }
 

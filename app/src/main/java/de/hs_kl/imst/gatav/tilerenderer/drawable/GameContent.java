@@ -8,9 +8,7 @@ import android.graphics.Paint;
 import android.graphics.Rect;
 import android.util.Log;
 
-import com.codemonkeylabs.fpslibrary.TinyDancer;
 
-import java.util.ArrayList;
 import java.util.Observable;
 import java.util.Observer;
 import java.util.Random;
@@ -22,11 +20,6 @@ import de.hs_kl.imst.gatav.tilerenderer.util.ScaleHelper;
 import de.hs_kl.imst.gatav.tilerenderer.util.World;
 
 public class GameContent implements Drawables, Observer {
-    public static GameCamera camera = new GameCamera();
-    public static World world;
-    public static Player player = null;
-    public static Context context;
-    public Robotic skelett;
     /**
      * Breite und Höhe des Levels in Pixel
      */
@@ -51,9 +44,13 @@ public class GameContent implements Drawables, Observer {
     public  HUD hud;
 
     private Random random = new Random();
+    public static Context context;
     private AssetManager assetManager;
     private String levelName;
+
     private boolean finishedSetup = false;
+
+
     public GameContent(Context context, String levelName) {
         this.context = context;
         this.assetManager = context.getAssets();
@@ -66,23 +63,6 @@ public class GameContent implements Drawables, Observer {
         loadLevel();
         hud = new HUD(camera);
     }
-
-    public int getGameWidth() {
-        return gameWidth;
-    }
-
-    public int getGameHeight() {
-        return gameHeight;
-    }
-
-    public int getCollectedTargets() {
-        return collectedTargets;
-    }
-
-    public int getCollectedScore() {
-        return collectedScore;
-    }
-
 
     public void movePlayer(Direction direction) {
         if(finishedSetup)
