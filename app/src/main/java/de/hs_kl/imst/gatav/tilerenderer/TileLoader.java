@@ -54,7 +54,7 @@ public class TileLoader extends Observable implements Runnable {
     private int tileHeight = 0;
     private int layers = 0;
     //private int[][][] map;
-    private ArrayList<List<TileInformation>> map;
+    //private ArrayList<List<TileInformation>> map;
     private Map<Integer, Bitmap> tiles = new HashMap<>();
     private Map<String, List<Collidable>> objectGroups = new HashMap<>();
 
@@ -64,7 +64,7 @@ public class TileLoader extends Observable implements Runnable {
     private boolean finishedLoading = false;
     private int loadingPercentage = 0;
 
-    private Bitmap sceneBitmap;
+    //private Bitmap sceneBitmap;
     private Bitmap[][] chunkArray;
 
     public TileLoader(Context context, String filename) {
@@ -137,13 +137,18 @@ public class TileLoader extends Observable implements Runnable {
         return loadingPercentage;
     }
 
-    @Deprecated
-    public Bitmap getSceneBitmap() {
-        return sceneBitmap;
-    }
+    //@Deprecated
+    //public Bitmap getSceneBitmap() {
+    //    return sceneBitmap;
+    //}
 
     public Bitmap[][] getChunkArray() {
         return chunkArray;
+    }
+
+    public void cleanup() {
+        chunkArray = null;
+        objectGroups = null;
     }
 
     private void xmlLoadMap() {
@@ -164,17 +169,20 @@ public class TileLoader extends Observable implements Runnable {
 
             NodeList layerList = doc.getElementsByTagName("layer");
             layers = layerList.getLength();
-            this.map = new ArrayList<>(layers);//new int[layers][width][height];
+
+            ArrayList<List<TileInformation>> fullMap;
+
+            fullMap = new ArrayList<>(layers);//new int[layers][width][height];
             Set<Integer> usedTilesInMap = new ArraySet<>();
 
-            Log.d("TileLoader", "Layers: " + this.map.size());
+            Log.d("TileLoader", "Layers: " + fullMap.size());
             loadingPercentage = 10;
             for (int layer = 0; layer < layers; layer++) {
                 loadingPercentage += 20 / layers;
                 Element layerElement = (Element) layerList.item(layer);
                 String layerString = layerElement.getElementsByTagName("data").item(0).getTextContent();
                 //List<String> items = Arrays.asList(layerString.split("\\s*,\\s*"));
-                this.map.add(new ArrayList<>());
+                fullMap.add(new ArrayList<>());
                 String[] elements = layerString.split(",");
                 Log.d("TileLoader", "Start Loading Tiles");
                 final int tmpLayer = layer;
@@ -193,7 +201,7 @@ public class TileLoader extends Observable implements Runnable {
                             tile.setTilesetPiece(i.second);
                             usedTilesInMap.add(i.second);
                             return tile;
-                        }).collect(Collectors.toCollection(() -> this.map.get(tmpLayer)));
+                        }).collect(Collectors.toCollection(() -> fullMap.get(tmpLayer)));
 
 
                 Log.d("TileLoader", "Finished Loading Tiles");
@@ -216,8 +224,8 @@ public class TileLoader extends Observable implements Runnable {
             loadingPercentage = 90;
 
 
-            generateGameBitmap();
-            splitBitmapToChunk();
+            Bitmap tmpMap = generateGameBitmap(fullMap);
+            splitBitmapToChunk(tmpMap);
 
             tileWidth = tileWidth * ratioX;
             tileHeight = tileHeight * ratioY;
@@ -290,10 +298,10 @@ public class TileLoader extends Observable implements Runnable {
             Log.d("TileLoader", "Hitbox Layer: " + group);
             Element groupElement = (Element) objectgroups.item(group);
             String name = groupElement.getAttribute("name");
-            objectGroups.put(name, new ArrayList<>());
 
             NodeList objects = groupElement.getElementsByTagName("object");
             int objectAmount = objects.getLength();
+            objectGroups.put(name, new ArrayList<>(objectAmount));
 
             Log.d("TileLoader", "Adding " + objectAmount + " Objects!");
             for (int i = 0; i < objectAmount; i++) {
@@ -320,7 +328,7 @@ public class TileLoader extends Observable implements Runnable {
         Log.d("TileLoader", "Finished Hitboxes");
     }
 
-    private void generateGameBitmap() {
+    private Bitmap generateGameBitmap(ArrayList<List<TileInformation>> map) {
         int w = width * tileWidth;
         int h = height * tileHeight;
         Bitmap.Config conf = Bitmap.Config.ARGB_8888;
@@ -336,15 +344,13 @@ public class TileLoader extends Observable implements Runnable {
             }
         }
         //cleanup
-        map.clear();
-        this.map = null;
         tiles.clear();
         this.tiles = null;
 
-        sceneBitmap = bmp;
+        return bmp;
     }
 
-    private void splitBitmapToChunk() {
+    private void splitBitmapToChunk(Bitmap sceneBitmap) {
         int sizeX = (int) Math.ceil(1024f / ratioX);
         int sizeY = (int) Math.ceil(1024f / ratioY);
         int splitY = (int) Math.ceil(sceneBitmap.getHeight() / sizeY);
@@ -360,8 +366,6 @@ public class TileLoader extends Observable implements Runnable {
                 chunkArray[x][y] = Bitmap.createScaledBitmap(chunkArray[x][y], chunkArray[x][y].getWidth() * ratioX, chunkArray[x][y].getHeight() * ratioY, false);
             }
         }
-        //cleanup
-        sceneBitmap = null;
     }
 
     private InputStream getGraphicsStream(String graphicsName) {
