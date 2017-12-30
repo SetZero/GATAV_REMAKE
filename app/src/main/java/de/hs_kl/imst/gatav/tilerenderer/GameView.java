@@ -109,7 +109,7 @@ public class GameView extends SurfaceView implements SurfaceHolder.Callback, Run
         canvas.save();
         gameContent.draw(canvas);
         canvas.restore();
-
+        gameContent.hud.draw(canvas);
         // Layer 2 (Collected Targets, Score and Elapsed Time)
         FPSHelper.draw(canvas);
         /*String collectedText = String.format("%d gesammelt", gameContent.getCollectedTargets());
@@ -274,7 +274,7 @@ public class GameView extends SurfaceView implements SurfaceHolder.Callback, Run
 
         int displayW = getWidth();
         int displayH = getHeight();
-        
+
         if(event.getAction() == MotionEvent.ACTION_UP && event.getPointerCount() < 2){
             if(leftmove){
                 leftmove = false;
@@ -298,7 +298,7 @@ public class GameView extends SurfaceView implements SurfaceHolder.Callback, Run
         }
         if(event.getPointerCount() > 1){
             if(event.getAction() == 262)
-            gameContent.movePlayer(Direction.UP);
+            GameContent.player.move(Direction.UP);
         }
         if(gestureDetector.onTouchEvent(event))
             return true;

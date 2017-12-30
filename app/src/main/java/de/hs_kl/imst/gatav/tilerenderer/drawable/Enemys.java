@@ -9,6 +9,7 @@ import android.util.Log;
 import java.io.InputStream;
 
 import de.hs_kl.imst.gatav.tilerenderer.util.Animations;
+import de.hs_kl.imst.gatav.tilerenderer.util.Constants;
 import de.hs_kl.imst.gatav.tilerenderer.util.Contact;
 import de.hs_kl.imst.gatav.tilerenderer.util.Direction;
 import de.hs_kl.imst.gatav.tilerenderer.util.PhysicsController;
@@ -27,7 +28,23 @@ public abstract class Enemys extends MovableGraphics implements Destroyable, Col
     protected int scorePoints;
     //protected int hitboxOffsetX,hitboxOffsetY;
     protected boolean isAlive =true;
-    public static int hitPoints;
+    public int hitPoints;
+
+    public int getScorePoints() {
+        return scorePoints;
+    }
+
+    public void setScorePoints(int scorePoints) {
+        this.scorePoints = scorePoints;
+    }
+
+    public int getHitPoints() {
+        return hitPoints;
+    }
+
+    public void setHitPoints(int hitPoints) {
+        this.hitPoints = hitPoints;
+    }
 
     public Enemys(float x, float y, float lifePoints, int hitPoints, float speed, int scorePoints){
         super(x,y);
@@ -50,7 +67,7 @@ public abstract class Enemys extends MovableGraphics implements Destroyable, Col
 
     @Override
     public void update(float delta){
-        if(isAlive())
+        if(isAlive)
         super.update(delta);
         if(this.lifePoints <= 0) isAlive =false;
         if(isActive) {
@@ -106,13 +123,14 @@ public abstract class Enemys extends MovableGraphics implements Destroyable, Col
         }
     }
     protected void aIHandle(){
-        if(GameContent.player.getPosition().x < Position.x){
-            move(Direction.LEFT);
-            currentDirection = Direction.LEFT;
-        }
-        else if(GameContent.player.getPosition().x > Position.x){
-            move(Direction.RIGHT);
-            currentDirection = Direction.RIGHT;
+        if(GameContent.player.isAlive()) {
+            if (GameContent.player.getPosition().x < Position.x) {
+                move(Direction.LEFT);
+                currentDirection = Direction.LEFT;
+            } else if (GameContent.player.getPosition().x > Position.x) {
+                move(Direction.RIGHT);
+                currentDirection = Direction.RIGHT;
+            }
         }
     }
 
@@ -157,8 +175,16 @@ public abstract class Enemys extends MovableGraphics implements Destroyable, Col
 
     @Override
     public void onCollision(Contact c) {
-        if(c.movable instanceof Player && c.siteHidden == PhysicsController.intersectDirection.TOP && isAlive){
-            this.lifePoints -= Player.hitPoints;
+        if(c.movable instanceof Player && (c.siteHidden == PhysicsController.intersectDirection.LEFT || c.siteHidden == PhysicsController.intersectDirection.RIGHT) && ((Player)c.movable).isAlive()){
+            if(c.siteHidden == PhysicsController.intersectDirection.LEFT) {
+                ((Player) c.movable).setLifePoints(((Player) c.movable).getLifePoints() - hitPoints);
+                c.movable.applyLinearImpulse(new Vector2(-630f,-280f));
+            }
+            if(c.siteHidden == PhysicsController.intersectDirection.RIGHT){
+                ((Player) c.movable).setLifePoints(((Player) c.movable).getLifePoints() - hitPoints);
+                c.movable.applyLinearImpulse(new Vector2(630f,-280f));
+            }
+
         }
     }
 
@@ -170,17 +196,31 @@ public abstract class Enemys extends MovableGraphics implements Destroyable, Col
     public void draw(Canvas canvas){
         if(isActive){
             if (bmp != null && isActive && !isFlipped) {
-                Paint p = new Paint();
-                p.setColor(Color.argb(128, 0, 65, 200));
-                canvas.drawRect(hitbox.getRect(), p);
+                if(Constants.debugBuild) {
+                    Paint p = new Paint();
+                    p.setColor(Color.argb(128, 0, 65, 200));
+                    canvas.drawRect(hitbox.getRect(), p);
+                }
                 canvas.drawBitmap(bmp.getBitmap(), Position.getX(), Position.getY(), null);
             } else if (isFlipped) {
-                Paint p = new Paint();
-                p.setColor(Color.argb(128, 0, 65, 200));
-                canvas.drawRect(hitbox.getRect(), p);
+                if(Constants.debugBuild) {
+                    Paint p = new Paint();
+                    p.setColor(Color.argb(128, 0, 65, 200));
+                    canvas.drawRect(hitbox.getRect(), p);
+                }
                 BitmapDrawable bmp = flip(this.bmp);
                 canvas.drawBitmap(bmp.getBitmap(), Position.getX(), Position.getY(), null);
             }
         }
+    }
+
+    /**
+     * decreases hitpoints and returns true if enemy died
+     * @param hitPoints
+     */
+    public boolean decreaseLife(int hitPoints){
+        lifePoints -= hitPoints;
+        if(lifePoints <= 0) return true;
+        return false;
     }
 }

@@ -23,7 +23,7 @@ public class PhysicsController {
     }
 
     private ArrayList<MovableGraphics> physicals = new ArrayList<MovableGraphics>();
-    private float gravity = 8.5f;
+    private float gravity = 680.5f;
     private World world;
     private  List<Collidable> list;
 
@@ -74,31 +74,34 @@ public class PhysicsController {
                     }
                 }
                 if (noCollision) {
-                    item.impact(new Vector2(0f, gravity));
+                    item.impact(new Vector2(0f, gravity*delta));
                     item.isOnGround = false;
                 } else {
                     item.isOnGround = groundCollision;
                     if (leftCollision) {
                         if (item.getVelocity().x < 0f)
                             item.setVelocity(new Vector2(0f, item.getVelocity().y));
+                            item.setLinearImpulse(new Vector2(0f,item.getLinearImpulse().y));
                         if (!item.isOnGround) {
-                            item.impact(new Vector2(0f, gravity));
+                            item.impact(new Vector2(0f, gravity*delta));
                         }
                     }
                     if (rightCollision) {
-                        if (item.getVelocity().x > 0f) {
+                        if (item.getVelocity().x > 0f)
                             item.setVelocity(new Vector2(0f, item.getVelocity().y));
-                        }
+                        item.setLinearImpulse(new Vector2(0f,item.getLinearImpulse().y));
+
                         if (!item.isOnGround) {
-                            item.impact(new Vector2(0f, gravity));
+                            item.impact(new Vector2(0f, gravity*delta));
                         }
                     }
                     if (topCollision) {
-                        if (item.getVelocity().y < 0) {
+                        if (item.getVelocity().y < 0)
                             item.setVelocity(new Vector2(item.getVelocity().x, 0f));
-                        }
+                        item.setLinearImpulse(new Vector2(item.getLinearImpulse().x,0f));
+
                         if (!item.isOnGround) {
-                            item.impact(new Vector2(0f, gravity));
+                            item.impact(new Vector2(0f, gravity*delta));
                         }
                     }
                     if (groundCollision) {

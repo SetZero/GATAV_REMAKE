@@ -10,6 +10,7 @@ import java.io.IOException;
 import java.io.InputStream;
 
 import de.hs_kl.imst.gatav.tilerenderer.util.Animations;
+import de.hs_kl.imst.gatav.tilerenderer.util.Constants;
 import de.hs_kl.imst.gatav.tilerenderer.util.Contact;
 import de.hs_kl.imst.gatav.tilerenderer.util.Direction;
 import de.hs_kl.imst.gatav.tilerenderer.util.Hitboxes.Rectangle;
@@ -26,6 +27,8 @@ public final class Player extends MovableGraphics implements Destroyable, Collis
     private Direction stopDirection = Direction.IDLE;
     private BitmapDrawable idle;
     private Animations run;
+    protected Animations dieng;
+    float dieTimer = 0.0f;
     private int score;
 
     public float getLifePoints() {
@@ -56,6 +59,9 @@ public final class Player extends MovableGraphics implements Destroyable, Collis
                 is = GameContent.context.getAssets().open("dynamics/player/Player.png");
                 run.addAnimation(super.loadTextures(is,17,35,1,4, ScaleHelper.getEntitiyScale()));
                 idle = run.getDrawable(0f);
+                dieng = new Animations(1f/4f);
+                friction = 0.0f;
+                dieng.addAnimation(Animations.frameLoad("dynamics/player/Die",4,25*ScaleHelper.getEntitiyScale(),40*ScaleHelper.getEntitiyScale()));
                 hitbox = new Rectangle((int)x,(int)y,width-35,height);
                 isActive = true;
                 is.close();
@@ -82,21 +88,25 @@ public final class Player extends MovableGraphics implements Destroyable, Collis
                     if (velocity.getX() > 0 && velocity.x <= speed && !isOnGround) {
                         velocity.x = 0f;
                         impact(new Vector2(-speed, 0f));
+                       // movementInput = true;
                     }
-                    if (velocity.getX() > -speed) {
+                    if (velocity.x > -speed) {
                         impact(new Vector2(-speed, 0f));
+                        //movementInput = true;
                     }
                 }
                 break;
             }
             case RIGHT:{
                 if(!isRightColliding) {
-                    if (velocity.getX() < 0 && velocity.x >= -speed && !isOnGround) {
+                    if (velocity.getX() < 0 && velocity.x>= -speed && !isOnGround) {
                         velocity.x = 0f;
                         impact(new Vector2(speed, 0f));
+                       // movementInput = true;
                     }
-                    if (velocity.getX() < speed) {
+                    if (velocity.x < speed) {
                         impact(new Vector2(speed, 0f));
+                       // movementInput = true;
                     }
                 }
                 break;
@@ -118,13 +128,26 @@ public final class Player extends MovableGraphics implements Destroyable, Collis
     public void stopMove(Direction direction){
         stopDirection = direction;
     }
+
+
     @Override
     public void update(float delta){
-        super.update(delta);
-        if(lifePoints <=0)
-            isAlive = false;
-        stateHandle();
-        animationHandle(delta);
+        if(isAlive) {
+            super.update(delta);
+            //movementInput = false;
+            if (lifePoints <= 0)
+                isAlive = false;
+            stateHandle();
+            animationHandle(delta);
+        }
+        else {
+        if (dieng.isFinished(dieTimer)) {
+           // GameContent.world.removeGameObject(this);
+        } else {
+            bmp = dieng.getDrawable(dieTimer);
+        }
+        dieTimer += delta;
+    }
     }
     private void stateHandle(){
         if(velocity.getY() == 0f && velocity.getX() == 0){
@@ -183,15 +206,19 @@ public final class Player extends MovableGraphics implements Destroyable, Collis
     @Override
     public void draw(Canvas canvas) {
         if(bmp != null && isActive && !isFlipped) {
-            Paint p = new Paint();
-            p.setColor(Color.argb(128, 0, 65, 200));
-            canvas.drawRect(hitbox.getRect(),p);
+            if(Constants.debugBuild) {
+                Paint p = new Paint();
+                p.setColor(Color.argb(128, 0, 65, 200));
+                canvas.drawRect(hitbox.getRect(), p);
+            }
             canvas.drawBitmap(bmp.getBitmap(),Position.getX(),Position.getY(),null);
         }
         else if (isFlipped){
-            Paint p = new Paint();
-            p.setColor(Color.argb(128, 0, 65, 200));
-            canvas.drawRect(hitbox.getRect(),p);
+            if(Constants.debugBuild) {
+                Paint p = new Paint();
+                p.setColor(Color.argb(128, 0, 65, 200));
+                canvas.drawRect(hitbox.getRect(), p);
+            }
             BitmapDrawable bmp = flip(this.bmp);
             canvas.drawBitmap(bmp.getBitmap(),Position.getX(),Position.getY(),null);
         }
@@ -210,25 +237,11 @@ public final class Player extends MovableGraphics implements Destroyable, Collis
 
     @Override
     public void onCollision(Contact c) {
-        //if(c.movable instanceof Robotic){
-            if(c.siteHidden != PhysicsController.intersectDirection.BOTTOM && c.movable instanceof Enemys) {
-
-                if(c.siteHidden == PhysicsController.intersectDirection.LEFT && ((Enemys)c.movable).isAlive()) {
-                    applyLinearImpulse(new Vector2(630f,-280f));
-                    this.lifePoints -= Robotic.hitPoints;
-                    //stopMove(Direction.LEFT);
-                }
-                if(c.siteHidden == PhysicsController.intersectDirection.RIGHT && ((Enemys)c.movable).isAlive()) {
-                    applyLinearImpulse(new Vector2(-630f,-280f));
-                    this.lifePoints -= Robotic.hitPoints;
-                    //stopMove(Direction.RIGHT);
-                }
-
-            }
-            else if(c.siteHidden == PhysicsController.intersectDirection.BOTTOM && c.movable instanceof  Enemys){
-                if(((Enemys)c.movable).isAlive()) {
+if(c.siteHidden == PhysicsController.intersectDirection.BOTTOM && c.movable instanceof  Enemys){
+                if(((Enemys)c.movable).isAlive() && isAlive) {
                     velocity.y = 0.0f;
                     impact(new Vector2(0f, -400f));
+                    if(((Enemys)c.movable).decreaseLife(hitPoints))score += ((Enemys)c.movable).getScorePoints();
                 }
 
             }
