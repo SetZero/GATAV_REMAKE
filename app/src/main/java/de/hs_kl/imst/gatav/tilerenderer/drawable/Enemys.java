@@ -26,7 +26,7 @@ public abstract class Enemys extends MovableGraphics implements Destroyable, Col
     protected Animations dieng;
     protected BitmapDrawable idle;
     protected int scorePoints;
-    //protected int hitboxOffsetX,hitboxOffsetY;
+    protected int drawOffsetY;
     protected boolean isAlive =true;
     public int hitPoints;
 
@@ -196,20 +196,20 @@ public abstract class Enemys extends MovableGraphics implements Destroyable, Col
     public void draw(Canvas canvas){
         if(isActive){
             if (bmp != null && isActive && !isFlipped) {
-                if(Constants.debugBuild) {
+                //if(Constants.debugBuild) {
                     Paint p = new Paint();
                     p.setColor(Color.argb(128, 0, 65, 200));
                     canvas.drawRect(hitbox.getRect(), p);
-                }
-                canvas.drawBitmap(bmp.getBitmap(), Position.getX(), Position.getY(), null);
+                //}
+                canvas.drawBitmap(bmp.getBitmap(), Position.getX(), Position.getY()+drawOffsetY, null);
             } else if (isFlipped) {
-                if(Constants.debugBuild) {
+                //if(Constants.debugBuild) {
                     Paint p = new Paint();
                     p.setColor(Color.argb(128, 0, 65, 200));
                     canvas.drawRect(hitbox.getRect(), p);
-                }
+                //}
                 BitmapDrawable bmp = flip(this.bmp);
-                canvas.drawBitmap(bmp.getBitmap(), Position.getX(), Position.getY(), null);
+                canvas.drawBitmap(bmp.getBitmap(), Position.getX(), Position.getY()+drawOffsetY, null);
             }
         }
     }
