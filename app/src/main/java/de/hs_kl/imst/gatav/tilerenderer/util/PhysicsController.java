@@ -4,6 +4,7 @@ import android.graphics.Rect;
 
 import java.util.ArrayList;
 import java.util.List;
+import java.util.stream.Collectors;
 
 import de.hs_kl.imst.gatav.tilerenderer.drawable.MovableGraphics;
 import de.hs_kl.imst.gatav.tilerenderer.util.Hitboxes.Collidable;
@@ -27,15 +28,27 @@ public class PhysicsController {
     private World world;
     private  List<Collidable> list;
 
+    private List<MovableGraphics> toRemove = new ArrayList<>();
+
     public PhysicsController(World world){
         this.world = world;
         list = new ArrayList<Collidable>();
         for(Collidable c: world.getObjects().get(Constants.collisionObjectGroupString)) list.add(c);
     }
     public void removePhysical(MovableGraphics x){
-        list.remove(x.getHitbox());
-        physicals.remove(x);
+        toRemove.add(x);
     }
+
+    public List<MovableGraphics> getToRemove() {
+        return toRemove;
+    }
+
+    public void cleanup() {
+        physicals.removeAll(toRemove);
+        list.removeIf(v -> toRemove.stream().map(element -> element.getHitbox()).collect(Collectors.toList()).contains(v));
+        toRemove.clear();
+    }
+
     public void Update(float delta, GameCamera cam){
         for(MovableGraphics item: physicals) {
             boolean groundCollision = false;

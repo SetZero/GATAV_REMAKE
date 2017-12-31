@@ -36,7 +36,7 @@ public class HUD {
     }
 
     public void update(float delta){
-        Log.d("time, length","time "+popupTimer+" length "+popupLength);
+        //Log.d("time, length","time "+popupTimer+" length "+popupLength);
         if(msg!= null)
             popupTimer += delta;
         if(popupTimer > popupLength){

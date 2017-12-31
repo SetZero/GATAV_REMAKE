@@ -8,6 +8,7 @@ import android.graphics.Rect;
 import android.util.Log;
 
 import java.util.ArrayList;
+import java.util.Iterator;
 import java.util.List;
 import java.util.Map;
 
@@ -22,16 +23,16 @@ import de.hs_kl.imst.gatav.tilerenderer.util.Hitboxes.Rectangle;
  */
 
 public class World {
-    TileLoader tileLoader;
+    GameChunkHolder tileHolder;
     private List<Drawables> dynamicObjects = new ArrayList<>();
     private Map<String, List<Collidable>> objects;
     private float step;
     private PhysicsController physics;
     private GameEventHandler gameEvents;
 
-    public World(TileLoader tileLoader, float step) {
-        this.tileLoader = tileLoader;
-        objects = tileLoader.getObjectGroups();
+    public World(GameChunkHolder tileHolder, float step) {
+        this.tileHolder = tileHolder;
+        objects = tileHolder.getObjectGroups();
         physics = new PhysicsController(this);
         gameEvents = new GameEventHandler(this.getObjects());
         this.step = step;
@@ -47,6 +48,10 @@ public class World {
         }
         physics.Update(step, cam);
         gameEvents.update(cam);
+
+        dynamicObjects.removeAll(physics.getToRemove());
+        gameEvents.getDynamics().removeAll(physics.getToRemove());
+        physics.cleanup();
     }
 
     public void draw(GameCamera camera, Canvas canvas) {
@@ -65,7 +70,7 @@ public class World {
         }*/
         camera.draw(canvas);
         Rect tmpRect = camera.getCameraViewRect();
-        Bitmap[][] mapChunks = tileLoader.getChunkArray();
+        Bitmap[][] mapChunks = tileHolder.getChunkArray();
         //TODO: Make 1024 variable of TileLoader
         int startX = tmpRect.left / 1024;
         int startY = tmpRect.top / 1024;
@@ -123,7 +128,6 @@ public class World {
     }
 
     public void removeGameObject(MovableGraphics object) {
-        dynamicObjects.remove(object);
         physics.removePhysical(object);
     }
 
