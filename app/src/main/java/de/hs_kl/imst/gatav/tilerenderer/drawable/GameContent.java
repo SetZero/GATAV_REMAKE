@@ -43,7 +43,7 @@ public class GameContent implements Drawables, Observer {
     public static Player player = null;
 
     public Robotic skelett;
-    public  HUD hud;
+    public static HUD hud;
 
     private Random random = new Random();
     public static Context context;

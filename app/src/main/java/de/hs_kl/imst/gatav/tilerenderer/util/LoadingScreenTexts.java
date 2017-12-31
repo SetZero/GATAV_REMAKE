@@ -30,6 +30,12 @@ public class LoadingScreenTexts {
             "To charge your phone put it in the microwave",
             "Fully translated by Google Translate",
             "We are out of red pills, why not take the blue?",
-            "Erst wenn der Subwoofer die Katze inhaliert fickt der Bass richtig übel - Wolfgang Amadeus Mozart"
+            "Erst wenn der Subwoofer die Katze inhaliert fickt der Bass richtig übel - Wolfgang Amadeus Mozart",
+            "Chuck Norris threw a grenade and killed 50 people, then it exploded.",
+            "Chuck Norris beat the sun in a staring contest.",
+            "Chuck Norris can strangle you with a cordless phone",
+            "Chuck Norris knows Victoria's secret.",
+            "Chuck Norris's Blood Type is AK-47.",
+            "M.C. Hammer learned the hard way that Chuck Norris can touch this."
     };
 }

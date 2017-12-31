@@ -117,7 +117,9 @@ public final class Player extends MovableGraphics implements Destroyable, Collis
     public boolean isAlive() {
         return isAlive;
     }
-
+    public void setIsAlive(boolean b){
+        isAlive = b;
+    }
 
     /**
      * interrupts LEFT or RIGHT movement the correct way (is the player on Ground?)
