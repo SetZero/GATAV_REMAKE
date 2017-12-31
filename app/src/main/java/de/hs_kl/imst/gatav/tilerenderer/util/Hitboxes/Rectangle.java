@@ -20,6 +20,19 @@ public class Rectangle extends Collidable {
         rect = new Rect(x, y, x + width, y + height);
     }
 
+    /**
+     * set position using left bottom corner position
+     * @param x axis
+     * @param y axis
+     */
+    public void setPos(int x, int y){
+        super.setX(x);
+        super.setY(y);
+        rect.left = x;
+        rect.right = x+width;
+        rect.top = y;
+        rect.bottom = y+height;
+    }
 
     @Override
     public void setX(int x) {

@@ -136,7 +136,8 @@ public abstract class MovableGraphics implements Drawables,CollisionReactive {
             int offset = 0;
             if(width -hitbox.getWidth() != 0)
             offset = (width -hitbox.getWidth())/2;
-        hitbox.setX((int)Position.getX()+offset); hitbox.setY((int)Position.getY());
+            hitbox.setPos((int)Position.getX()+offset,(int)Position.getY());
+        //hitbox.setX((int)Position.getX()+offset); hitbox.setY((int)Position.getY());
         }
     }
 

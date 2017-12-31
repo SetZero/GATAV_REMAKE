@@ -20,7 +20,6 @@ import de.hs_kl.imst.gatav.tilerenderer.util.Vector2;
 public abstract class Collectable implements  Drawables {
 
     private Vector2 Position;
-    private int score;
     private BitmapDrawable bmp;
     protected int width,height;
     private boolean isCollected = false;
@@ -34,10 +33,9 @@ public abstract class Collectable implements  Drawables {
         isCollected = collected;
     }
 
-    public Collectable(int x, int y, int width, int height, int score, InputStream is){
+    public Collectable(int x, int y, int width, int height, InputStream is){
         Position = new Vector2(x,y);
-        this.score = score;
-        loadGraphic(is,width,height, ScaleHelper.getEntitiyScale());
+        loadGraphic(is,width,height, ScaleHelper.getEntitiyScale()/2);
         Hitbox = new Rectangle(x,y,this.width,this.height);
     }
 
@@ -52,11 +50,13 @@ public abstract class Collectable implements  Drawables {
 
     @Override
     public void update(float delta){
-        if(GameContent.player.getHitbox().isCollidingWith(Hitbox)){
-            GameContent.player.setScore(score);
+        if(!isCollected && GameContent.player.getHitbox().isCollidingWith(Hitbox)){
+            onCollect();
             this.isCollected = true;
         }
     }
+
+    protected abstract void onCollect();
 
     @Override
     public void draw(Canvas canvas){

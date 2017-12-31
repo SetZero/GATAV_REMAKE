@@ -37,7 +37,7 @@ public final class Robotic extends Enemys implements CollisionReactive, Destroya
                 e.printStackTrace();
             }
             idle = run.getDrawable(0f);
-            hitbox = new Rectangle((int) x, (int) y, width/2 , height-4*ScaleHelper.getEntitiyScale());
+            hitbox = new Rectangle(x, y, width/2 , height-4*ScaleHelper.getEntitiyScale());
             isActive = true;
             drawOffsetY = -3*ScaleHelper.getEntitiyScale();
         }

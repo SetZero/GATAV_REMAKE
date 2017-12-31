@@ -25,13 +25,11 @@ public class PhysicsController {
 
     private ArrayList<MovableGraphics> physicals = new ArrayList<MovableGraphics>();
     private float gravity = 680.5f;
-    private World world;
     private  List<Collidable> list;
 
     private List<MovableGraphics> toRemove = new ArrayList<>();
 
     public PhysicsController(World world){
-        this.world = world;
         list = new ArrayList<Collidable>();
         for(Collidable c: world.getObjects().get(Constants.collisionObjectGroupString)) list.add(c);
     }
@@ -153,7 +151,7 @@ public class PhysicsController {
     }
 
     private Contact collisionDirection(Collidable c, MovableGraphics item){
-        Rect rectA = (item.getHitbox().getRect());
+        Rect rectA = new Rect(item.getHitbox().getRect()); // side effekt hier
         Rect rectB = (((Rectangle) c).getRect());
         if(rectA.intersect(rectB)) {
 

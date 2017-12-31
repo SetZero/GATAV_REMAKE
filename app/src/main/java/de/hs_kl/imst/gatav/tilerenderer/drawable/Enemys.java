@@ -68,8 +68,6 @@ public abstract class Enemys extends MovableGraphics implements Destroyable, Col
         if(this.lifePoints <= 0) isAlive =false;
         if(isActive) {
             if (isAlive) {
-                hitbox.setX(hitbox.getX()/*+hitboxOffsetX*/);
-                hitbox.setY(hitbox.getY()/*+hitboxOffsetY*/);
                 aIHandle();
                 stateHandle();
                 animationHandle(delta);
@@ -120,10 +118,10 @@ public abstract class Enemys extends MovableGraphics implements Destroyable, Col
     }
     protected void aIHandle(){
         if(GameContent.player.isAlive()) {
-            if (GameContent.player.getPosition().x < Position.x) {
+            if (GameContent.player.getPosition().x-GameContent.player.getHitbox().getWidth()/2 < Position.x) {
                 move(Direction.LEFT);
                 currentDirection = Direction.LEFT;
-            } else if (GameContent.player.getPosition().x > Position.x) {
+            } else if (GameContent.player.getPosition().x -GameContent.player.getHitbox().getWidth()/2 > Position.x) {
                 move(Direction.RIGHT);
                 currentDirection = Direction.RIGHT;
             }

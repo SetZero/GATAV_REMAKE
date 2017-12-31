@@ -15,6 +15,7 @@ import java.util.List;
 import java.util.Map;
 
 import de.hs_kl.imst.gatav.tilerenderer.TileLoader;
+import de.hs_kl.imst.gatav.tilerenderer.drawable.Collectable;
 import de.hs_kl.imst.gatav.tilerenderer.drawable.Drawables;
 import de.hs_kl.imst.gatav.tilerenderer.drawable.MovableGraphics;
 import de.hs_kl.imst.gatav.tilerenderer.util.Hitboxes.Collidable;
@@ -27,9 +28,19 @@ import de.hs_kl.imst.gatav.tilerenderer.util.Hitboxes.Rectangle;
 public class World {
     TileLoader tileLoader;
     private List<Drawables> dynamicObjects = new ArrayList<>();
+    private List<Collectable> collectables = new ArrayList<>();
     private Map<String, List<Collidable>> objects;
     private float step;
     private PhysicsController physics;
+
+    public List<Collectable> getCollectables() {
+        return collectables;
+    }
+
+    public void addCollectables(Collectable collectable) {
+        this.collectables.add(collectable);
+    }
+
     private GameEventHandler gameEvents;
 
     public World(TileLoader tileLoader, float step) {
@@ -46,6 +57,9 @@ public class World {
 
     public void update(float delta, GameCamera cam) {
         for (Drawables x : dynamicObjects) {
+            x.update(delta);
+        }
+        for(Collectable x: collectables){
             x.update(delta);
         }
         physics.Update(step, cam);
@@ -125,7 +139,9 @@ public class World {
         for (Drawables object : dynamicObjects) {
             object.draw(canvas);
         }
-
+        for (Collectable x: collectables){
+            x.draw(canvas);
+        }
     }
 
     public void addGameObject(MovableGraphics object) {

@@ -61,7 +61,7 @@ public final class Player extends MovableGraphics implements Destroyable, Collis
             dieng = new Animations(1f / 4f);
             friction = 0.0f;
             dieng.addAnimation(Animations.frameLoad("dynamics/player/Die", 4, 25 * ScaleHelper.getEntitiyScale(), 40 * ScaleHelper.getEntitiyScale()));
-            hitbox = new Rectangle((int) x, (int) y, width - 35, height);
+            hitbox = new Rectangle((int) x, (int) y, width - 35, height-5);
             isActive = true;
             is.close();
         } catch (IOException e) {
