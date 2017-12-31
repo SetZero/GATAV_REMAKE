@@ -131,7 +131,7 @@ public class PhysicsController {
         for(MovableGraphics item : physicals) {
             for (MovableGraphics other : physicals) {
                 if (item != other) {
-                    item.onCollision(collisionDirection(other.getHitbox(), item).setMovable(other));
+                    item.onCollision(collisionDirection(other.getHitbox(), item).setCollisionObject(other));
                 }
             }
         }

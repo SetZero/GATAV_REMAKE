@@ -4,12 +4,8 @@ import android.graphics.Canvas;
 import android.graphics.Color;
 import android.graphics.Paint;
 import android.graphics.drawable.BitmapDrawable;
-import android.util.Log;
-
-import java.io.InputStream;
 
 import de.hs_kl.imst.gatav.tilerenderer.util.Animations;
-import de.hs_kl.imst.gatav.tilerenderer.util.Constants;
 import de.hs_kl.imst.gatav.tilerenderer.util.Contact;
 import de.hs_kl.imst.gatav.tilerenderer.util.Direction;
 import de.hs_kl.imst.gatav.tilerenderer.util.PhysicsController;
@@ -175,14 +171,14 @@ public abstract class Enemys extends MovableGraphics implements Destroyable, Col
 
     @Override
     public void onCollision(Contact c) {
-        if(c.movable instanceof Player && (c.siteHidden == PhysicsController.intersectDirection.LEFT || c.siteHidden == PhysicsController.intersectDirection.RIGHT) && ((Player)c.movable).isAlive()){
+        if(c.collisionObject instanceof Player && (c.siteHidden == PhysicsController.intersectDirection.LEFT || c.siteHidden == PhysicsController.intersectDirection.RIGHT) && ((Player)c.collisionObject).isAlive()){
             if(c.siteHidden == PhysicsController.intersectDirection.LEFT) {
-                ((Player) c.movable).setLifePoints(((Player) c.movable).getLifePoints() - hitPoints);
-                c.movable.applyLinearImpulse(new Vector2(-630f,-280f));
+                ((Player) c.collisionObject).setLifePoints(((Player) c.collisionObject).getLifePoints() - hitPoints);
+                ((Player) c.collisionObject).applyLinearImpulse(new Vector2(-630f,-280f));
             }
             if(c.siteHidden == PhysicsController.intersectDirection.RIGHT){
-                ((Player) c.movable).setLifePoints(((Player) c.movable).getLifePoints() - hitPoints);
-                c.movable.applyLinearImpulse(new Vector2(630f,-280f));
+                ((Player) c.collisionObject).setLifePoints(((Player) c.collisionObject).getLifePoints() - hitPoints);
+                ((Player) c.collisionObject).applyLinearImpulse(new Vector2(630f,-280f));
             }
 
         }
