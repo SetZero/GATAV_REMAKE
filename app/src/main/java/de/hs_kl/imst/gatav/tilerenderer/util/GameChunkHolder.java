@@ -1,6 +1,8 @@
 package de.hs_kl.imst.gatav.tilerenderer.util;
 
 import android.graphics.Bitmap;
+import android.util.LruCache;
+import android.util.Pair;
 
 import java.util.HashMap;
 import java.util.List;
@@ -13,7 +15,7 @@ import de.hs_kl.imst.gatav.tilerenderer.util.Hitboxes.Collidable;
  */
 
 public class GameChunkHolder {
-    private Bitmap[][] chunkArray;
+    private LruCache<Pair<Integer, Integer>, Bitmap> chunkArray;
 
     public Map<String, List<Collidable>> getObjectGroups() {
         return objectGroups;
@@ -25,11 +27,11 @@ public class GameChunkHolder {
 
     private Map<String, List<Collidable>> objectGroups = new HashMap<>();
 
-    public Bitmap[][] getChunkArray() {
+    public LruCache<Pair<Integer, Integer>, Bitmap> getChunkArray() {
         return chunkArray;
     }
 
-    public void setChunkArray(Bitmap[][] chunkArray) {
+    public void setChunkArray(LruCache<Pair<Integer, Integer>, Bitmap> chunkArray) {
         this.chunkArray = chunkArray;
     }
 }

@@ -6,6 +6,8 @@ import android.graphics.Color;
 import android.graphics.Paint;
 import android.graphics.Rect;
 import android.util.Log;
+import android.util.LruCache;
+import android.util.Pair;
 
 import java.util.ArrayList;
 import java.util.Iterator;
@@ -23,16 +25,16 @@ import de.hs_kl.imst.gatav.tilerenderer.util.Hitboxes.Rectangle;
  */
 
 public class World {
-    GameChunkHolder tileHolder;
+    TileLoader tileLoader;
     private List<Drawables> dynamicObjects = new ArrayList<>();
     private Map<String, List<Collidable>> objects;
     private float step;
     private PhysicsController physics;
     private GameEventHandler gameEvents;
 
-    public World(GameChunkHolder tileHolder, float step) {
-        this.tileHolder = tileHolder;
-        objects = tileHolder.getObjectGroups();
+    public World(TileLoader tileLoader, float step) {
+        this.tileLoader = tileLoader;
+        objects = tileLoader.getObjectGroups();
         physics = new PhysicsController(this);
         gameEvents = new GameEventHandler(this.getObjects());
         this.step = step;
@@ -56,9 +58,9 @@ public class World {
 
     public void draw(GameCamera camera, Canvas canvas) {
         //1. Load All Tiles
-        /*List<List<TileInformation>> map = tileLoader.getMap();
+        //List<List<TileInformation>> map = tileLoader.getMap();
         camera.draw(canvas);
-        for (List<TileInformation> currentLayerTiles : map) {
+        /*for (List<TileInformation> currentLayerTiles : map) {
             for (TileInformation currentTile : currentLayerTiles) {
                 Rect test = currentTile.getTileRect();
                 if (camera.isRectInView(test)) {
@@ -68,9 +70,9 @@ public class World {
                 }
             }
         }*/
-        camera.draw(canvas);
-        Rect tmpRect = camera.getCameraViewRect();
-        Bitmap[][] mapChunks = tileHolder.getChunkArray();
+        canvas.drawBitmap(tileLoader.getSceneBitmap(), 0, 0, null);
+        /*Rect tmpRect = camera.getCameraViewRect();
+        LruCache<Pair<Integer, Integer>, Bitmap> mapChunks = tileHolder.getChunkArray();
         //TODO: Make 1024 variable of TileLoader
         int startX = tmpRect.left / 1024;
         int startY = tmpRect.top / 1024;
@@ -79,10 +81,15 @@ public class World {
 
         for (int x = startX; x <= endX; x++) {
             for (int y = startY; y <= endY; y++) {
-                if(x >= mapChunks.length || y >= mapChunks[0].length) continue;
-                canvas.drawBitmap(mapChunks[x][y], x*1024, y*1024, null);
+                //if(x >= mapChunks.length || y >= mapChunks[0].length) continue;
+                Pair<Integer, Integer> key = new Pair<>(x, y);
+                Bitmap tmp = mapChunks.get(key);
+                Log.d("GameChunk", "Size: " + mapChunks.size());
+                if(tmp != null)
+                    canvas.drawBitmap(tmp, x*1024, y*1024, null);
+                //canvas.drawBitmap(mapChunks[x][y], x*1024, y*1024, null);
             }
-        }
+        }*/
 
         //2. Draw all Debug Hitboxes
         if (Constants.debugBuild) {

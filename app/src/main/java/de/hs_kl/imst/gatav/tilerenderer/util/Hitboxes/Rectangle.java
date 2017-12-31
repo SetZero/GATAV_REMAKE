@@ -36,7 +36,7 @@ public class Rectangle extends Collidable {
     }
 
     public Rect getRect() {
-        return new Rect(rect);
+        return rect;
     }
 
     public int getWidth() {

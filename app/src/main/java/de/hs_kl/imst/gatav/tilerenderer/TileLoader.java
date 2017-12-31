@@ -9,6 +9,7 @@ import android.graphics.Canvas;
 import android.graphics.Rect;
 import android.util.ArraySet;
 import android.util.Log;
+import android.util.LruCache;
 import android.util.Pair;
 
 import org.w3c.dom.Document;
@@ -54,7 +55,7 @@ public class TileLoader extends Observable implements Runnable {
     private int tileHeight = 0;
     private int layers = 0;
     //private int[][][] map;
-    //private ArrayList<List<TileInformation>> map;
+    private ArrayList<List<TileInformation>> map;
     private Map<Integer, Bitmap> tiles = new HashMap<>();
     private Map<String, List<Collidable>> objectGroups = new HashMap<>();
 
@@ -64,8 +65,9 @@ public class TileLoader extends Observable implements Runnable {
     private boolean finishedLoading = false;
     private int loadingPercentage = 0;
 
-    //private Bitmap sceneBitmap;
-    private Bitmap[][] chunkArray;
+    private Bitmap sceneBitmap;
+    //private Bitmap[][] chunkArray;
+    //private LruCache<Pair<Integer, Integer>, Bitmap> chunkArray;
 
     public TileLoader(Context context, String filename) {
         assert (ratioX > 0) : "Scale Helper never initialized!";
@@ -105,12 +107,11 @@ public class TileLoader extends Observable implements Runnable {
         return tileHeight;
     }
 
-    /*@Deprecated
+    @Deprecated
     public int getLayers() {
         return layers;
     }
 
-    @Deprecated
     public List<List<TileInformation>> getMap() {
         return map;
     }
@@ -120,11 +121,10 @@ public class TileLoader extends Observable implements Runnable {
         return map.get(layer);
     }
 
-    @Deprecated
     public Map<Integer, Bitmap> getTiles() {
         return tiles;
     }
-    */
+
     public Map<String, List<Collidable>> getObjectGroups() {
         return objectGroups;
     }
@@ -137,19 +137,19 @@ public class TileLoader extends Observable implements Runnable {
         return loadingPercentage;
     }
 
-    //@Deprecated
-    //public Bitmap getSceneBitmap() {
-    //    return sceneBitmap;
-    //}
+    @Deprecated
+    public Bitmap getSceneBitmap() {
+        return sceneBitmap;
+    }
 
-    public Bitmap[][] getChunkArray() {
+    /*public LruCache<Pair<Integer, Integer>, Bitmap> getChunkArray() {
         return chunkArray;
     }
 
     public void cleanup() {
         chunkArray = null;
         objectGroups = null;
-    }
+    }*/
 
     private void xmlLoadMap() {
         try {
@@ -170,19 +170,19 @@ public class TileLoader extends Observable implements Runnable {
             NodeList layerList = doc.getElementsByTagName("layer");
             layers = layerList.getLength();
 
-            ArrayList<List<TileInformation>> fullMap;
+            //ArrayList<List<TileInformation>> fullMap;
 
-            fullMap = new ArrayList<>(layers);//new int[layers][width][height];
+            this.map = new ArrayList<>(layers);//new int[layers][width][height];
             Set<Integer> usedTilesInMap = new ArraySet<>();
 
-            Log.d("TileLoader", "Layers: " + fullMap.size());
+            Log.d("TileLoader", "Layers: " + this.map.size());
             loadingPercentage = 10;
             for (int layer = 0; layer < layers; layer++) {
                 loadingPercentage += 20 / layers;
                 Element layerElement = (Element) layerList.item(layer);
                 String layerString = layerElement.getElementsByTagName("data").item(0).getTextContent();
                 //List<String> items = Arrays.asList(layerString.split("\\s*,\\s*"));
-                fullMap.add(new ArrayList<>());
+                this.map.add(new ArrayList<>());
                 String[] elements = layerString.split(",");
                 Log.d("TileLoader", "Start Loading Tiles");
                 final int tmpLayer = layer;
@@ -193,15 +193,15 @@ public class TileLoader extends Observable implements Runnable {
                             int x = i.first % width;
                             int y = i.first / width;
                             TileInformation tile = new TileInformation();
-                            tile.setxPos(x);
-                            tile.setyPos(y);
+                            tile.setxPos(x*ratioX);
+                            tile.setyPos(y*ratioY);
                             tile.setWidth(tileWidth);
                             tile.setHeight(tileHeight);
                             tile.generateRect();
                             tile.setTilesetPiece(i.second);
                             usedTilesInMap.add(i.second);
                             return tile;
-                        }).collect(Collectors.toCollection(() -> fullMap.get(tmpLayer)));
+                        }).collect(Collectors.toCollection(() -> this.map.get(tmpLayer)));
 
 
                 Log.d("TileLoader", "Finished Loading Tiles");
@@ -224,11 +224,11 @@ public class TileLoader extends Observable implements Runnable {
             loadingPercentage = 90;
 
 
-            Bitmap tmpMap = generateGameBitmap(fullMap);
-            splitBitmapToChunk(tmpMap);
+            //splitBitmapToChunk(tmpMap);
 
             tileWidth = tileWidth * ratioX;
             tileHeight = tileHeight * ratioY;
+            sceneBitmap = generateGameBitmap(this.map);
             loadingPercentage = 100;
             //width = width / (int) ScaleHelper.getRatioX();
             //height = height / (int) ScaleHelper.getRatioY();
@@ -272,7 +272,7 @@ public class TileLoader extends Observable implements Runnable {
                 int xPos = (realPosInTileset % columns) * tileWidth;
                 int yPos = (realPosInTileset / columns) * tileHeight;
                 Bitmap region = decoder.decodeRegion(new Rect(xPos, yPos, xPos + tileWidth, yPos + tileHeight), null);
-                //region = Bitmap.createScaledBitmap(region, region.getWidth() * ratioX, region.getHeight() * ratioY, false);
+                region = Bitmap.createScaledBitmap(region, region.getWidth() * ratioX, region.getHeight() * ratioY, false);
                 this.tiles.put(i, region);
             }
             Log.d("TileLoader", "Finished Generating Bitmaps " + this.tiles.size());
@@ -350,23 +350,35 @@ public class TileLoader extends Observable implements Runnable {
         return bmp;
     }
 
-    private void splitBitmapToChunk(Bitmap sceneBitmap) {
+    /*private void splitBitmapToChunk(Bitmap sceneBitmap) {
         int sizeX = (int) Math.ceil(1024f / ratioX);
         int sizeY = (int) Math.ceil(1024f / ratioY);
         int splitY = (int) Math.ceil(sceneBitmap.getHeight() / sizeY);
         int splitX = (int) Math.ceil(sceneBitmap.getWidth() / sizeX);
-        chunkArray = new Bitmap[splitX + 1][splitY + 1];
+        //chunkArray = new Bitmap[splitX + 1][splitY + 1];
+        final int maxMemory = (int) (Runtime.getRuntime().maxMemory() / 1024);
+        final int cacheSize = maxMemory / 2;
+        chunkArray =  new LruCache<Pair<Integer, Integer>, Bitmap>(cacheSize) {
+            @Override
+            protected int sizeOf(Pair<Integer, Integer> key, Bitmap bitmap) {
+                // The cache size will be measured in kilobytes rather than
+                // number of items.
+                return bitmap.getByteCount() / 1024;
+            }
+        };
         for (int x = 0; x <= splitX; x++) {
             for (int y = 0; y <= splitY; y++) {
+                Bitmap tmp;
                 if ((x + 1) * sizeX <= sceneBitmap.getWidth() && (y + 1) * sizeY <= sceneBitmap.getHeight()) {
-                    chunkArray[x][y] = Bitmap.createBitmap(sceneBitmap, x * sizeX, y * sizeY, sizeX, sizeY);
+                    tmp = Bitmap.createBitmap(sceneBitmap, x * sizeX, y * sizeY, sizeX, sizeY);
                 } else {
-                    chunkArray[x][y] = Bitmap.createBitmap(sceneBitmap, x * sizeX, y * sizeY, (sceneBitmap.getWidth() - (x) * sizeX), (sceneBitmap.getHeight() - (y) * sizeY));
+                    tmp = Bitmap.createBitmap(sceneBitmap, x * sizeX, y * sizeY, (sceneBitmap.getWidth() - (x) * sizeX), (sceneBitmap.getHeight() - (y) * sizeY));
                 }
-                chunkArray[x][y] = Bitmap.createScaledBitmap(chunkArray[x][y], chunkArray[x][y].getWidth() * ratioX, chunkArray[x][y].getHeight() * ratioY, false);
+                //chunkArray[x][y] = Bitmap.createScaledBitmap(chunkArray[x][y], chunkArray[x][y].getWidth() * ratioX, chunkArray[x][y].getHeight() * ratioY, false);
+                chunkArray.put(new Pair<>(x, y), Bitmap.createScaledBitmap(tmp, tmp.getWidth() * ratioX, tmp.getHeight() * ratioY, false));
             }
         }
-    }
+    }*/
 
     private InputStream getGraphicsStream(String graphicsName) {
         try {

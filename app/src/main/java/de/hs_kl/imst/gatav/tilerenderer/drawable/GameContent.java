@@ -108,15 +108,10 @@ public class GameContent implements Drawables, Observer {
         Log.d("GameContent", "" + tileLoader.getTileHeight() * tileLoader.getTileHeight());
         gameHeight = tileLoader.getHeight();
         gameWidth = tileLoader.getWidth();
-        GameChunkHolder holder = new GameChunkHolder();
-        holder.setChunkArray(tileLoader.getChunkArray());
-        holder.setObjectGroups(tileLoader.getObjectGroups());
         camera.setLevelHeight(gameHeight * tileLoader.getTileHeight());
         camera.setLevelWidth(gameWidth * tileLoader.getTileWidth());
-        tileLoader.cleanup();
-        tileLoader = null;
 
-        world = new World(holder, 1f / 60f);
+        world = new World(tileLoader, 1f / 60f);
         player = new Player(350, 500*ScaleHelper.getRatioY());
         skelett = new Robotic(100, (int) (400 * ScaleHelper.getRatioY()));
         /*for(int i=0;i<20;i++) {
