@@ -118,10 +118,8 @@ public class GameContent implements Drawables, Observer {
 
         world = new World(holder, 1f / 60f);
         player = new Player(350, 500*ScaleHelper.getRatioY());
-        skelett = new Robotic(100, (int) (400 * ScaleHelper.getRatioY()));
-        /*for(int i=0;i<20;i++) {
-            world.addGameObject(new Robotic(100 + (i*20), (int) (400 * ScaleHelper.getRatioY())));
-        }*/
+        skelett = new Robotic(900, (int) (400 * ScaleHelper.getRatioY()));
+
         world.addGameObject(player);
         world.addGameObject(skelett);
         camera.attach(player);

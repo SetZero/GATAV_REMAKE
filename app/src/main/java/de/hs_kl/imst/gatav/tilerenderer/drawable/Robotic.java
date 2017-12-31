@@ -28,18 +28,18 @@ public final class Robotic extends Enemys implements CollisionReactive, Destroya
             loadGraphic(is, 33, 33, ScaleHelper.getEntitiyScale());
             is.close();
             run = new Animations(1f / 8f);
-            run.addAnimation(Animations.frameLoad("dynamics/enemys/robo/run/Run", 8, 175, 175));
+            run.addAnimation(Animations.frameLoad("dynamics/enemys/robo/run/Run", 8, 33*ScaleHelper.getEntitiyScale(), 33*ScaleHelper.getEntitiyScale()));
             dieng = new Animations(1f / 8f);
             try {
-                dieng.addAnimation(Animations.frameLoad("dynamics/enemys/robo/die/Dead", 10, 175, 175));
+                dieng.addAnimation(Animations.frameLoad("dynamics/enemys/robo/die/Dead", 10, 33*ScaleHelper.getEntitiyScale(), 33*ScaleHelper.getEntitiyScale()));
             }
             catch(Exception e){
                 e.printStackTrace();
             }
             idle = run.getDrawable(0f);
-            hitbox = new Rectangle((int) x, (int) y, width/2 , height);
+            hitbox = new Rectangle((int) x, (int) y, width/2 , height-4*ScaleHelper.getEntitiyScale());
             isActive = true;
-            //hitboxOffsetX = 40;
+            drawOffsetY = -3*ScaleHelper.getEntitiyScale();
         }
         catch (Exception e){
             e.printStackTrace();

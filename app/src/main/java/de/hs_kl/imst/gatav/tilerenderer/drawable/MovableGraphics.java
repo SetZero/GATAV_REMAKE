@@ -124,7 +124,7 @@ public abstract class MovableGraphics implements Drawables,CollisionReactive {
 
     @Override
     public void update(float delta) {
-        Rect temp = new Rect(hitbox.getRect());
+        Rect temp = (hitbox.getRect());
         if(velocity.x < 1 && velocity.x > -1) velocity.x = 0f;
         if(GameContent.camera.isRectInView(temp)) isActive = true;
         else isActive = false;
