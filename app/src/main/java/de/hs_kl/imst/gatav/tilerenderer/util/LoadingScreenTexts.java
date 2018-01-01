@@ -35,7 +35,7 @@ public class LoadingScreenTexts {
             "Deleting C:",
             "Uninstalling Rootkits",
             "100001101000101111100111111100110011110001111",
-            "$2a$12$DkijUXpclfC7FfYaeZEi7uckyCuDkoEA/5cunYEbSOP7KpbgtM5Gy"
+            "$2a$12$DkijUXpclfC7FfYaeZEi7uckyCuDkoEA/5cunYEbSOP7KpbgtM5Gy",
             "Chuck Norris threw a grenade and killed 50 people, then it exploded.",
             "Chuck Norris beat the sun in a staring contest.",
             "Chuck Norris can strangle you with a cordless phone",

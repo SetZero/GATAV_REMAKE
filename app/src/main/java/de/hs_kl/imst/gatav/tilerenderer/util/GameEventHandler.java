@@ -19,13 +19,18 @@ import de.hs_kl.imst.gatav.tilerenderer.util.Hitboxes.Rectangle;
  */
 
 public class GameEventHandler {
+    private final Timer timer;
     private ArrayList<MovableGraphics> dynamics = new ArrayList<>();
     private Map<String, List<Collidable>> objects;
     private Player player;
     private GameStateHandler gameState = new GameStateHandler();
+    private double gracePeriod = 3;
+    private double currentGracePeriod = 0;
 
-    public GameEventHandler(Map<String, List<Collidable>> objects) {
+    public GameEventHandler(Map<String, List<Collidable>> objects, Timer timer) {
         this.objects = objects;
+        this.timer = timer;
+        currentGracePeriod = timer.getElapsedTime() + gracePeriod;
     }
 
     public ArrayList<MovableGraphics> getDynamics() {
@@ -38,21 +43,22 @@ public class GameEventHandler {
             GameEventExecutioner.finishLevel();
         }
 
-        if(hasReachCheckpoint()) {
-            if(gameState.getLastCheckpoint() == null) {
+        if (hasReachCheckpoint()) {
+            if (gameState.getLastCheckpoint() == null) {
                 Log.d("GameEventHandler", "New Checkpoint!");
                 gameState.setLastCheckpoint(new Vector2(player.getPosition()));
-            } else if(gameState.getLastCheckpoint().getX() < player.getPosition().getX()) {
+            } else if (gameState.getLastCheckpoint().getX() < player.getPosition().getX()) {
                 Log.d("GameEventHandler", "Even Newer Checkpoint!");
                 gameState.setLastCheckpoint(new Vector2(player.getPosition()));
             }
         }
 
-        if(cam.isAttachedToObject() && isOutOfBounds(cam)) {
+        if (cam.isAttachedToObject() && isOutOfBounds(cam)) {
+            if(currentGracePeriod >= timer.getElapsedTime()) return;
             //TODO: Add some Death Screen
-            //TODO: Fix popup -> player "died" directly after loading
-                GameContent.hud.drawPopupMessage("you Died :(",5);
-            if(gameState.getLastCheckpoint() != null) {
+            GameContent.hud.drawPopupMessage("you Died :(", 5);
+            currentGracePeriod = timer.getElapsedTime() + gracePeriod;
+            if (gameState.getLastCheckpoint() != null) {
                 Log.d("GameEventHandler", "Reset!");
                 player.setPosition(gameState.getLastCheckpoint());
                 player.setActive(true);
@@ -65,7 +71,7 @@ public class GameEventHandler {
         if (player == null) return false;
 
         List<Collidable> finishObjs = objects.get(Constants.finishObjectGroupString);
-        if(finishObjs != null && finishObjs.size() >= 1) {
+        if (finishObjs != null && finishObjs.size() >= 1) {
             Collidable finish = finishObjs.get(0);
             if (finish instanceof Rectangle) {
                 Rect finishRect = ((Rectangle) finish).getRect();
@@ -83,7 +89,7 @@ public class GameEventHandler {
 
     public boolean hasReachCheckpoint() {
         List<Collidable> checkpoints = objects.get(Constants.checkpointsObjectGroupString);
-        if(checkpoints != null) {
+        if (checkpoints != null) {
             for (Collidable checkpoint : checkpoints) {
                 if (checkpoint instanceof Rectangle) {
                     Rect checkpointRect = ((Rectangle) checkpoint).getRect();

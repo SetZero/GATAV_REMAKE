@@ -44,13 +44,7 @@ public class GameView extends SurfaceView implements SurfaceHolder.Callback, Run
     public static boolean isTouched = false;
     private String levelName;
 
-    private Thread timeThread;
-    private volatile boolean runningTimeThread=false;    // access to elementary data types (not double or long) are atomic and should be volatile to synchronize content
-    private volatile double elapsedTime = 0.0;
 
-    synchronized private void resetElapsedTime() { elapsedTime = 0.0;}
-    synchronized private double getElapsedTime() { return elapsedTime; }
-    synchronized private void increaseElapsedTime(double increment) { elapsedTime += increment; }
 
     private double maxCollectedTargets = 30;
 
@@ -192,14 +186,11 @@ public class GameView extends SurfaceView implements SurfaceHolder.Callback, Run
     public void surfaceDestroyed(SurfaceHolder holder) {
         // Gameloop and Time Thread beenden
         runningRenderLoop = false;
-        runningTimeThread = false;
         gameMode=0;
         gameOver=false;
-
+        gameContent.cleanup();
         try {
             gameThread.join();
-            if(timeThread != null)  // überhaupt gestartet?
-                timeThread.join();
         }catch(InterruptedException e) {
             e.printStackTrace();
         }
@@ -237,24 +228,6 @@ public class GameView extends SurfaceView implements SurfaceHolder.Callback, Run
 
             surfaceHolder.unlockCanvasAndPost(canvas);
         }
-    }
-
-    public  void startTimeThread() {
-        if(runningTimeThread) return;
-        runningTimeThread = true;
-        resetElapsedTime();
-        timeThread = new Thread(() -> {
-            while (runningTimeThread) {
-                increaseElapsedTime(0.01);
-
-                try {
-                    Thread.sleep(10);
-                } catch (InterruptedException ex) {
-                    runningTimeThread=false;
-                }
-            }
-        });
-        timeThread.start();
     }
 
 
@@ -338,7 +311,7 @@ public class GameView extends SurfaceView implements SurfaceHolder.Callback, Run
 
         // erster Fling startet den Zeitzähler
         gameMode=1;
-        startTimeThread();
+        //startTimeThread();
 
         return true;
     }

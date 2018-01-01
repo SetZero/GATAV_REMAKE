@@ -1,16 +1,11 @@
 package de.hs_kl.imst.gatav.tilerenderer.util;
 
-import android.graphics.Bitmap;
 import android.graphics.Canvas;
 import android.graphics.Color;
 import android.graphics.Paint;
 import android.graphics.Rect;
-import android.util.Log;
-import android.util.LruCache;
-import android.util.Pair;
 
 import java.util.ArrayList;
-import java.util.Iterator;
 import java.util.List;
 import java.util.Map;
 
@@ -26,12 +21,23 @@ import de.hs_kl.imst.gatav.tilerenderer.util.Hitboxes.Rectangle;
  */
 
 public class World {
+    private final Timer timer;
     TileLoader tileLoader;
     private List<Drawables> dynamicObjects = new ArrayList<>();
     private List<Collectable> collectables = new ArrayList<>();
     private Map<String, List<Collidable>> objects;
     private float step;
     private PhysicsController physics;
+    private GameEventHandler gameEvents;
+
+    public World(TileLoader tileLoader, float step, Timer timer) {
+        this.tileLoader = tileLoader;
+        objects = tileLoader.getObjectGroups();
+        physics = new PhysicsController(this);
+        gameEvents = new GameEventHandler(this.getObjects(), timer);
+        this.step = step;
+        this.timer = timer;
+    }
 
     public List<Collectable> getCollectables() {
         return collectables;
@@ -39,16 +45,6 @@ public class World {
 
     public void addCollectables(Collectable collectable) {
         this.collectables.add(collectable);
-    }
-
-    private GameEventHandler gameEvents;
-
-    public World(TileLoader tileLoader, float step) {
-        this.tileLoader = tileLoader;
-        objects = tileLoader.getObjectGroups();
-        physics = new PhysicsController(this);
-        gameEvents = new GameEventHandler(this.getObjects());
-        this.step = step;
     }
 
     public Map<String, List<Collidable>> getObjects() {
@@ -59,7 +55,7 @@ public class World {
         for (Drawables x : dynamicObjects) {
             x.update(delta);
         }
-        for(Collectable x: collectables){
+        for (Collectable x : collectables) {
             x.update(delta);
         }
         physics.Update(step, cam);
@@ -139,7 +135,7 @@ public class World {
         for (Drawables object : dynamicObjects) {
             object.draw(canvas);
         }
-        for (Collectable x: collectables){
+        for (Collectable x : collectables) {
             x.draw(canvas);
         }
     }

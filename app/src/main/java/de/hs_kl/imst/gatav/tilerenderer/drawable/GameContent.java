@@ -19,6 +19,7 @@ import de.hs_kl.imst.gatav.tilerenderer.util.GameCamera;
 import de.hs_kl.imst.gatav.tilerenderer.util.GameChunkHolder;
 import de.hs_kl.imst.gatav.tilerenderer.util.LoadingScreenTexts;
 import de.hs_kl.imst.gatav.tilerenderer.util.ScaleHelper;
+import de.hs_kl.imst.gatav.tilerenderer.util.Timer;
 import de.hs_kl.imst.gatav.tilerenderer.util.World;
 
 public class GameContent implements Drawables, Observer {
@@ -56,6 +57,8 @@ public class GameContent implements Drawables, Observer {
     private boolean loadingScreenFadeDirection = true;
     private String loadingScreenText;
 
+    private Timer timer = new Timer();
+
     public GameContent(Context context, String levelName) {
         this.context = context;
         this.assetManager = context.getAssets();
@@ -64,11 +67,11 @@ public class GameContent implements Drawables, Observer {
         //Kamera setzen
         //camera.setCameraYCenter(450);
         //camera.setCameraXCenter(700);
-        int rnd = new Random().nextInt(LoadingScreenTexts.text.length);
+        int rnd = random.nextInt(LoadingScreenTexts.text.length);
         loadingScreenText = LoadingScreenTexts.text[rnd];
 
         loadLevel();
-        hud = new HUD(camera);
+        hud = new HUD(camera, timer);
     }
 
     public void movePlayer(Direction direction) {
@@ -111,7 +114,7 @@ public class GameContent implements Drawables, Observer {
         camera.setLevelHeight(gameHeight * tileLoader.getTileHeight());
         camera.setLevelWidth(gameWidth * tileLoader.getTileWidth());
 
-        world = new World(tileLoader, 1f / 60f);
+        world = new World(tileLoader, 1f / 60f, timer);
         player = new Player(350, 500*ScaleHelper.getRatioY());
         skelett = new Robotic(900, (int) (400 * ScaleHelper.getRatioY()));
         try {
@@ -123,6 +126,7 @@ public class GameContent implements Drawables, Observer {
         world.addGameObject(player);
         world.addGameObject(skelett);
         camera.attach(player);
+        timer.startTimeThread();
         finishedSetup = true;
     }
 
@@ -179,5 +183,10 @@ public class GameContent implements Drawables, Observer {
                 finishLoading();
             }
         }
+    }
+
+    public void cleanup() {
+        tileLoader.cleanup();
+        timer.stopTimeThread();
     }
 }

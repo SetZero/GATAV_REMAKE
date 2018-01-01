@@ -26,6 +26,7 @@ import java.util.ArrayList;
 import java.util.HashMap;
 import java.util.List;
 import java.util.Map;
+import java.util.Objects;
 import java.util.Observable;
 import java.util.Set;
 import java.util.stream.Collectors;
@@ -112,6 +113,7 @@ public class TileLoader extends Observable implements Runnable {
         return layers;
     }
 
+    @Deprecated
     public List<List<TileInformation>> getMap() {
         return map;
     }
@@ -292,8 +294,37 @@ public class TileLoader extends Observable implements Runnable {
         Log.d("TileLoader", "Start Loading Hitboxes ");
         NodeList objectgroups = doc.getElementsByTagName("objectgroup");
         int groups = objectgroups.getLength();
-        for (int group = 0; group < groups; group++) {
-            loadingPercentage += (40 / groups) * group;
+
+        objectGroups = IntStream.range(0, groups).mapToObj(i -> {
+            Element groupElement = (Element) objectgroups.item(i);
+            String name = groupElement.getAttribute("name");
+
+            NodeList objects = groupElement.getElementsByTagName("object");
+            int objectAmount = objects.getLength();
+
+            List<Collidable> list = IntStream.range(0, objectAmount).parallel().mapToObj(obj -> {
+                Element objectElement = (Element) objects.item(obj);
+                int id = Integer.parseInt(objectElement.getAttribute("id"));
+                int x = (int) (Double.parseDouble(objectElement.getAttribute("x")) * ratioX);
+                int y = (int) (Double.parseDouble(objectElement.getAttribute("y")) * ratioY);
+                String width = objectElement.getAttribute("width");
+                String height = objectElement.getAttribute("height");
+                if (width != null && height != null && !width.isEmpty() && !height.isEmpty()) {
+                    int tmpWidth = (int) Double.parseDouble(width);
+                    int tmpHeight = (int) Double.parseDouble(height);
+                    tmpWidth *= ratioX;
+                    tmpHeight *= ratioY;
+                    Rectangle tmpRect = new Rectangle(x, y, tmpWidth, tmpHeight);
+                    tmpRect.setId(id);
+                    return tmpRect;
+                }
+                return null;
+            }).filter(Objects::nonNull).collect(Collectors.toList());
+            return new Pair<>(name, list);
+        }).collect(Collectors.toMap(i -> i.first, i -> i.second));
+
+        /*for (int group = 0; group < groups; group++) {
+            //loadingPercentage += (40 / groups) * group;
 
             Log.d("TileLoader", "Hitbox Layer: " + group);
             Element groupElement = (Element) objectgroups.item(group);
@@ -325,7 +356,7 @@ public class TileLoader extends Observable implements Runnable {
                 }
             }
         }
-        Log.d("TileLoader", "Finished Hitboxes");
+        Log.d("TileLoader", "Finished Hitboxes");*/
     }
 
     private Bitmap generateGameBitmap(ArrayList<List<TileInformation>> map) {
@@ -386,5 +417,9 @@ public class TileLoader extends Observable implements Runnable {
         } catch (IOException e2) {
             return null;
         }
+    }
+
+    public void cleanup() {
+        sceneBitmap = null;
     }
 }

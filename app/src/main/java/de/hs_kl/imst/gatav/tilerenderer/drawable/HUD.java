@@ -7,6 +7,7 @@ import android.graphics.Rect;
 import android.util.Log;
 
 import de.hs_kl.imst.gatav.tilerenderer.util.GameCamera;
+import de.hs_kl.imst.gatav.tilerenderer.util.Timer;
 
 /**
  * Created by keven on 27.12.2017.
@@ -17,10 +18,12 @@ public class HUD {
     private String msg;
     private Paint paint;
     private Rect lp = new Rect(),popup = new Rect(),score = new Rect();
-    private float popupTimer,popupLength;
+    private double popupLength;
+    private Timer timer;
 
-    public HUD(GameCamera camera){
+    public HUD(GameCamera camera, Timer timer){
         //this.camera = camera;
+        this.timer = timer;
         paint = new Paint();
         paint.setColor(Color.BLACK);
         paint.setTextSize(50);
@@ -29,26 +32,24 @@ public class HUD {
     public void draw(Canvas canvas) {
         if(GameContent.player != null) {
             drawLP(canvas);
-            if(msg!=null && popupTimer <= popupLength)
+            if(msg!=null)
                 drawPopup(canvas);
             drawScore(canvas);
+            drawTimer(canvas);
         }
     }
 
     public void update(float delta){
         //Log.d("time, length","time "+popupTimer+" length "+popupLength);
-        if(msg!= null)
-            popupTimer += delta;
-        if(popupTimer > popupLength){
-            popupTimer = 0;
+        if(timer.getElapsedTime() > popupLength){
             popupLength = 0;
             msg = null;
         }
     }
 
-    public void drawPopupMessage(String msg,float popupLength){
+    public void drawPopupMessage(String msg, float popupLength){
         this.msg = msg;
-        this.popupLength = popupLength;
+        this.popupLength = timer.getElapsedTime() + popupLength;
     }
 
     private void drawLP(Canvas canvas){
@@ -68,5 +69,14 @@ public class HUD {
             paint.setTextSize(80);
             canvas.drawText(msg, canvas.getWidth()/2, canvas.getHeight()/2, paint);
             paint.setTextSize(50);
+    }
+
+    private void drawTimer(Canvas canvas) {
+
+        String timeText = "Time: " + String.format("%03d", (long)timer.getElapsedTime());
+        paint.setTextSize(50);
+        paint.setTextAlign(Paint.Align.RIGHT);
+        canvas.drawText(timeText, canvas.getWidth() - timeText.length(), 60, paint);
+        paint.setTextAlign(Paint.Align.LEFT);
     }
 }
