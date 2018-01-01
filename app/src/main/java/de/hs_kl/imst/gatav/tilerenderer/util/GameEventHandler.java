@@ -7,6 +7,7 @@ import java.util.ArrayList;
 import java.util.List;
 import java.util.Map;
 
+import de.hs_kl.imst.gatav.tilerenderer.drawable.GameContent;
 import de.hs_kl.imst.gatav.tilerenderer.drawable.MovableGraphics;
 import de.hs_kl.imst.gatav.tilerenderer.drawable.Player;
 import de.hs_kl.imst.gatav.tilerenderer.util.Hitboxes.Collidable;
@@ -49,10 +50,13 @@ public class GameEventHandler {
 
         if(cam.isAttachedToObject() && isOutOfBounds(cam)) {
             //TODO: Add some Death Screen
-            Log.d("GameEventHandler", "U diededed!");
+            //TODO: Fix popup -> player "died" directly after loading
+                GameContent.hud.drawPopupMessage("you Died :(",5);
             if(gameState.getLastCheckpoint() != null) {
                 Log.d("GameEventHandler", "Reset!");
                 player.setPosition(gameState.getLastCheckpoint());
+                player.setActive(true);
+                player.setIsAlive(true);
             }
         }
     }

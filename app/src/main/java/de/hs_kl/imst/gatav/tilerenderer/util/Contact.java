@@ -1,7 +1,5 @@
 package de.hs_kl.imst.gatav.tilerenderer.util;
 
-import java.util.ArrayList;
-
 import de.hs_kl.imst.gatav.tilerenderer.drawable.MovableGraphics;
 import de.hs_kl.imst.gatav.tilerenderer.util.PhysicsController.intersectDirection;
 import de.hs_kl.imst.gatav.tilerenderer.util.Hitboxes.Collidable;
@@ -14,12 +12,12 @@ public class Contact {
     public intersectDirection siteHidden;
     public Collidable collisions;
 
-    public Contact setMovable(MovableGraphics movable) {
-        this.movable = movable;
+    public Contact setCollisionObject(MovableGraphics collisionObject) {
+        this.collisionObject = collisionObject;
         return this;
     }
 
-    public MovableGraphics movable;
+    public Object collisionObject;
     /**
      * @param params
      * maybe useful in later implementions
@@ -32,6 +30,6 @@ public class Contact {
         siteHidden= (siteHit); collisions = (other); params = (param);
     }
     public Contact(intersectDirection siteHit, Collidable other, MovableGraphics item){
-        siteHidden= (siteHit); collisions = (other); movable = (item);
+        siteHidden= (siteHit); collisions = (other); collisionObject = (item);
     }
 }

@@ -36,5 +36,11 @@ public class LoadingScreenTexts {
             "Uninstalling Rootkits",
             "100001101000101111100111111100110011110001111",
             "$2a$12$DkijUXpclfC7FfYaeZEi7uckyCuDkoEA/5cunYEbSOP7KpbgtM5Gy"
+            "Chuck Norris threw a grenade and killed 50 people, then it exploded.",
+            "Chuck Norris beat the sun in a staring contest.",
+            "Chuck Norris can strangle you with a cordless phone",
+            "Chuck Norris knows Victoria's secret.",
+            "Chuck Norris's Blood Type is AK-47.",
+            "M.C. Hammer learned the hard way that Chuck Norris can touch this."
     };
 }

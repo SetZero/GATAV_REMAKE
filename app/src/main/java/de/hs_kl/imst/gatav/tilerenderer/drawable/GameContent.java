@@ -43,7 +43,7 @@ public class GameContent implements Drawables, Observer {
     public static Player player = null;
 
     public Robotic skelett;
-    public  HUD hud;
+    public static HUD hud;
 
     private Random random = new Random();
     public static Context context;
@@ -114,7 +114,12 @@ public class GameContent implements Drawables, Observer {
         world = new World(tileLoader, 1f / 60f);
         player = new Player(350, 500*ScaleHelper.getRatioY());
         skelett = new Robotic(900, (int) (400 * ScaleHelper.getRatioY()));
-
+        try {
+            world.addCollectables(new Coin(1200, (int) (500 * ScaleHelper.getRatioY())));
+        }
+        catch  (Exception e){
+            e.printStackTrace();
+        }
         world.addGameObject(player);
         world.addGameObject(skelett);
         camera.attach(player);

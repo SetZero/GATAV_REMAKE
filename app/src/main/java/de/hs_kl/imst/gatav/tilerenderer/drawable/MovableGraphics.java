@@ -56,8 +56,16 @@ public abstract class MovableGraphics implements Drawables,CollisionReactive {
     protected volatile Vector2 velocity = new Vector2();
     protected volatile Direction currentDirection = Direction.IDLE;
 
+    /**
+     * sets position and hitbox
+     * @param position
+     */
 	public void setPosition(Vector2 position) {
         Position = position;
+        int offset = 0;
+        if(width -hitbox.getWidth() != 0)
+            offset = (width -hitbox.getWidth())/2;
+        hitbox.setPos((int)Position.getX()+offset,(int)Position.getY());
     }
 	
     public Rectangle getHitbox() {
@@ -136,7 +144,8 @@ public abstract class MovableGraphics implements Drawables,CollisionReactive {
             int offset = 0;
             if(width -hitbox.getWidth() != 0)
             offset = (width -hitbox.getWidth())/2;
-        hitbox.setX((int)Position.getX()+offset); hitbox.setY((int)Position.getY());
+            hitbox.setPos((int)Position.getX()+offset,(int)Position.getY());
+        //hitbox.setX((int)Position.getX()+offset); hitbox.setY((int)Position.getY());
         }
     }
 
