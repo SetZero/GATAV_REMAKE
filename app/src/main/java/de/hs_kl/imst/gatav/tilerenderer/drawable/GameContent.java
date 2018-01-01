@@ -161,6 +161,7 @@ public class GameContent implements Drawables, Observer {
         canvas.drawText(fpsText, (canvas.getWidth() / 2), 200 * ScaleHelper.getRatioY(), paint);
 
         paint.setColor(Color.BLACK);
+        paint.setTextSize(20 * ScaleHelper.getRatioY() *  (float)Math.min(1.5, (50f / loadingScreenText.length())));
         canvas.drawText(loadingScreenText, (canvas.getWidth() / 2), 300 * ScaleHelper.getRatioY(), paint);
 
     }

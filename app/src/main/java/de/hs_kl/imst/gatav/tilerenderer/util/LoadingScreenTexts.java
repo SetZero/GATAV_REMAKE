@@ -11,7 +11,7 @@ public class LoadingScreenTexts {
             "Whoever sold you this game should give you your money back",
             "Swipe up to jump.",
             "You can't win this game.",
-            "01000001 01010010 01000010 01000101 01001001 01010100 01000101 01001110 ",
+            "0100000101010010010000100100010101001001010101000100010101001110",
             "There is no 1337 in this game. Now there is.",
             "c2VyaW91c2x5Pw==",
             "Spoiler: Darth Vader is Harry's father",
@@ -30,6 +30,11 @@ public class LoadingScreenTexts {
             "To charge your phone put it in the microwave",
             "Fully translated by Google Translate",
             "We are out of red pills, why not take the blue?",
-            "Erst wenn der Subwoofer die Katze inhaliert fickt der Bass richtig übel - Wolfgang Amadeus Mozart"
+            "Erst wenn der Subwoofer die Katze inhaliert fickt der Bass richtig übel - Wolfgang Amadeus Mozart",
+            "Did you know: Dragons like Salt",
+            "Deleting C:",
+            "Uninstalling Rootkits",
+            "100001101000101111100111111100110011110001111",
+            "$2a$12$DkijUXpclfC7FfYaeZEi7uckyCuDkoEA/5cunYEbSOP7KpbgtM5Gy"
     };
 }
