@@ -11,7 +11,7 @@
     </head>
     <body>
 
-        <h1>Generic Game Name</h1>
+        <h1 id="gameName">Generic Game Name</h1>
         <div class="main-container">
             <ul id="level-selector">
                 <li id="level-select-title">Select Level</li>
@@ -26,6 +26,8 @@
                 Android.loadLevel($(this).attr("href").replace('#',''));
             });
             $( document ).ready(function() {
+                var gameName = Android.getGameName();
+                $('#gameName').text(gameName);
                 var levels = Android.showLevel();
                 var obj = jQuery.parseJSON(levels);
                obj["maps"].forEach(function(element) {

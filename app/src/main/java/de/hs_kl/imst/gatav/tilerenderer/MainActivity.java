@@ -26,7 +26,7 @@ public class MainActivity extends AppCompatActivity {
         mainMenuView.setHapticFeedbackEnabled(false);
         mainMenuView.setOnLongClickListener(v -> true);
 
-        mainMenuView.addJavascriptInterface(new WebAppInterface(this, am), "Android");
+        mainMenuView.addJavascriptInterface(new WebAppInterface(this, am, getResources().getString(R.string.app_name)), "Android");
     }
 
     public void loadLevel(String level) {

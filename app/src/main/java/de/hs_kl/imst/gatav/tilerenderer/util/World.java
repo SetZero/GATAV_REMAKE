@@ -1,9 +1,12 @@
 package de.hs_kl.imst.gatav.tilerenderer.util;
 
+import android.graphics.Bitmap;
 import android.graphics.Canvas;
 import android.graphics.Color;
+import android.graphics.Matrix;
 import android.graphics.Paint;
 import android.graphics.Rect;
+import android.util.Log;
 
 import java.util.ArrayList;
 import java.util.List;
@@ -64,9 +67,9 @@ public class World {
 
     public void draw(GameCamera camera, Canvas canvas) {
         //1. Load All Tiles
-        //List<List<TileInformation>> map = tileLoader.getMap();
         camera.draw(canvas);
         /* Why is this so slow? Why is transparency so slow... :-/
+        List<List<TileInformation>> map = tileLoader.getMap();
         for (List<TileInformation> currentLayerTiles : map) {
             for (TileInformation currentTile : currentLayerTiles) {
                 Rect test = currentTile.getTileRect();
@@ -77,6 +80,15 @@ public class World {
                 }
             }
         }*/
+
+        //Scaling is slow...
+        /*Rect tmp = camera.getCameraViewRect();
+        Matrix matrix = new Matrix();
+        matrix.postScale(ScaleHelper.getRatioX(), ScaleHelper.getRatioY());
+        Bitmap bmp = tileLoader.getSceneBitmap();
+        Bitmap croppedBitmap = Bitmap.createBitmap(bmp, (int)(tmp.left / ScaleHelper.getRatioX()), (int)(tmp.top / ScaleHelper.getRatioY()), (int)(tmp.width() / ScaleHelper.getRatioX()), (int)(tmp.height() / ScaleHelper.getRatioY()), matrix, true);
+        canvas.drawBitmap(croppedBitmap, tmp.left, tmp.top, null);*/
+
         //Screw RAM, modern Smartphones have 4GB of RAM anyways...
         canvas.drawBitmap(tileLoader.getSceneBitmap(), 0, 0, null);
 

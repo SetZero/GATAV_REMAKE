@@ -3,11 +3,8 @@ package webview;
 import android.content.res.AssetManager;
 import android.webkit.JavascriptInterface;
 
-import org.json.JSONArray;
-
 import java.io.IOException;
 import java.io.InputStream;
-import java.util.ArrayList;
 
 import de.hs_kl.imst.gatav.tilerenderer.MainActivity;
 import de.hs_kl.imst.gatav.tilerenderer.util.Constants;
@@ -19,13 +16,15 @@ import de.hs_kl.imst.gatav.tilerenderer.util.Constants;
 public class WebAppInterface {
     private MainActivity mContext;
     private AssetManager am;
+    private String gameName;
 
     /**
      * Instantiate the interface and set the context + AssetManager
      */
-    public WebAppInterface(MainActivity c, AssetManager am) {
+    public WebAppInterface(MainActivity c, AssetManager am, String gameName) {
         mContext = c;
         this.am = am;
+        this.gameName = gameName;
     }
 
     /**
@@ -62,5 +61,10 @@ public class WebAppInterface {
     @JavascriptInterface
     public void loadLevel(String level) {
         mContext.loadLevel(level);
+    }
+
+    @JavascriptInterface
+    public String getGameName() {
+        return gameName;
     }
 }

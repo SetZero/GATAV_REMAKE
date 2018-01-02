@@ -225,7 +225,6 @@ public class TileLoader extends Observable implements Runnable {
 
 
             //splitBitmapToChunk(tmpMap);
-
             tileWidth = tileWidth * ratioX;
             tileHeight = tileHeight * ratioY;
             sceneBitmap = generateGameBitmap(this.map);
@@ -360,10 +359,11 @@ public class TileLoader extends Observable implements Runnable {
     private Bitmap generateGameBitmap(ArrayList<List<TileInformation>> map) {
         int w = width * tileWidth;
         int h = height * tileHeight;
-        Bitmap.Config conf = Bitmap.Config.ARGB_8888;
+        //Bitmap.Config conf = Bitmap.Config.ARGB_8888;
+        Bitmap.Config conf = Bitmap.Config.RGB_565;
         Bitmap bmp = Bitmap.createBitmap(w, h, conf);
         Canvas canvas = new Canvas(bmp);
-
+        canvas.drawARGB(255, 109, 165, 255);
         for (List<TileInformation> currentLayerTiles : map) {
             for (TileInformation currentTile : currentLayerTiles) {
                 Rect test = currentTile.getTileRect();
