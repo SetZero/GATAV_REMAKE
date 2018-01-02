@@ -20,6 +20,7 @@ import de.hs_kl.imst.gatav.tilerenderer.util.Hitboxes.Rectangle;
 
 public class GameEventHandler {
     private final Timer timer;
+    private final GameEventExecutioner executioner;
     private ArrayList<MovableGraphics> dynamics = new ArrayList<>();
     private Map<String, List<Collidable>> objects;
     private Player player;
@@ -27,10 +28,11 @@ public class GameEventHandler {
     private double gracePeriod = 3;
     private double currentGracePeriod = 0;
 
-    public GameEventHandler(Map<String, List<Collidable>> objects, Timer timer) {
+    public GameEventHandler(Map<String, List<Collidable>> objects, Timer timer, GameEventExecutioner executioner) {
         this.objects = objects;
         this.timer = timer;
         currentGracePeriod = timer.getElapsedTime() + gracePeriod;
+        this.executioner = executioner;
     }
 
     public ArrayList<MovableGraphics> getDynamics() {
@@ -40,7 +42,7 @@ public class GameEventHandler {
     public void update(GameCamera cam) {
         if (hasReachedFinish(cam)) {
             //TODO: add some Finish Screen
-            GameEventExecutioner.finishLevel();
+            executioner.finishLevel();
         }
 
         if (hasReachCheckpoint()) {
@@ -56,7 +58,7 @@ public class GameEventHandler {
         if (cam.isAttachedToObject() && (isOutOfBounds(cam) || isInDeathZone())) {
             if(currentGracePeriod >= timer.getElapsedTime()) return;
             //TODO: Add some Death Screen
-            GameContent.hud.drawPopupMessage("you Died :(", 5);
+            GameContent.getHud().drawPopupMessage("you Died :(", 5);
             currentGracePeriod = timer.getElapsedTime() + gracePeriod;
             if (gameState.getLastCheckpoint() != null) {
                 Log.d("GameEventHandler", "Reset!");
@@ -74,17 +76,17 @@ public class GameEventHandler {
         return isInTheZone(finishObjs);
     }
 
-    public boolean isInDeathZone() {
+    private boolean isInDeathZone() {
         List<Collidable> deathZones = objects.get(Constants.deathzoneObjectGroupString);
         return isInTheZone(deathZones);
     }
 
-    public boolean hasReachCheckpoint() {
+    private boolean hasReachCheckpoint() {
         List<Collidable> checkpoints = objects.get(Constants.checkpointsObjectGroupString);
         return isInTheZone(checkpoints);
     }
 
-    public boolean isInTheZone(List<Collidable> zone) {
+    private boolean isInTheZone(List<Collidable> zone) {
         if (zone != null) {
             for (Collidable z : zone) {
                 if (z instanceof Rectangle) {
@@ -98,15 +100,12 @@ public class GameEventHandler {
         return false;
     }
 
-    public boolean isOutOfBounds(GameCamera cam) {
+    private boolean isOutOfBounds(GameCamera cam) {
         //Player is in Center = not out of bounds
-        if (cam.isRectInView(player.getHitbox().getRect())) {
-            return false;
-        }
-        return true;
+        return !cam.isRectInView(player.getHitbox().getRect());
     }
 
-    public void addDynamicObject(MovableGraphics dynamic) {
+    void addDynamicObject(MovableGraphics dynamic) {
         dynamics.add(dynamic);
         if (dynamic instanceof Player) {
             this.player = (Player) dynamic;

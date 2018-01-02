@@ -22,7 +22,7 @@ import de.hs_kl.imst.gatav.tilerenderer.util.Hitboxes.Rectangle;
 
 public class World {
     private final Timer timer;
-    TileLoader tileLoader;
+    private TileLoader tileLoader;
     private List<Drawables> dynamicObjects = new ArrayList<>();
     private List<Collectable> collectables = new ArrayList<>();
     private Map<String, List<Collidable>> objects;
@@ -30,17 +30,13 @@ public class World {
     private PhysicsController physics;
     private GameEventHandler gameEvents;
 
-    public World(TileLoader tileLoader, float step, Timer timer) {
+    public World(TileLoader tileLoader, float step, Timer timer, GameEventExecutioner executioner) {
         this.tileLoader = tileLoader;
         objects = tileLoader.getObjectGroups();
         physics = new PhysicsController(this);
-        gameEvents = new GameEventHandler(this.getObjects(), timer);
+        gameEvents = new GameEventHandler(this.getObjects(), timer, executioner);
         this.step = step;
         this.timer = timer;
-    }
-
-    public List<Collectable> getCollectables() {
-        return collectables;
     }
 
     public void addCollectables(Collectable collectable) {

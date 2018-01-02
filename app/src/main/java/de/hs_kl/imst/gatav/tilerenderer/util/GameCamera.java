@@ -43,9 +43,7 @@ public class GameCamera {
     }
 
     public boolean isAttachedToObject() {
-        if(attachedTo == null)
-            return false;
-        return true;
+        return attachedTo != null;
     }
 
 
@@ -120,9 +118,7 @@ public class GameCamera {
     }
 
     public boolean isRectInView(Rect a) {
-        if (getCameraViewRect().intersect(a))
-            return true;
-        return false;
+        return getCameraViewRect().intersect(a);
     }
 
     public void attach(MovableGraphics body) {

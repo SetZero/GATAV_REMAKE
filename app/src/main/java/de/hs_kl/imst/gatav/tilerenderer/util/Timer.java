@@ -5,7 +5,6 @@ package de.hs_kl.imst.gatav.tilerenderer.util;
  */
 
 public class Timer {
-    private Thread timeThread;
     private volatile boolean runningTimeThread = false;
     private volatile double elapsedTime = 0.0;
 
@@ -25,7 +24,7 @@ public class Timer {
         if (runningTimeThread) return;
         runningTimeThread = true;
         resetElapsedTime();
-        timeThread = new Thread(() -> {
+        Thread timeThread = new Thread(() -> {
             while (runningTimeThread) {
                 increaseElapsedTime(0.01);
 

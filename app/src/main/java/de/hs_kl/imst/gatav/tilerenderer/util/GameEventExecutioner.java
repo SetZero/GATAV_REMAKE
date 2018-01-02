@@ -8,13 +8,13 @@ import android.util.Log;
  */
 
 public class GameEventExecutioner {
-    private static AppCompatActivity activity;
+    private AppCompatActivity activity;
 
     public GameEventExecutioner(AppCompatActivity activity) {
         this.activity = activity;
     }
 
-    public static void finishLevel() {
+    public void finishLevel() {
         activity.finish();
         //Intent intent = new Intent(activity, MainActivity.class);
         //.putExtra("level", level);

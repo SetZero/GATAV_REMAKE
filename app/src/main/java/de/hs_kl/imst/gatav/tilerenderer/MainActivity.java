@@ -2,14 +2,10 @@ package de.hs_kl.imst.gatav.tilerenderer;
 
 import android.content.Intent;
 import android.content.res.AssetManager;
-import android.support.v7.app.AppCompatActivity;
 import android.os.Bundle;
-import android.view.View;
+import android.support.v7.app.AppCompatActivity;
 import android.webkit.WebSettings;
 import android.webkit.WebView;
-
-import java.io.IOException;
-import java.util.ArrayList;
 
 import webview.WebAppInterface;
 

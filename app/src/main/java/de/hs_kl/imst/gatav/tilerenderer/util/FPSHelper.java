@@ -5,6 +5,7 @@ import android.graphics.Color;
 import android.graphics.Paint;
 
 import java.util.LinkedList;
+import java.util.Locale;
 
 /**
  * Created by Sebastian on 2017-12-05.
@@ -20,7 +21,7 @@ public class FPSHelper {
 
 
     public static void draw(Canvas canvas) {
-        String fpsText = String.format("FPS: %.2f", fps());
+        String fpsText = String.format(Locale.GERMAN, "FPS: %.2f", fps());
 
         Paint paint = new Paint();
 

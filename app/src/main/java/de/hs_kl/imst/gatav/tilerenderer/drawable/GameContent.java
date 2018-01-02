@@ -16,13 +16,14 @@ import java.util.Random;
 import de.hs_kl.imst.gatav.tilerenderer.TileLoader;
 import de.hs_kl.imst.gatav.tilerenderer.util.Direction;
 import de.hs_kl.imst.gatav.tilerenderer.util.GameCamera;
-import de.hs_kl.imst.gatav.tilerenderer.util.GameChunkHolder;
+import de.hs_kl.imst.gatav.tilerenderer.util.GameEventExecutioner;
 import de.hs_kl.imst.gatav.tilerenderer.util.LoadingScreenTexts;
 import de.hs_kl.imst.gatav.tilerenderer.util.ScaleHelper;
 import de.hs_kl.imst.gatav.tilerenderer.util.Timer;
 import de.hs_kl.imst.gatav.tilerenderer.util.World;
 
 public class GameContent implements Drawables, Observer {
+    private final GameEventExecutioner executioner;
     /**
      * Breite und Höhe des Levels in Pixel
      */
@@ -31,6 +32,11 @@ public class GameContent implements Drawables, Observer {
 	
     //TODO wieder entfernen
     private boolean test = true;
+
+    public static HUD getHud() {
+        return hud;
+    }
+
     public int getGameWidth() { return gameWidth; }
     public int getGameHeight() { return gameHeight; }
 
@@ -44,10 +50,10 @@ public class GameContent implements Drawables, Observer {
     public static Player player = null;
 
     public Robotic skelett;
-    public static HUD hud;
+    private static HUD hud;
 
     private Random random = new Random();
-    public static Context context;
+    public static Context context; //TODO!!!!!!!!!!111111111elf: ___DON'T___ MAKE THIS STATIC: Memory leak!
     private AssetManager assetManager;
     private String levelName;
 
@@ -59,10 +65,11 @@ public class GameContent implements Drawables, Observer {
 
     private Timer timer = new Timer();
 
-    public GameContent(Context context, String levelName) {
+    public GameContent(Context context, String levelName, GameEventExecutioner executioner) {
         this.context = context;
         this.assetManager = context.getAssets();
         this.levelName = levelName;
+        this.executioner = executioner;
 
         //Kamera setzen
         //camera.setCameraYCenter(450);
@@ -93,10 +100,10 @@ public class GameContent implements Drawables, Observer {
     public void update(float delta) {
         if (finishedSetup) {
             world.update(delta, camera);
-            hud.update(delta);
+            getHud().update(delta);
             if (!player.isAlive()&& test){
                 test = false;
-                hud.drawPopupMessage("You Died", 5);
+                getHud().drawPopupMessage("You Died", 5);
             }
         }
     }
@@ -114,7 +121,7 @@ public class GameContent implements Drawables, Observer {
         camera.setLevelHeight(gameHeight * tileLoader.getTileHeight());
         camera.setLevelWidth(gameWidth * tileLoader.getTileWidth());
 
-        world = new World(tileLoader, 1f / 60f, timer);
+        world = new World(tileLoader, 1f / 60f, timer, executioner);
         player = new Player(350, 500*ScaleHelper.getRatioY());
         skelett = new Robotic(900, (int) (400 * ScaleHelper.getRatioY()));
         try {

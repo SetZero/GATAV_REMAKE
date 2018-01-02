@@ -13,6 +13,7 @@ import android.view.View;
 import de.hs_kl.imst.gatav.tilerenderer.drawable.GameContent;
 import de.hs_kl.imst.gatav.tilerenderer.util.Direction;
 import de.hs_kl.imst.gatav.tilerenderer.util.FPSHelper;
+import de.hs_kl.imst.gatav.tilerenderer.util.GameEventExecutioner;
 import de.hs_kl.imst.gatav.tilerenderer.util.ScaleHelper;
 
 
@@ -24,15 +25,13 @@ import de.hs_kl.imst.gatav.tilerenderer.util.ScaleHelper;
 public class GameView extends SurfaceView implements SurfaceHolder.Callback, Runnable, GestureDetector.OnGestureListener {
 
     public static boolean isTouched = false;
+    private final GameEventExecutioner executioner;
     public boolean gameOver = false;
     private SurfaceHolder surfaceHolder;
     private Thread gameThread;
     private boolean runningRenderLoop = false;
     private String levelName;
 
-
-    private float gameWidth = -1;
-    private float gameHeight = -1;
 
     private GestureDetectorCompat gestureDetector;
 
@@ -53,7 +52,7 @@ public class GameView extends SurfaceView implements SurfaceHolder.Callback, Run
      *
      * @param context Kontext
      */
-    public GameView(Context context, String level) {
+    public GameView(Context context, String level, GameEventExecutioner executioner) {
         super(context);
         levelName = level;
 
@@ -62,6 +61,7 @@ public class GameView extends SurfaceView implements SurfaceHolder.Callback, Run
 
         gestureDetector = new GestureDetectorCompat(context, this);
         gestureDetector.setIsLongpressEnabled(true);
+        this.executioner = executioner;
         setSystemUiVisibility(View.SYSTEM_UI_FLAG_LAYOUT_STABLE
                 | View.SYSTEM_UI_FLAG_LAYOUT_HIDE_NAVIGATION
                 | View.SYSTEM_UI_FLAG_LAYOUT_FULLSCREEN
@@ -87,7 +87,7 @@ public class GameView extends SurfaceView implements SurfaceHolder.Callback, Run
         canvas.save();
         gameContent.draw(canvas);
         canvas.restore();
-        gameContent.hud.draw(canvas);
+        GameContent.getHud().draw(canvas);
         // Layer 2 (Collected Targets, Score and Elapsed Time)
         FPSHelper.draw(canvas);
     }
@@ -128,12 +128,12 @@ public class GameView extends SurfaceView implements SurfaceHolder.Callback, Run
     @Override
     public void surfaceChanged(SurfaceHolder holder, int format, int width, int height) {
         int border = 0;                                                     // darf's ein wenig Rand sein?
-        gameWidth = width - border;                                         // hinzufügen
-        gameHeight = (int) ((float) gameWidth / ((float) width / height));    // Höhe entsprechend anpassen
+        float gameWidth = width - border;
+        float gameHeight = (int) (gameWidth / ((float) width / height));
 
 
         ScaleHelper.calculateRatio((int) gameWidth, (int) gameHeight);
-        gameContent = new GameContent(getContext(), levelName);
+        gameContent = new GameContent(getContext(), levelName, executioner);
 
         // Reset der Zustände bei "onResume"
         gameOver = false;
