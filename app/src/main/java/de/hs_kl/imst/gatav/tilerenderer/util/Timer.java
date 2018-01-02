@@ -6,7 +6,7 @@ package de.hs_kl.imst.gatav.tilerenderer.util;
 
 public class Timer {
     private Thread timeThread;
-    private volatile boolean runningTimeThread = false;    // access to elementary data types (not double or long) are atomic and should be volatile to synchronize content
+    private volatile boolean runningTimeThread = false;
     private volatile double elapsedTime = 0.0;
 
     synchronized private void resetElapsedTime() {

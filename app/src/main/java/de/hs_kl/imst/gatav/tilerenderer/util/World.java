@@ -70,7 +70,8 @@ public class World {
         //1. Load All Tiles
         //List<List<TileInformation>> map = tileLoader.getMap();
         camera.draw(canvas);
-        /*for (List<TileInformation> currentLayerTiles : map) {
+        /* Why is this so slow? Why is transparency so slow... :-/
+        for (List<TileInformation> currentLayerTiles : map) {
             for (TileInformation currentTile : currentLayerTiles) {
                 Rect test = currentTile.getTileRect();
                 if (camera.isRectInView(test)) {
@@ -80,26 +81,8 @@ public class World {
                 }
             }
         }*/
+        //Screw RAM, modern Smartphones have 4GB of RAM anyways...
         canvas.drawBitmap(tileLoader.getSceneBitmap(), 0, 0, null);
-        /*Rect tmpRect = camera.getCameraViewRect();
-        LruCache<Pair<Integer, Integer>, Bitmap> mapChunks = tileHolder.getChunkArray();
-        //TODO: Make 1024 variable of TileLoader
-        int startX = tmpRect.left / 1024;
-        int startY = tmpRect.top / 1024;
-        int endX = tmpRect.right / 1024;
-        int endY = tmpRect.bottom / 1024;
-
-        for (int x = startX; x <= endX; x++) {
-            for (int y = startY; y <= endY; y++) {
-                //if(x >= mapChunks.length || y >= mapChunks[0].length) continue;
-                Pair<Integer, Integer> key = new Pair<>(x, y);
-                Bitmap tmp = mapChunks.get(key);
-                Log.d("GameChunk", "Size: " + mapChunks.size());
-                if(tmp != null)
-                    canvas.drawBitmap(tmp, x*1024, y*1024, null);
-                //canvas.drawBitmap(mapChunks[x][y], x*1024, y*1024, null);
-            }
-        }*/
 
         //2. Draw all Debug Hitboxes
         if (Constants.debugBuild) {

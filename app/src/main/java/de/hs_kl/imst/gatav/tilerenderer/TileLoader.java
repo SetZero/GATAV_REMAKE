@@ -9,7 +9,6 @@ import android.graphics.Canvas;
 import android.graphics.Rect;
 import android.util.ArraySet;
 import android.util.Log;
-import android.util.LruCache;
 import android.util.Pair;
 
 import org.w3c.dom.Document;
@@ -139,7 +138,6 @@ public class TileLoader extends Observable implements Runnable {
         return loadingPercentage;
     }
 
-    @Deprecated
     public Bitmap getSceneBitmap() {
         return sceneBitmap;
     }
@@ -195,8 +193,8 @@ public class TileLoader extends Observable implements Runnable {
                             int x = i.first % width;
                             int y = i.first / width;
                             TileInformation tile = new TileInformation();
-                            tile.setxPos(x*ratioX);
-                            tile.setyPos(y*ratioY);
+                            tile.setxPos(x * ratioX);
+                            tile.setyPos(y * ratioY);
                             tile.setWidth(tileWidth);
                             tile.setHeight(tileHeight);
                             tile.generateRect();

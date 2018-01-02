@@ -53,7 +53,7 @@ public class GameEventHandler {
             }
         }
 
-        if (cam.isAttachedToObject() && isOutOfBounds(cam)) {
+        if (cam.isAttachedToObject() && (isOutOfBounds(cam) || isInDeathZone())) {
             if(currentGracePeriod >= timer.getElapsedTime()) return;
             //TODO: Add some Death Screen
             GameContent.hud.drawPopupMessage("you Died :(", 5);
@@ -71,28 +71,24 @@ public class GameEventHandler {
         if (player == null) return false;
 
         List<Collidable> finishObjs = objects.get(Constants.finishObjectGroupString);
-        if (finishObjs != null && finishObjs.size() >= 1) {
-            Collidable finish = finishObjs.get(0);
-            if (finish instanceof Rectangle) {
-                Rect finishRect = ((Rectangle) finish).getRect();
-                if (cam.isRectInView(finishRect)) {
-                    if (finishRect.intersect(player.getHitbox().getRect())) {
-                        return true;
-                    } else {
-                        return false;
-                    }
-                }
-            }
-        }
-        return false;
+        return isInTheZone(finishObjs);
+    }
+
+    public boolean isInDeathZone() {
+        List<Collidable> deathZones = objects.get(Constants.deathzoneObjectGroupString);
+        return isInTheZone(deathZones);
     }
 
     public boolean hasReachCheckpoint() {
         List<Collidable> checkpoints = objects.get(Constants.checkpointsObjectGroupString);
-        if (checkpoints != null) {
-            for (Collidable checkpoint : checkpoints) {
-                if (checkpoint instanceof Rectangle) {
-                    Rect checkpointRect = ((Rectangle) checkpoint).getRect();
+        return isInTheZone(checkpoints);
+    }
+
+    public boolean isInTheZone(List<Collidable> zone) {
+        if (zone != null) {
+            for (Collidable z : zone) {
+                if (z instanceof Rectangle) {
+                    Rect checkpointRect = ((Rectangle) z).getRect();
                     if (checkpointRect.intersect(player.getHitbox().getRect())) {
                         return true;
                     }
