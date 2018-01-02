@@ -26,7 +26,7 @@ public class GameContent implements Drawables, Observer {
     public static GameCamera camera = new GameCamera();
     public static World world;
     public static Player player = null;
-    public static Context context; //TODO!!!!!!!!!!111111111elf: ___DON'T___ MAKE THIS STATIC: Memory leak!
+    public Context context;
     private static HUD hud;
     private final GameEventExecutioner executioner;
     public Robotic skelett;
@@ -118,10 +118,10 @@ public class GameContent implements Drawables, Observer {
         camera.setLevelWidth(gameWidth * tileLoader.getTileWidth());
 
         world = new World(tileLoader, 1f / 60f, timer, executioner);
-        player = new Player(350, 500 * ScaleHelper.getRatioY());
-        skelett = new Robotic(900, (int) (400 * ScaleHelper.getRatioY()));
+        player = new Player(350, 500 * ScaleHelper.getRatioY(),context);
+        skelett = new Robotic(900, (int) (400 * ScaleHelper.getRatioY()),context);
         try {
-            world.addCollectables(new Coin(1200, (int) (500 * ScaleHelper.getRatioY())));
+            world.addCollectables(new Coin(1200, (int) (500 * ScaleHelper.getRatioY()),context));
         } catch (Exception e) {
             e.printStackTrace();
         }

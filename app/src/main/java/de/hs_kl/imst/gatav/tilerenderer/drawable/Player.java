@@ -1,5 +1,6 @@
 package de.hs_kl.imst.gatav.tilerenderer.drawable;
 
+import android.content.Context;
 import android.graphics.Canvas;
 import android.graphics.Color;
 import android.graphics.Paint;
@@ -48,19 +49,19 @@ public final class Player extends MovableGraphics implements Destroyable, Collis
 
     private float animTime = 0f;
 
-    public Player(float x, float y) {
+    public Player(float x, float y, Context context) {
         super(x, y);
         try {
-            InputStream is = GameContent.context.getAssets().open("dynamics/player/Player.png");
+            InputStream is = context.getAssets().open("dynamics/player/Player.png");
             loadGraphic(is, 17, 35, ScaleHelper.getEntitiyScale());
             run = new Animations(1f / 4f);
             is.close();
-            is = GameContent.context.getAssets().open("dynamics/player/Player.png");
+            is = context.getAssets().open("dynamics/player/Player.png");
             run.addAnimation(super.loadTextures(is, 17, 35, 1, 4, ScaleHelper.getEntitiyScale()));
             idle = run.getDrawable(0f);
             dieng = new Animations(1f / 4f);
             friction = 0.0f;
-            dieng.addAnimation(Animations.frameLoad("dynamics/player/Die", 4, 25 * ScaleHelper.getEntitiyScale(), 40 * ScaleHelper.getEntitiyScale()));
+            dieng.addAnimation(Animations.frameLoad("dynamics/player/Die", 4, 25 * ScaleHelper.getEntitiyScale(), 40 * ScaleHelper.getEntitiyScale(),context));
             hitbox = new Rectangle((int) x, (int) y, width - 35, height-5);
             isActive = true;
             is.close();

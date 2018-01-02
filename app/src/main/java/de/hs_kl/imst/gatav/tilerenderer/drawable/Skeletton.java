@@ -1,5 +1,7 @@
 package de.hs_kl.imst.gatav.tilerenderer.drawable;
 
+import android.content.Context;
+
 import java.io.InputStream;
 
 import de.hs_kl.imst.gatav.tilerenderer.util.Animations;
@@ -11,17 +13,17 @@ import de.hs_kl.imst.gatav.tilerenderer.util.ScaleHelper;
  */
 
 public final class Skeletton extends Enemys implements Destroyable,CollisionReactive{
-    public Skeletton(float x, float y){
+    public Skeletton(float x, float y, Context context){
         super(x,y, 50, 50,140f,60);
         try {
-            InputStream is = GameContent.context.getAssets().open("dynamics/enemys/robo/idle/Idle1.png");
+            InputStream is = context.getAssets().open("dynamics/enemys/robo/idle/Idle1.png");
             loadGraphic(is, 33, 33, ScaleHelper.getEntitiyScale());
             is.close();
             run = new Animations(1f / 4f);
-            run.addAnimation(Animations.frameLoad("dynamics/enemys/robo/run/Run", 8, 175, 175));
+            run.addAnimation(Animations.frameLoad("dynamics/enemys/robo/run/Run", 8, 175, 175,context));
             dieng = new Animations(1f / 4f);
             try {
-                dieng.addAnimation(Animations.frameLoad("dynamics/enemys/robo/die/Dead", 10, 175, 175));
+                dieng.addAnimation(Animations.frameLoad("dynamics/enemys/robo/die/Dead", 10, 175, 175,context));
             }
             catch(Exception e){
                 e.printStackTrace();

@@ -1,6 +1,7 @@
 package de.hs_kl.imst.gatav.tilerenderer.drawable;
 
 
+import android.content.Context;
 import android.graphics.Canvas;
 import android.graphics.Color;
 import android.graphics.Paint;
@@ -21,17 +22,17 @@ import de.hs_kl.imst.gatav.tilerenderer.util.Vector2;
 
 public final class Robotic extends Enemys implements CollisionReactive, Destroyable {
 
-    public Robotic(int x, int y){
+    public Robotic(int x, int y,Context context){
         super(x,y, 60, 50,120f,40);
         try {
-            InputStream is = GameContent.context.getAssets().open("dynamics/enemys/robo/idle/Idle1.png");
+            InputStream is = context.getAssets().open("dynamics/enemys/robo/idle/Idle1.png");
             loadGraphic(is, 33, 33, ScaleHelper.getEntitiyScale());
             is.close();
             run = new Animations(1f / 8f);
-            run.addAnimation(Animations.frameLoad("dynamics/enemys/robo/run/Run", 8, 33*ScaleHelper.getEntitiyScale(), 33*ScaleHelper.getEntitiyScale()));
+            run.addAnimation(Animations.frameLoad("dynamics/enemys/robo/run/Run", 8, 33*ScaleHelper.getEntitiyScale(), 33*ScaleHelper.getEntitiyScale(),context));
             dieng = new Animations(1f / 8f);
             try {
-                dieng.addAnimation(Animations.frameLoad("dynamics/enemys/robo/die/Dead", 10, 33*ScaleHelper.getEntitiyScale(), 33*ScaleHelper.getEntitiyScale()));
+                dieng.addAnimation(Animations.frameLoad("dynamics/enemys/robo/die/Dead", 10, 33*ScaleHelper.getEntitiyScale(), 33*ScaleHelper.getEntitiyScale(),context));
             }
             catch(Exception e){
                 e.printStackTrace();

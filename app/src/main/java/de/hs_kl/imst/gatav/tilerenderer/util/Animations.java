@@ -1,5 +1,6 @@
 package de.hs_kl.imst.gatav.tilerenderer.util;
 
+import android.content.Context;
 import android.graphics.Bitmap;
 import android.graphics.BitmapFactory;
 import android.graphics.drawable.BitmapDrawable;
@@ -60,13 +61,13 @@ public class Animations {
      * @return
      * @throws IOException
      */
-        public static List<BitmapDrawable> frameLoad(String fileName, int range,int dstWidth, int dstHeight) throws IOException
+        public static List<BitmapDrawable> frameLoad(String fileName, int range,int dstWidth, int dstHeight,Context context) throws IOException
         {
             List<BitmapDrawable> list = new ArrayList<>();
             InputStream is;
             Bitmap bmp;
             for(int i = 1; i<=range;i++){
-                is = GameContent.context.getAssets().open(fileName+i+".png");
+                is = context.getAssets().open(fileName+i+".png");
                 bmp = Bitmap.createScaledBitmap(BitmapFactory.decodeStream(is),dstWidth,dstHeight,false);
                 list.add(new BitmapDrawable(bmp));
                 is.close();
