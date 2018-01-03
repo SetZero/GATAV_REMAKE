@@ -1,15 +1,20 @@
 package de.hs_kl.imst.gatav.tilerenderer;
 
+import android.media.AudioManager;
 import android.support.v7.app.AppCompatActivity;
 import android.os.Bundle;
 
 
+import de.hs_kl.imst.gatav.tilerenderer.util.AudioPlayer;
 import de.hs_kl.imst.gatav.tilerenderer.util.GameEventExecutioner;
 
 public class MainGameActivity extends AppCompatActivity {
 
     @Override
     protected void onCreate(Bundle savedInstanceState) {
+        setVolumeControlStream(AudioManager.STREAM_MUSIC);
+        AudioPlayer player = new AudioPlayer(this);
+
         super.onCreate(savedInstanceState);
         GameEventExecutioner executioner = new GameEventExecutioner(this);
 
