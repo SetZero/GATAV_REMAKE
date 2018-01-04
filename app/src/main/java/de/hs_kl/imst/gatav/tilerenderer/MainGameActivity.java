@@ -5,8 +5,10 @@ import android.support.v7.app.AppCompatActivity;
 import android.os.Bundle;
 
 
-import de.hs_kl.imst.gatav.tilerenderer.util.AudioPlayer;
+import de.hs_kl.imst.gatav.tilerenderer.util.Vector2;
+import de.hs_kl.imst.gatav.tilerenderer.util.audio.AudioPlayer;
 import de.hs_kl.imst.gatav.tilerenderer.util.GameEventExecutioner;
+import de.hs_kl.imst.gatav.tilerenderer.util.audio.Sounds;
 
 public class MainGameActivity extends AppCompatActivity {
 
@@ -14,6 +16,8 @@ public class MainGameActivity extends AppCompatActivity {
     protected void onCreate(Bundle savedInstanceState) {
         setVolumeControlStream(AudioManager.STREAM_MUSIC);
         AudioPlayer player = new AudioPlayer(this);
+        new Thread(player).start();
+        player.addSound(Sounds.BASS, new Vector2(40, 40));
 
         super.onCreate(savedInstanceState);
         GameEventExecutioner executioner = new GameEventExecutioner(this);
