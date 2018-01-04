@@ -6,14 +6,15 @@ import android.media.AudioAttributes;
 import android.media.MediaPlayer;
 import android.media.SoundPool;
 import android.util.Log;
+import android.util.LruCache;
 import android.util.Pair;
 
 import java.io.IOException;
+import java.util.ArrayList;
 import java.util.Queue;
 import java.util.concurrent.ConcurrentLinkedQueue;
 import java.util.concurrent.atomic.AtomicBoolean;
 
-import de.hs_kl.imst.gatav.tilerenderer.drawable.GameContent;
 import de.hs_kl.imst.gatav.tilerenderer.drawable.Player;
 import de.hs_kl.imst.gatav.tilerenderer.util.Vector2;
 
@@ -25,12 +26,27 @@ public class AudioPlayer implements Runnable {
 
     private SoundPool sp;
     private MediaPlayer player;
+    private Queue<Pair<Vector2, Integer>> loadingQueue = new ConcurrentLinkedQueue<>();
     private Queue<Pair<Vector2, Integer>> soundToPlay = new ConcurrentLinkedQueue<>();
     private AtomicBoolean playing = new AtomicBoolean(true);
     private Context ctx;
     private Player playerCharacter;
     // ~83.2 = 100% volume => @ ~4000 Units = 0%
     private final double audioThreshold = 83.2;
+    private final int cacheElements = 10;
+    private LruCache<Integer, Integer> cache = new LruCache<Integer, Integer>(cacheElements) {
+
+        @Override
+        protected void entryRemoved(boolean evicted, Integer key, Integer oldElement, Integer newElement) {
+            sp.unload(oldElement);
+        }
+
+        @Override
+        protected int sizeOf(Integer key, Integer value) {
+            return 1;
+        }
+    };
+
 
 
     public AudioPlayer(Context ctx) {
@@ -60,16 +76,33 @@ public class AudioPlayer implements Runnable {
                 .setMaxStreams(10)
                 .setAudioAttributes(attrs)
                 .build();
+
+        sp.setOnLoadCompleteListener((soundPool, sampleId, status) -> {
+            ArrayList<Integer> tmp = new ArrayList<>();
+            for(Pair<Vector2, Integer> sound : loadingQueue) {
+                if(sound.second == sampleId) {
+                    int id = sp.play(sound.second, 0.5f, 0.5f, 1, 0, 1);
+                    soundToPlay.add(new Pair<>(sound.first, id));
+                    tmp.add(sound.second);
+                }
+            }
+            loadingQueue.removeIf(v -> tmp.contains(v.second));
+        });
     }
 
     public void addSound(Sounds s, Vector2 source) {
-        // @Todo:
-        // Add LruChache, remove last used audio resource
-        // get soundId from LruChache
         if(playing.get()) {
-            int soundId = sp.load(ctx, s.getSoundResource(), 1);
-            Pair<Vector2, Integer> element = new Pair<>(source, soundId);
-            soundToPlay.add(element);
+            if(cache.get(s.getSoundResource()) != null) {
+                int soundId = cache.get(s.getSoundResource());
+                int id = sp.play(soundId, 0.5f, 0.5f, 1, 0, 1);
+                soundToPlay.add(new Pair<>(source, id));
+            } else {
+                int soundId = sp.load(ctx, s.getSoundResource(), 1);
+                cache.put(s.getSoundResource(), soundId);
+                Pair<Vector2, Integer> element = new Pair<>(source, soundId);
+                loadingQueue.add(element);
+            }
+            //soundToPlay.add(element);
         }
     }
 
@@ -94,7 +127,6 @@ public class AudioPlayer implements Runnable {
             //not yet initialized!
             if (playerCharacter == null) continue;
             else {
-                Log.d("Player", "Position: " + playerCharacter.getPosition().getX());
                 if (!soundToPlay.isEmpty()) {
                     for (Pair<Vector2, Integer> sound : soundToPlay) {
                         double volume = (audioThreshold - 10d * Math.log10(
@@ -105,17 +137,17 @@ public class AudioPlayer implements Runnable {
                         ) / audioThreshold;
                         volume = (volume > 1 ? 1 : volume); // prevent infinite volume
                         if(volume > 0) {
-                            sp.play(sound.second, (float) volume, (float) volume, 1, 0, 1);
-                            Log.d("Sound", "Starting Sound: " + sound.second.toString());
+                            sp.setVolume(sound.second, (float) volume, (float) volume);
+                            //sp.play(sound.second, (float) volume, (float) volume, 1, 0, 1);
                         }
-                    }
-                    try {
-                        Thread.sleep(500);
-                    } catch (InterruptedException e) {
-                        e.printStackTrace();
                     }
                     //soundToPlay.clear();
                 }
+            }
+            try {
+                Thread.sleep(500);
+            } catch (InterruptedException e) {
+                e.printStackTrace();
             }
         }
     }

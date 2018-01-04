@@ -15,6 +15,7 @@ import de.hs_kl.imst.gatav.tilerenderer.util.Direction;
 import de.hs_kl.imst.gatav.tilerenderer.util.Hitboxes.Rectangle;
 import de.hs_kl.imst.gatav.tilerenderer.util.ScaleHelper;
 import de.hs_kl.imst.gatav.tilerenderer.util.Vector2;
+import de.hs_kl.imst.gatav.tilerenderer.util.audio.AudioPlayer;
 
 /**
  * Created by keven on 19.12.2017.
@@ -22,7 +23,7 @@ import de.hs_kl.imst.gatav.tilerenderer.util.Vector2;
 
 public final class Robotic extends Enemys implements CollisionReactive, Destroyable {
 
-    public Robotic(int x, int y,Context context){
+    public Robotic(int x, int y, Context context){
         super(x,y, 60, 50,120f,40);
         try {
             InputStream is = context.getAssets().open("dynamics/enemys/robo/idle/Idle1.png");

@@ -4,6 +4,7 @@ import android.content.Context;
 import android.graphics.Canvas;
 import android.graphics.Color;
 import android.support.v4.view.GestureDetectorCompat;
+import android.util.Log;
 import android.view.GestureDetector;
 import android.view.MotionEvent;
 import android.view.SurfaceHolder;
@@ -141,8 +142,8 @@ public class GameView extends SurfaceView implements SurfaceHolder.Callback, Run
 
         audioPlayer = new AudioPlayer(context);
         new Thread(audioPlayer).start();
-        audioPlayer.addSound(Sounds.BASS, new Vector2(40, 40));
-        audioPlayer.addSound(Sounds.COIN, new Vector2(4000, 80));
+        audioPlayer.addSound(Sounds.COIN, new Vector2(40, 40));
+        //audioPlayer.addSound(Sounds.BASS, new Vector2(4000, 80));
 
         ScaleHelper.calculateRatio((int) gameWidth, (int) gameHeight);
         gameContent = new GameContent(getContext(), levelName, executioner, audioPlayer);

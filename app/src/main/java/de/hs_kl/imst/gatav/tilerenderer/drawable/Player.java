@@ -5,6 +5,7 @@ import android.graphics.Canvas;
 import android.graphics.Color;
 import android.graphics.Paint;
 import android.graphics.drawable.BitmapDrawable;
+import android.util.Log;
 
 import java.io.IOException;
 import java.io.InputStream;
@@ -17,6 +18,8 @@ import de.hs_kl.imst.gatav.tilerenderer.util.Hitboxes.Rectangle;
 import de.hs_kl.imst.gatav.tilerenderer.util.PhysicsController;
 import de.hs_kl.imst.gatav.tilerenderer.util.ScaleHelper;
 import de.hs_kl.imst.gatav.tilerenderer.util.Vector2;
+import de.hs_kl.imst.gatav.tilerenderer.util.audio.AudioPlayer;
+import de.hs_kl.imst.gatav.tilerenderer.util.audio.Sounds;
 
 public final class Player extends MovableGraphics implements Destroyable, CollisionReactive {
     private byte doublejump = 0;
@@ -30,6 +33,7 @@ public final class Player extends MovableGraphics implements Destroyable, Collis
     protected Animations dieng;
     float dieTimer = 0.0f;
     private int score;
+    private AudioPlayer audioPlayer;
 
     public float getLifePoints() {
         return lifePoints;
@@ -49,7 +53,7 @@ public final class Player extends MovableGraphics implements Destroyable, Collis
 
     private float animTime = 0f;
 
-    public Player(float x, float y, Context context) {
+    public Player(float x, float y, Context context, AudioPlayer audioPlayer) {
         super(x, y);
         try {
             InputStream is = context.getAssets().open("dynamics/player/Player.png");
@@ -64,6 +68,7 @@ public final class Player extends MovableGraphics implements Destroyable, Collis
             dieng.addAnimation(Animations.frameLoad("dynamics/player/Die", 4, 25 * ScaleHelper.getEntitiyScale(), 40 * ScaleHelper.getEntitiyScale(),context));
             hitbox = new Rectangle((int) x, (int) y, width - 35, height-5);
             isActive = true;
+            this.audioPlayer = audioPlayer;
             is.close();
         } catch (IOException e) {
             e.printStackTrace();
@@ -76,6 +81,7 @@ public final class Player extends MovableGraphics implements Destroyable, Collis
             case UP: {
                 if (velocity.getY() != 0 && previous == Direction.DOWN) doublejump++;
                 if (doublejump < 2) {
+                    audioPlayer.addSound(Sounds.COIN, getPosition());
                     velocity.setY(0f);
                     impact(new Vector2(0f, -550f));
                     currentDirection = Direction.UP;
