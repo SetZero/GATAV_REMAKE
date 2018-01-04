@@ -7,7 +7,8 @@ import de.hs_kl.imst.gatav.tilerenderer.R;
  */
 
 public enum Sounds {
-    BASS(R.raw.bass);
+    BASS(R.raw.bass),
+    COIN(R.raw.coin);
 
     private int soundResource = -1;
 

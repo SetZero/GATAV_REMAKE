@@ -11,6 +11,7 @@ import android.util.Pair;
 import java.io.IOException;
 import java.util.Queue;
 import java.util.concurrent.ConcurrentLinkedQueue;
+import java.util.concurrent.atomic.AtomicBoolean;
 
 import de.hs_kl.imst.gatav.tilerenderer.drawable.GameContent;
 import de.hs_kl.imst.gatav.tilerenderer.drawable.Player;
@@ -25,10 +26,11 @@ public class AudioPlayer implements Runnable {
     private SoundPool sp;
     private MediaPlayer player;
     private Queue<Pair<Vector2, Integer>> soundToPlay = new ConcurrentLinkedQueue<>();
-    private boolean playing = true;
+    private AtomicBoolean playing = new AtomicBoolean(true);
     private Context ctx;
     private Player playerCharacter;
-    private static final double audioThreshold = 83.2;
+    // ~83.2 = 100% volume => @ ~4000 Units = 0%
+    private final double audioThreshold = 83.2;
 
 
     public AudioPlayer(Context ctx) {
@@ -61,25 +63,47 @@ public class AudioPlayer implements Runnable {
     }
 
     public void addSound(Sounds s, Vector2 source) {
-        int soundId = sp.load(ctx, s.getSoundResource(), 1);
-        Pair<Vector2, Integer> element = new Pair<>(source, soundId);
-        soundToPlay.add(element);
+        // @Todo:
+        // Add LruChache, remove last used audio resource
+        // get soundId from LruChache
+        if(playing.get()) {
+            int soundId = sp.load(ctx, s.getSoundResource(), 1);
+            Pair<Vector2, Integer> element = new Pair<>(source, soundId);
+            soundToPlay.add(element);
+        }
+    }
+
+    public void cleanup() {
+        player.release();
+        playing.set(false);
+        for(Pair<Vector2, Integer> sound : soundToPlay) {
+            sp.unload(sound.second);
+        }
+        sp.release();
+        soundToPlay.clear();
+        Log.d("AudioPlayer", "Cleaned!");
+    }
+
+    public void setPlayerCharacter(Player playerCharacter) {
+        this.playerCharacter = playerCharacter;
     }
 
     @Override
     public void run() {
-        while (playing) {
-            if (playerCharacter == null) playerCharacter = GameContent.player;
+        while (playing.get()) {
+            //not yet initialized!
+            if (playerCharacter == null) continue;
             else {
+                Log.d("Player", "Position: " + playerCharacter.getPosition().getX());
                 if (!soundToPlay.isEmpty()) {
                     for (Pair<Vector2, Integer> sound : soundToPlay) {
-                        // ~83.2 = 100% volume => @ ~4000 Units = 0
                         double volume = (audioThreshold - 10d * Math.log10(
                                 4 * Math.PI * Math.pow(
                                         Math.abs(Vector2.distance(sound.first, playerCharacter.getPosition())), 2
                                     )
                                 )
                         ) / audioThreshold;
+                        volume = (volume > 1 ? 1 : volume); // prevent infinite volume
                         if(volume > 0) {
                             sp.play(sound.second, (float) volume, (float) volume, 1, 0, 1);
                             Log.d("Sound", "Starting Sound: " + sound.second.toString());

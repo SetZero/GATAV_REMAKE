@@ -15,6 +15,9 @@ import de.hs_kl.imst.gatav.tilerenderer.util.Direction;
 import de.hs_kl.imst.gatav.tilerenderer.util.FPSHelper;
 import de.hs_kl.imst.gatav.tilerenderer.util.GameEventExecutioner;
 import de.hs_kl.imst.gatav.tilerenderer.util.ScaleHelper;
+import de.hs_kl.imst.gatav.tilerenderer.util.Vector2;
+import de.hs_kl.imst.gatav.tilerenderer.util.audio.AudioPlayer;
+import de.hs_kl.imst.gatav.tilerenderer.util.audio.Sounds;
 
 
 /**
@@ -31,6 +34,7 @@ public class GameView extends SurfaceView implements SurfaceHolder.Callback, Run
     private Thread gameThread;
     private boolean runningRenderLoop = false;
     private String levelName;
+    private AudioPlayer audioPlayer;
 
 
     private GestureDetectorCompat gestureDetector;
@@ -47,6 +51,8 @@ public class GameView extends SurfaceView implements SurfaceHolder.Callback, Run
     private boolean leftmove = false;
     private boolean rightmove = false;
 
+    private Context context;
+
     /**
      * Konstruktor, initialisiert surfaceHolder und setzt damit den Lifecycle des SurfaceViews in Gang
      *
@@ -55,6 +61,7 @@ public class GameView extends SurfaceView implements SurfaceHolder.Callback, Run
     public GameView(Context context, String level, GameEventExecutioner executioner) {
         super(context);
         levelName = level;
+        this.context = context;
 
         surfaceHolder = getHolder();
         surfaceHolder.addCallback(this);
@@ -114,6 +121,7 @@ public class GameView extends SurfaceView implements SurfaceHolder.Callback, Run
         // Gameloop anwerfen
         gameThread = new Thread(this);
         gameThread.start();
+
     }
 
     /**
@@ -131,12 +139,17 @@ public class GameView extends SurfaceView implements SurfaceHolder.Callback, Run
         float gameWidth = width - border;
         float gameHeight = (int) (gameWidth / ((float) width / height));
 
+        audioPlayer = new AudioPlayer(context);
+        new Thread(audioPlayer).start();
+        audioPlayer.addSound(Sounds.BASS, new Vector2(40, 40));
+        audioPlayer.addSound(Sounds.COIN, new Vector2(4000, 80));
 
         ScaleHelper.calculateRatio((int) gameWidth, (int) gameHeight);
-        gameContent = new GameContent(getContext(), levelName, executioner);
+        gameContent = new GameContent(getContext(), levelName, executioner, audioPlayer);
 
         // Reset der Zustände bei "onResume"
         gameOver = false;
+
     }
 
     /**
@@ -152,6 +165,7 @@ public class GameView extends SurfaceView implements SurfaceHolder.Callback, Run
         runningRenderLoop = false;
         gameOver = false;
         gameContent.cleanup();
+        audioPlayer.cleanup();
         try {
             gameThread.join();
         } catch (InterruptedException e) {

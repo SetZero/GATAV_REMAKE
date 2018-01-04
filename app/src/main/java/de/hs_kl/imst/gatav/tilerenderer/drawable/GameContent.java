@@ -21,6 +21,7 @@ import de.hs_kl.imst.gatav.tilerenderer.util.LoadingScreenTexts;
 import de.hs_kl.imst.gatav.tilerenderer.util.ScaleHelper;
 import de.hs_kl.imst.gatav.tilerenderer.util.Timer;
 import de.hs_kl.imst.gatav.tilerenderer.util.World;
+import de.hs_kl.imst.gatav.tilerenderer.util.audio.AudioPlayer;
 
 public class GameContent implements Drawables, Observer {
     public static GameCamera camera = new GameCamera();
@@ -49,11 +50,14 @@ public class GameContent implements Drawables, Observer {
     private boolean loadingScreenFadeDirection = true;
     private String loadingScreenText;
     private Timer timer = new Timer();
-    public GameContent(Context context, String levelName, GameEventExecutioner executioner) {
+    private AudioPlayer audioPlayer;
+
+    public GameContent(Context context, String levelName, GameEventExecutioner executioner, AudioPlayer player) {
         this.context = context;
         this.assetManager = context.getAssets();
         this.levelName = levelName;
         this.executioner = executioner;
+        this.audioPlayer = player;
 
         //Kamera setzen
         //camera.setCameraYCenter(450);
@@ -120,6 +124,9 @@ public class GameContent implements Drawables, Observer {
         world = new World(tileLoader, 1f / 60f, timer, executioner);
         player = new Player(350, 500 * ScaleHelper.getRatioY(),context);
         skelett = new Robotic(900, (int) (400 * ScaleHelper.getRatioY()),context);
+
+        audioPlayer.setPlayerCharacter(player);
+
         try {
             world.addCollectables(new Coin(1200, (int) (500 * ScaleHelper.getRatioY()),context));
         } catch (Exception e) {

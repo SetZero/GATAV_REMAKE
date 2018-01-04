@@ -15,9 +15,6 @@ public class MainGameActivity extends AppCompatActivity {
     @Override
     protected void onCreate(Bundle savedInstanceState) {
         setVolumeControlStream(AudioManager.STREAM_MUSIC);
-        AudioPlayer player = new AudioPlayer(this);
-        new Thread(player).start();
-        player.addSound(Sounds.BASS, new Vector2(40, 40));
 
         super.onCreate(savedInstanceState);
         GameEventExecutioner executioner = new GameEventExecutioner(this);
