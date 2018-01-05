@@ -5,7 +5,6 @@ import android.graphics.Canvas;
 import android.graphics.Color;
 import android.graphics.Paint;
 import android.graphics.drawable.BitmapDrawable;
-import android.util.Log;
 
 import java.io.IOException;
 import java.io.InputStream;
@@ -242,12 +241,12 @@ public final class Player extends MovableGraphics implements Destroyable, Collis
 
     @Override
     public void onCollision(Contact c) {
-        if (c.siteHidden == PhysicsController.intersectDirection.BOTTOM && c.collisionObject instanceof Enemys) {
-            if (((Enemys) c.collisionObject).isAlive() && isAlive) {
+        if (c.siteHidden == PhysicsController.intersectDirection.BOTTOM && c.collisionObject instanceof Enemies) {
+            if (((Enemies) c.collisionObject).isAlive() && isAlive) {
                 velocity.y = 0.0f;
                 impact(new Vector2(0f, -400f));
-                if (((Enemys) c.collisionObject).decreaseLife(hitPoints))
-                    score += ((Enemys) c.collisionObject).getScorePoints();
+                if (((Enemies) c.collisionObject).decreaseLife(hitPoints))
+                    score += ((Enemies) c.collisionObject).getScorePoints();
             }
 
         }

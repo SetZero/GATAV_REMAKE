@@ -8,6 +8,7 @@ import android.graphics.Paint;
 import android.graphics.Rect;
 import android.util.Log;
 
+import java.util.List;
 import java.util.Locale;
 import java.util.Observable;
 import java.util.Observer;
@@ -17,6 +18,7 @@ import de.hs_kl.imst.gatav.tilerenderer.TileLoader;
 import de.hs_kl.imst.gatav.tilerenderer.util.Direction;
 import de.hs_kl.imst.gatav.tilerenderer.util.GameCamera;
 import de.hs_kl.imst.gatav.tilerenderer.util.GameEventExecutioner;
+import de.hs_kl.imst.gatav.tilerenderer.util.GameObjectFactory;
 import de.hs_kl.imst.gatav.tilerenderer.util.LoadingScreenTexts;
 import de.hs_kl.imst.gatav.tilerenderer.util.ScaleHelper;
 import de.hs_kl.imst.gatav.tilerenderer.util.Timer;
@@ -26,11 +28,11 @@ import de.hs_kl.imst.gatav.tilerenderer.util.audio.AudioPlayer;
 public class GameContent implements Drawables, Observer {
     public static GameCamera camera = new GameCamera();
     public static World world;
+    //Not Thread safe! Can even return  old instance of Player (static player = evil!)
     public static Player player = null;
     public Context context;
     private static HUD hud;
     private final GameEventExecutioner executioner;
-    public Robotic skelett;
     /**
      * Breite und Höhe des Levels in Pixel
      */
@@ -122,21 +124,28 @@ public class GameContent implements Drawables, Observer {
         camera.setLevelWidth(gameWidth * tileLoader.getTileWidth());
 
         world = new World(tileLoader, 1f / 60f, timer, executioner, audioPlayer);
-        player = new Player(350, 500 * ScaleHelper.getRatioY(), context, audioPlayer);
-        skelett = new Robotic(900, (int) (400 * ScaleHelper.getRatioY()), context);
+        generateGameElements();
 
         audioPlayer.setPlayerCharacter(player);
-
-        try {
-            world.addCollectables(new Coin(1200, (int) (500 * ScaleHelper.getRatioY()),context));
-        } catch (Exception e) {
-            e.printStackTrace();
-        }
-        world.addGameObject(player);
-        world.addGameObject(skelett);
-        camera.attach(player);
         timer.startTimeThread();
         finishedSetup = true;
+    }
+
+    public void generateGameElements() {
+        GameObjectFactory factory = new GameObjectFactory(tileLoader.getObjectGroups());
+        player = factory.generatePlayer(context, audioPlayer);
+        world.addGameObject(player);
+        camera.attach(player);
+
+        List<Enemies> enemies = factory.generateEnemies(context);
+        for (Enemies enemy : enemies) {
+            world.addGameObject(enemy);
+        }
+
+        List<Coin> coins = factory.generateCoins(context);
+        for(Coin coin : coins) {
+            world.addCollectables(coin);
+        }
     }
 
     public void showLoadingScreen(Canvas canvas) {
@@ -144,13 +153,13 @@ public class GameContent implements Drawables, Observer {
             if (loadingScreenColor < 255) {
                 loadingScreenColor += 1;
             } else {
-                loadingScreenFadeDirection = !loadingScreenFadeDirection;
+                loadingScreenFadeDirection = false;
             }
         } else {
             if (loadingScreenColor > 0) {
                 loadingScreenColor -= 1;
             } else {
-                loadingScreenFadeDirection = !loadingScreenFadeDirection;
+                loadingScreenFadeDirection = true;
             }
         }
         int loaded = (tileLoader != null ? tileLoader.getLoadingPercentage() : 0);

@@ -12,7 +12,7 @@ import de.hs_kl.imst.gatav.tilerenderer.util.ScaleHelper;
  * Created by keven on 27.12.2017.
  */
 
-public final class Skeletton extends Enemys implements Destroyable,CollisionReactive{
+public final class Skeletton extends Enemies implements Destroyable,CollisionReactive{
     public Skeletton(float x, float y, Context context){
         super(x,y, 50, 50,140f,60);
         try {

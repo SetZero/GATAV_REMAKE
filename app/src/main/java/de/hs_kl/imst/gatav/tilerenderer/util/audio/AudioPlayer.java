@@ -28,13 +28,12 @@ public class AudioPlayer implements Runnable {
     private final int cacheElements = 10;
     // ~83.2 = 100% volume => @ ~4000 Units = 0%
     private final double audioThreshold = 83.2;
+    private final MediaPlayer player;
+    private final Queue<Pair<Vector2, Integer>> loadingQueue = new ConcurrentLinkedQueue<>();
+    private final AtomicBoolean playing = new AtomicBoolean(true);
+    private final Context ctx;
     private SoundPool sp;
-    private MediaPlayer player;
-    private Queue<Pair<Vector2, Integer>> loadingQueue = new ConcurrentLinkedQueue<>();
-    private AtomicBoolean playing = new AtomicBoolean(true);
-    private Context ctx;
-    private Player playerCharacter;
-    private LruCache<Integer, Integer> cache = new LruCache<Integer, Integer>(cacheElements) {
+    private final LruCache<Integer, Integer> cache = new LruCache<Integer, Integer>(cacheElements) {
 
         @Override
         protected void entryRemoved(boolean evicted, Integer key, Integer oldElement, Integer newElement) {
@@ -46,7 +45,7 @@ public class AudioPlayer implements Runnable {
             return 1;
         }
     };
-    private LruCache<Integer, Vector2> soundToPlay = new LruCache<Integer, Vector2>(cacheElements) {
+    private final LruCache<Integer, Vector2> soundToPlay = new LruCache<Integer, Vector2>(cacheElements) {
 
         @Override
         protected void entryRemoved(boolean evicted, Integer key, Vector2 oldElement, Vector2 newElement) {
@@ -58,6 +57,7 @@ public class AudioPlayer implements Runnable {
             return 1;
         }
     };
+    private Player playerCharacter;
 
 
     public AudioPlayer(Context ctx) {
@@ -150,6 +150,7 @@ public class AudioPlayer implements Runnable {
                 for (Map.Entry<Integer, Vector2> sound : snapshot.entrySet()) {
                     double distance = Math.abs(Vector2.distance(sound.getValue(), playerCharacter.getPosition()));
                     //stolen from a book ;-)
+                    //calculates diffusion of sound @audioThreshold as starting dB, falls of logarithmic
                     double volume = (audioThreshold - 10d * Math.log10(
                             4 * Math.PI * Math.pow(
                                     distance, 2
@@ -160,7 +161,7 @@ public class AudioPlayer implements Runnable {
                     //Sigmoid for thresholding of stereo sound position (https://imgur.com/a/Ww50l)
                     double left = 0.75 + Math.tanh(((playerCharacter.getPosition().getX() - sound.getValue().getX()) * 0.001) + 2) * 0.25;
                     double right = 0.75 + Math.tanh(-((playerCharacter.getPosition().getX() - sound.getValue().getX()) * 0.001 - 2)) * 0.25;
-                    Log.d("AudioPlayer", "Left: " + left + ", Right: " + right + ", Distance: " + distance + ", Sound: (" +sound.getValue().getX()+", " + sound.getValue().getY()+")");
+                    //Log.d("AudioPlayer", "Left: " + left + ", Right: " + right + ", Distance: " + distance + ", Sound: (" + sound.getValue().getX() + ", " + sound.getValue().getY() + ")");
                     volume = (volume > 1 ? 1 : volume); // prevent infinite volume
                     //Log.d("Audio Player", "Volume: " + volume + "@(" + sound.getValue().getX() + ", " + sound.getValue().getY() + ")");
                     if (volume > 0) {

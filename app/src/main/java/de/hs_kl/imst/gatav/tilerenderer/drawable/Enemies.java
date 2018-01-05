@@ -15,7 +15,7 @@ import de.hs_kl.imst.gatav.tilerenderer.util.Vector2;
  * Created by keven on 17.12.2017.
  */
 
-public abstract class Enemys extends MovableGraphics implements Destroyable, CollisionReactive  {
+public abstract class Enemies extends MovableGraphics implements Destroyable, CollisionReactive  {
     protected float lifePoints, animTime, speed;
     protected float dieTimer = 0.0f;
     protected Animations run;
@@ -42,7 +42,7 @@ public abstract class Enemys extends MovableGraphics implements Destroyable, Col
         this.hitPoints = hitPoints;
     }
 
-    public Enemys(float x, float y, float lifePoints, int hitPoints, float speed, int scorePoints){
+    public Enemies(float x, float y, float lifePoints, int hitPoints, float speed, int scorePoints){
         super(x,y);
         this.scorePoints = scorePoints;
         this.lifePoints = lifePoints;

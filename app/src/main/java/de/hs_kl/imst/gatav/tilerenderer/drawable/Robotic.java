@@ -2,26 +2,18 @@ package de.hs_kl.imst.gatav.tilerenderer.drawable;
 
 
 import android.content.Context;
-import android.graphics.Canvas;
-import android.graphics.Color;
-import android.graphics.Paint;
-import android.graphics.drawable.BitmapDrawable;
-import android.view.animation.Animation;
 
 import java.io.InputStream;
 
 import de.hs_kl.imst.gatav.tilerenderer.util.Animations;
-import de.hs_kl.imst.gatav.tilerenderer.util.Direction;
 import de.hs_kl.imst.gatav.tilerenderer.util.Hitboxes.Rectangle;
 import de.hs_kl.imst.gatav.tilerenderer.util.ScaleHelper;
-import de.hs_kl.imst.gatav.tilerenderer.util.Vector2;
-import de.hs_kl.imst.gatav.tilerenderer.util.audio.AudioPlayer;
 
 /**
  * Created by keven on 19.12.2017.
  */
 
-public final class Robotic extends Enemys implements CollisionReactive, Destroyable {
+public final class Robotic extends Enemies implements CollisionReactive, Destroyable {
 
     public Robotic(int x, int y, Context context){
         super(x,y, 60, 50,120f,40);

@@ -16,5 +16,6 @@ public class Constants {
     public static final String deathzoneObjectGroupString = "Tot";
     public static final String playerStartObjectGroupString = "Start";
     public static final String enemyObjectGroupString = "Gegner";
+    public static final String coinObjectGroupString = "Coin";
     public static final String bossObjectGroupString = "Boss";
 }
