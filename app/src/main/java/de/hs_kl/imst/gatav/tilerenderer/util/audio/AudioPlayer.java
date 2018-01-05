@@ -107,13 +107,17 @@ public class AudioPlayer implements Runnable {
 
     public void addSound(Sounds s, Vector2 source) {
         //If we can play a song....
-        if (playing.get()) {
+        if (playing.get() && playerCharacter != null) {
+            double distance = Math.abs(Vector2.distance(source, playerCharacter.getPosition()));
+            //don't add out of reach sounds
+            if (distance > 3900) return;
             if (cache.get(s.getSoundResource()) != null) {
                 //...get it from the cache and play it
                 int soundId = cache.get(s.getSoundResource());
                 int id = sp.play(soundId, 0.5f, 0.5f, 1, 0, 1);
                 //soundToPlay.add(new Pair<>(source, id));
                 soundToPlay.put(id, source);
+                Log.d("addSound", "Position: (" + source.getX() + ", " + source.getY() + ")");
             } else {
                 //add it to the loading queue if we don't have it
                 int soundId = sp.load(ctx, s.getSoundResource(), 1);
@@ -145,19 +149,24 @@ public class AudioPlayer implements Runnable {
                 //go over all audio resources
                 Map<Integer, Vector2> snapshot = soundToPlay.snapshot();
                 for (Map.Entry<Integer, Vector2> sound : snapshot.entrySet()) {
-                    double volume = 1;
+                    double distance = Math.abs(Vector2.distance(sound.getValue(), playerCharacter.getPosition()));
                     //stolen from a book ;-)
-                        volume = (audioThreshold - 10d * Math.log10(
-                                4 * Math.PI * Math.pow(
-                                        Math.abs(Vector2.distance(sound.getValue(), playerCharacter.getPosition())), 2
-                                )
-                        )
-                        ) / audioThreshold;
-                        volume = (volume > 1 ? 1 : volume); // prevent infinite volume
-                        //Log.d("Audio Player", "Volume: " + volume + "@(" + sound.getValue().getX() + ", " + sound.getValue().getY() + ")");
+                    double volume = (audioThreshold - 10d * Math.log10(
+                            4 * Math.PI * Math.pow(
+                                    distance, 2
+                            )
+                    )
+                    ) / audioThreshold;
+                    //playerCharacter.getHitbox().getWidth()
+                    //links
+                    double left = 0.875 + Math.tanh((playerCharacter.getPosition().getX() - sound.getValue().getX()) * 0.001) * 0.125;
+                    double right = 0.875 + Math.tanh(-(playerCharacter.getPosition().getX() - sound.getValue().getX()) * 0.001) * 0.125;
+                    //Log.d("AudioPlayer", "Left: " + left + ", Right: " + right + ", Distance: " + distance + ", Sound: (" +sound.getValue().getX()+", " + sound.getValue().getY()+")");
+                    volume = (volume > 1 ? 1 : volume); // prevent infinite volume
+                    //Log.d("Audio Player", "Volume: " + volume + "@(" + sound.getValue().getX() + ", " + sound.getValue().getY() + ")");
                     if (volume > 0) {
                         //Log.d("Audio Player", "Setting Volume (" + sound.getKey() + "): " + volume);
-                        sp.setVolume(sound.getKey(), (float) volume, (float) volume);
+                        sp.setVolume(sound.getKey(), (float) (volume * left), (float) (volume * right));
                     }
                 }
             }
