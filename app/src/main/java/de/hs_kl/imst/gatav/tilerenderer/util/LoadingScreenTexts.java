@@ -41,6 +41,8 @@ public class LoadingScreenTexts {
             "Chuck Norris can strangle you with a cordless phone",
             "Chuck Norris knows Victoria's secret.",
             "Chuck Norris's Blood Type is AK-47.",
-            "M.C. Hammer learned the hard way that Chuck Norris can touch this."
+            "M.C. Hammer learned the hard way that Chuck Norris can touch this.",
+            "Works best with Headphones. Seriously",
+            "Now with stereo sound. Find your enemy even if you are blind."
     };
 }

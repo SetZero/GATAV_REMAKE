@@ -157,10 +157,10 @@ public class AudioPlayer implements Runnable {
                     )
                     ) / audioThreshold;
                     //playerCharacter.getHitbox().getWidth()
-                    //Sigmoid for thresholding of stereo sound position
-                    double left = 0.875 + Math.tanh((playerCharacter.getPosition().getX() - sound.getValue().getX()) * 0.001) * 0.125;
-                    double right = 0.875 + Math.tanh(-(playerCharacter.getPosition().getX() - sound.getValue().getX()) * 0.001) * 0.125;
-                    //Log.d("AudioPlayer", "Left: " + left + ", Right: " + right + ", Distance: " + distance + ", Sound: (" +sound.getValue().getX()+", " + sound.getValue().getY()+")");
+                    //Sigmoid for thresholding of stereo sound position (https://imgur.com/a/Ww50l)
+                    double left = 0.75 + Math.tanh(((playerCharacter.getPosition().getX() - sound.getValue().getX()) * 0.001) + 2) * 0.25;
+                    double right = 0.75 + Math.tanh(-((playerCharacter.getPosition().getX() - sound.getValue().getX()) * 0.001 - 2)) * 0.25;
+                    Log.d("AudioPlayer", "Left: " + left + ", Right: " + right + ", Distance: " + distance + ", Sound: (" +sound.getValue().getX()+", " + sound.getValue().getY()+")");
                     volume = (volume > 1 ? 1 : volume); // prevent infinite volume
                     //Log.d("Audio Player", "Volume: " + volume + "@(" + sound.getValue().getX() + ", " + sound.getValue().getY() + ")");
                     if (volume > 0) {
