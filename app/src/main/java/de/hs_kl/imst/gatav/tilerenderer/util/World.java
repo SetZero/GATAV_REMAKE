@@ -18,6 +18,7 @@ import de.hs_kl.imst.gatav.tilerenderer.drawable.Drawables;
 import de.hs_kl.imst.gatav.tilerenderer.drawable.MovableGraphics;
 import de.hs_kl.imst.gatav.tilerenderer.util.Hitboxes.Collidable;
 import de.hs_kl.imst.gatav.tilerenderer.util.Hitboxes.Rectangle;
+import de.hs_kl.imst.gatav.tilerenderer.util.audio.AudioPlayer;
 
 /**
  * Created by Sebastian on 2017-12-06.
@@ -33,11 +34,11 @@ public class World {
     private PhysicsController physics;
     private GameEventHandler gameEvents;
 
-    public World(TileLoader tileLoader, float step, Timer timer, GameEventExecutioner executioner) {
+    public World(TileLoader tileLoader, float step, Timer timer, GameEventExecutioner executioner, AudioPlayer audioPlayer) {
         this.tileLoader = tileLoader;
         objects = tileLoader.getObjectGroups();
         physics = new PhysicsController(this);
-        gameEvents = new GameEventHandler(this.getObjects(), timer, executioner);
+        gameEvents = new GameEventHandler(this.getObjects(), timer, executioner, audioPlayer);
         this.step = step;
         this.timer = timer;
     }

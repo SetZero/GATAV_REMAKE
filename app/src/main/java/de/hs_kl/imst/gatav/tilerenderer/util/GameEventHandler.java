@@ -13,6 +13,8 @@ import de.hs_kl.imst.gatav.tilerenderer.drawable.Player;
 import de.hs_kl.imst.gatav.tilerenderer.util.Hitboxes.Collidable;
 import de.hs_kl.imst.gatav.tilerenderer.util.Hitboxes.GameStateHandler;
 import de.hs_kl.imst.gatav.tilerenderer.util.Hitboxes.Rectangle;
+import de.hs_kl.imst.gatav.tilerenderer.util.audio.AudioPlayer;
+import de.hs_kl.imst.gatav.tilerenderer.util.audio.events.Owl;
 
 /**
  * Created by Sebastian on 2017-12-25.
@@ -27,12 +29,18 @@ public class GameEventHandler {
     private GameStateHandler gameState = new GameStateHandler();
     private double gracePeriod = 3;
     private double currentGracePeriod = 0;
+    private AudioPlayer audioPlayer;
 
-    public GameEventHandler(Map<String, List<Collidable>> objects, Timer timer, GameEventExecutioner executioner) {
+    //Audio Events
+    private Owl owlAudioEvent;
+
+    public GameEventHandler(Map<String, List<Collidable>> objects, Timer timer, GameEventExecutioner executioner, AudioPlayer audioPlayer) {
         this.objects = objects;
         this.timer = timer;
         currentGracePeriod = timer.getElapsedTime() + gracePeriod;
         this.executioner = executioner;
+        this.audioPlayer = audioPlayer;
+        this.owlAudioEvent = new Owl(new Vector2(4000, 600), audioPlayer, timer);
     }
 
     public ArrayList<MovableGraphics> getDynamics() {
@@ -67,6 +75,7 @@ public class GameEventHandler {
                 player.setIsAlive(true);
             }
         }
+        owlAudioEvent.update();
     }
 
     private boolean hasReachedFinish(GameCamera cam) {

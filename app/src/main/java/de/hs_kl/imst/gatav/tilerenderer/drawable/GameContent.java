@@ -121,7 +121,7 @@ public class GameContent implements Drawables, Observer {
         camera.setLevelHeight(gameHeight * tileLoader.getTileHeight());
         camera.setLevelWidth(gameWidth * tileLoader.getTileWidth());
 
-        world = new World(tileLoader, 1f / 60f, timer, executioner);
+        world = new World(tileLoader, 1f / 60f, timer, executioner, audioPlayer);
         player = new Player(350, 500 * ScaleHelper.getRatioY(), context, audioPlayer);
         skelett = new Robotic(900, (int) (400 * ScaleHelper.getRatioY()), context);
 

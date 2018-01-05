@@ -25,28 +25,15 @@ import de.hs_kl.imst.gatav.tilerenderer.util.Vector2;
 
 public class AudioPlayer implements Runnable {
 
+    private final int cacheElements = 10;
+    // ~83.2 = 100% volume => @ ~4000 Units = 0%
+    private final double audioThreshold = 83.2;
     private SoundPool sp;
     private MediaPlayer player;
     private Queue<Pair<Vector2, Integer>> loadingQueue = new ConcurrentLinkedQueue<>();
-    private final int cacheElements = 10;
-    private LruCache<Integer, Vector2> soundToPlay = new LruCache<Integer, Vector2>(cacheElements) {
-
-        @Override
-        protected void entryRemoved(boolean evicted, Integer key, Vector2 oldElement, Vector2 newElement) {
-            sp.stop(key);
-        }
-
-        @Override
-        protected int sizeOf(Integer key, Vector2 value) {
-            return 1;
-        }
-    };
-
     private AtomicBoolean playing = new AtomicBoolean(true);
     private Context ctx;
     private Player playerCharacter;
-    // ~83.2 = 100% volume => @ ~4000 Units = 0%
-    private final double audioThreshold = 83.2;
     private LruCache<Integer, Integer> cache = new LruCache<Integer, Integer>(cacheElements) {
 
         @Override
@@ -59,7 +46,18 @@ public class AudioPlayer implements Runnable {
             return 1;
         }
     };
+    private LruCache<Integer, Vector2> soundToPlay = new LruCache<Integer, Vector2>(cacheElements) {
 
+        @Override
+        protected void entryRemoved(boolean evicted, Integer key, Vector2 oldElement, Vector2 newElement) {
+            sp.stop(key);
+        }
+
+        @Override
+        protected int sizeOf(Integer key, Vector2 value) {
+            return 1;
+        }
+    };
 
 
     public AudioPlayer(Context ctx) {
@@ -77,7 +75,7 @@ public class AudioPlayer implements Runnable {
             player.prepare();
             player.setVolume(0.5f, 0.5f);
             player.setLooping(true);
-            player.start();
+            //player.start();
         } catch (IOException e) {
             e.printStackTrace();
         }
@@ -95,8 +93,8 @@ public class AudioPlayer implements Runnable {
         //If there is a new Song to Play, wait for it to load and Play it!
         sp.setOnLoadCompleteListener((soundPool, sampleId, status) -> {
             ArrayList<Integer> tmp = new ArrayList<>();
-            for(Pair<Vector2, Integer> sound : loadingQueue) {
-                if(sound.second == sampleId) {
+            for (Pair<Vector2, Integer> sound : loadingQueue) {
+                if (sound.second == sampleId) {
                     int id = sp.play(sound.second, 0.5f, 0.5f, 1, 0, 1);
                     //soundToPlay.add(new Pair<>(sound.first, id));
                     soundToPlay.put(id, sound.first);
@@ -109,8 +107,8 @@ public class AudioPlayer implements Runnable {
 
     public void addSound(Sounds s, Vector2 source) {
         //If we can play a song....
-        if(playing.get()) {
-            if(cache.get(s.getSoundResource()) != null) {
+        if (playing.get()) {
+            if (cache.get(s.getSoundResource()) != null) {
                 //...get it from the cache and play it
                 int soundId = cache.get(s.getSoundResource());
                 int id = sp.play(soundId, 0.5f, 0.5f, 1, 0, 1);
@@ -131,7 +129,6 @@ public class AudioPlayer implements Runnable {
         playing.set(false);
         sp.release();
         soundToPlay.evictAll();
-        Log.d("AudioPlayer", "Cleaned!");
     }
 
     public void setPlayerCharacter(Player playerCharacter) {
@@ -150,7 +147,6 @@ public class AudioPlayer implements Runnable {
                 for (Map.Entry<Integer, Vector2> sound : snapshot.entrySet()) {
                     double volume = 1;
                     //stolen from a book ;-)
-                    if(sound.getValue().equals(playerCharacter.getPosition())) {
                         volume = (audioThreshold - 10d * Math.log10(
                                 4 * Math.PI * Math.pow(
                                         Math.abs(Vector2.distance(sound.getValue(), playerCharacter.getPosition())), 2
@@ -158,8 +154,9 @@ public class AudioPlayer implements Runnable {
                         )
                         ) / audioThreshold;
                         volume = (volume > 1 ? 1 : volume); // prevent infinite volume
-                    }
-                    if(volume > 0) {
+                        //Log.d("Audio Player", "Volume: " + volume + "@(" + sound.getValue().getX() + ", " + sound.getValue().getY() + ")");
+                    if (volume > 0) {
+                        //Log.d("Audio Player", "Setting Volume (" + sound.getKey() + "): " + volume);
                         sp.setVolume(sound.getKey(), (float) volume, (float) volume);
                     }
                 }
