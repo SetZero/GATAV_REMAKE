@@ -11,6 +11,7 @@ import android.util.Pair;
 
 import java.io.IOException;
 import java.util.ArrayList;
+import java.util.Map;
 import java.util.Queue;
 import java.util.concurrent.ConcurrentLinkedQueue;
 import java.util.concurrent.atomic.AtomicBoolean;
@@ -27,13 +28,25 @@ public class AudioPlayer implements Runnable {
     private SoundPool sp;
     private MediaPlayer player;
     private Queue<Pair<Vector2, Integer>> loadingQueue = new ConcurrentLinkedQueue<>();
-    private Queue<Pair<Vector2, Integer>> soundToPlay = new ConcurrentLinkedQueue<>();
+    private final int cacheElements = 10;
+    private LruCache<Integer, Vector2> soundToPlay = new LruCache<Integer, Vector2>(cacheElements) {
+
+        @Override
+        protected void entryRemoved(boolean evicted, Integer key, Vector2 oldElement, Vector2 newElement) {
+            sp.stop(key);
+        }
+
+        @Override
+        protected int sizeOf(Integer key, Vector2 value) {
+            return 1;
+        }
+    };
+
     private AtomicBoolean playing = new AtomicBoolean(true);
     private Context ctx;
     private Player playerCharacter;
     // ~83.2 = 100% volume => @ ~4000 Units = 0%
     private final double audioThreshold = 83.2;
-    private final int cacheElements = 10;
     private LruCache<Integer, Integer> cache = new LruCache<Integer, Integer>(cacheElements) {
 
         @Override
@@ -50,39 +63,43 @@ public class AudioPlayer implements Runnable {
 
 
     public AudioPlayer(Context ctx) {
-        init();
+        //Start Sound Pool
+        initSoundPool();
         this.ctx = ctx;
+        //start Media Player
         player = new MediaPlayer();
         try {
+            //Start Playing BGM
             AssetFileDescriptor descriptor = ctx.getAssets().openFd("music/GloriousMorning2.mp3");
             player.setDataSource(descriptor.getFileDescriptor(), descriptor.getStartOffset(), descriptor.getLength());
             descriptor.close();
 
             player.prepare();
-            player.setVolume(1f, 1f);
+            player.setVolume(0.5f, 0.5f);
             player.setLooping(true);
-            //player.start();
+            player.start();
         } catch (IOException e) {
             e.printStackTrace();
         }
     }
 
-    private void init() {
+    private void initSoundPool() {
         AudioAttributes attrs = new AudioAttributes.Builder()
                 .setUsage(AudioAttributes.USAGE_GAME)
                 .setContentType(AudioAttributes.CONTENT_TYPE_SONIFICATION)
                 .build();
         sp = new SoundPool.Builder()
-                .setMaxStreams(10)
+                .setMaxStreams(cacheElements)
                 .setAudioAttributes(attrs)
                 .build();
-
+        //If there is a new Song to Play, wait for it to load and Play it!
         sp.setOnLoadCompleteListener((soundPool, sampleId, status) -> {
             ArrayList<Integer> tmp = new ArrayList<>();
             for(Pair<Vector2, Integer> sound : loadingQueue) {
                 if(sound.second == sampleId) {
                     int id = sp.play(sound.second, 0.5f, 0.5f, 1, 0, 1);
-                    soundToPlay.add(new Pair<>(sound.first, id));
+                    //soundToPlay.add(new Pair<>(sound.first, id));
+                    soundToPlay.put(id, sound.first);
                     tmp.add(sound.second);
                 }
             }
@@ -91,29 +108,29 @@ public class AudioPlayer implements Runnable {
     }
 
     public void addSound(Sounds s, Vector2 source) {
+        //If we can play a song....
         if(playing.get()) {
             if(cache.get(s.getSoundResource()) != null) {
+                //...get it from the cache and play it
                 int soundId = cache.get(s.getSoundResource());
                 int id = sp.play(soundId, 0.5f, 0.5f, 1, 0, 1);
-                soundToPlay.add(new Pair<>(source, id));
+                //soundToPlay.add(new Pair<>(source, id));
+                soundToPlay.put(id, source);
             } else {
+                //add it to the loading queue if we don't have it
                 int soundId = sp.load(ctx, s.getSoundResource(), 1);
                 cache.put(s.getSoundResource(), soundId);
                 Pair<Vector2, Integer> element = new Pair<>(source, soundId);
                 loadingQueue.add(element);
             }
-            //soundToPlay.add(element);
         }
     }
 
     public void cleanup() {
         player.release();
         playing.set(false);
-        for(Pair<Vector2, Integer> sound : soundToPlay) {
-            sp.unload(sound.second);
-        }
         sp.release();
-        soundToPlay.clear();
+        soundToPlay.evictAll();
         Log.d("AudioPlayer", "Cleaned!");
     }
 
@@ -123,29 +140,33 @@ public class AudioPlayer implements Runnable {
 
     @Override
     public void run() {
+        //As long as we can play songs
         while (playing.get()) {
-            //not yet initialized!
+            //If we have a reference to the player (for relative audio position)
             if (playerCharacter == null) continue;
             else {
-                if (!soundToPlay.isEmpty()) {
-                    for (Pair<Vector2, Integer> sound : soundToPlay) {
-                        double volume = (audioThreshold - 10d * Math.log10(
+                //go over all audio resources
+                Map<Integer, Vector2> snapshot = soundToPlay.snapshot();
+                for (Map.Entry<Integer, Vector2> sound : snapshot.entrySet()) {
+                    double volume = 1;
+                    //stolen from a book ;-)
+                    if(sound.getValue().equals(playerCharacter.getPosition())) {
+                        volume = (audioThreshold - 10d * Math.log10(
                                 4 * Math.PI * Math.pow(
-                                        Math.abs(Vector2.distance(sound.first, playerCharacter.getPosition())), 2
-                                    )
+                                        Math.abs(Vector2.distance(sound.getValue(), playerCharacter.getPosition())), 2
                                 )
+                        )
                         ) / audioThreshold;
                         volume = (volume > 1 ? 1 : volume); // prevent infinite volume
-                        if(volume > 0) {
-                            sp.setVolume(sound.second, (float) volume, (float) volume);
-                            //sp.play(sound.second, (float) volume, (float) volume, 1, 0, 1);
-                        }
                     }
-                    //soundToPlay.clear();
+                    if(volume > 0) {
+                        sp.setVolume(sound.getKey(), (float) volume, (float) volume);
+                    }
                 }
             }
+            //prevent oversampling
             try {
-                Thread.sleep(500);
+                Thread.sleep(40);
             } catch (InterruptedException e) {
                 e.printStackTrace();
             }

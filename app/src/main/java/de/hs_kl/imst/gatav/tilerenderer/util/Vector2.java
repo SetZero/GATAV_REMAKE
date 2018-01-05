@@ -50,6 +50,14 @@ public class Vector2 {
         return (float)Math.sqrt(x*x+y*y);
     }
 
+    public boolean equals(Vector2 v2) {
+        float diffX = getX()-v2.getX();
+        float diffY = getY()-v2.getY();
+        if(Math.abs(diffX-1.0) <= 0.1 && Math.abs(diffY-1.0) <= 0.1)
+            return true;
+        return false;
+    }
+
     public static float distance(Vector2 v1, Vector2 v2){
         Vector2 verbindungsvektor = Vector2.minus(v1,v2);
         return verbindungsvektor.vectorLength();
