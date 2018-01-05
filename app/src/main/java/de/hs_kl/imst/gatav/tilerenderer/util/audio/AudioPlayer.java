@@ -96,7 +96,6 @@ public class AudioPlayer implements Runnable {
             for (Pair<Vector2, Integer> sound : loadingQueue) {
                 if (sound.second == sampleId) {
                     int id = sp.play(sound.second, 0.5f, 0.5f, 1, 0, 1);
-                    //soundToPlay.add(new Pair<>(sound.first, id));
                     soundToPlay.put(id, sound.first);
                     tmp.add(sound.second);
                 }
@@ -117,7 +116,7 @@ public class AudioPlayer implements Runnable {
                 int id = sp.play(soundId, 0.5f, 0.5f, 1, 0, 1);
                 //soundToPlay.add(new Pair<>(source, id));
                 soundToPlay.put(id, source);
-                Log.d("addSound", "Position: (" + source.getX() + ", " + source.getY() + ")");
+                //Log.d("addSound", "Position: (" + source.getX() + ", " + source.getY() + ")");
             } else {
                 //add it to the loading queue if we don't have it
                 int soundId = sp.load(ctx, s.getSoundResource(), 1);
@@ -158,7 +157,7 @@ public class AudioPlayer implements Runnable {
                     )
                     ) / audioThreshold;
                     //playerCharacter.getHitbox().getWidth()
-                    //links
+                    //Sigmoid for thresholding of stereo sound position
                     double left = 0.875 + Math.tanh((playerCharacter.getPosition().getX() - sound.getValue().getX()) * 0.001) * 0.125;
                     double right = 0.875 + Math.tanh(-(playerCharacter.getPosition().getX() - sound.getValue().getX()) * 0.001) * 0.125;
                     //Log.d("AudioPlayer", "Left: " + left + ", Right: " + right + ", Distance: " + distance + ", Sound: (" +sound.getValue().getX()+", " + sound.getValue().getY()+")");

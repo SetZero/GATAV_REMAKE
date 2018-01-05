@@ -2,6 +2,8 @@ package de.hs_kl.imst.gatav.tilerenderer.util.audio.events;
 
 import android.util.Log;
 
+import java.util.concurrent.ThreadLocalRandom;
+
 import de.hs_kl.imst.gatav.tilerenderer.util.Timer;
 import de.hs_kl.imst.gatav.tilerenderer.util.Vector2;
 import de.hs_kl.imst.gatav.tilerenderer.util.audio.AudioPlayer;
@@ -15,7 +17,7 @@ public class Owl {
     private Timer timer;
     private AudioPlayer audioPlayer;
     private double lastOwl = -3;
-    private double timeBetween = 4; //seconds
+    private double timeBetween = 8; //seconds
     private Vector2 position;
 
     public Owl(Vector2 position, AudioPlayer audioPlayer, Timer timer) {
@@ -26,7 +28,8 @@ public class Owl {
 
     public void update() {
         if(lastOwl + timeBetween <= timer.getElapsedTime()) {
-            lastOwl = timer.getElapsedTime();
+            int randomNum = ThreadLocalRandom.current().nextInt(-2, 3);
+            lastOwl = timer.getElapsedTime() + randomNum;
             audioPlayer.addSound(Sounds.OWL, position);
         }
     }
