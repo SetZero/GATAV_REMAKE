@@ -30,6 +30,8 @@ public class GameEventHandler {
     private double gracePeriod = 3;
     private double currentGracePeriod = 0;
     private AudioPlayer audioPlayer;
+    private boolean finished = false;
+
 
     //Audio Events
     private boolean speedUpSound = false;
@@ -51,10 +53,18 @@ public class GameEventHandler {
     }
 
     public void update(GameCamera cam) {
-        if (hasReachedFinish()) {
+        if (hasReachedFinish() && !finished) {
             //TODO: add some Finish Screen
-            executioner.finishLevel();
+            //TODO: If Player is not active don't let him move...
+            finished = true;
+            timer.snapshotTime();
+            player.setScore(player.getScore() + (int)(timer.getTotalLevelTime() - timer.getSnapshotTime()));
+            GameContent.getHud().drawPopupMessage("Finished!", 5);
             player.setActive(false);
+        }
+
+        if(finished && timer.getElapsedTime() > timer.getSnapshotTime() + 3) {
+            executioner.finishLevel();
         }
 
         if (hasReachCheckpoint()) {
@@ -81,14 +91,14 @@ public class GameEventHandler {
             }
         }
 
-        if(timer.getElapsedTime() > timer.getTotalLevelTime() * speedUpSoundTime) {
+        if(!finished && timer.getElapsedTime() > timer.getTotalLevelTime() * speedUpSoundTime) {
             if(!speedUpSound) {
                 audioPlayer.changeBGMSpeed(speedUpSoundAmount);
                 speedUpSound = true;
             }
         }
 
-        if(isOutOfTime()) {
+        if(!finished && isOutOfTime()) {
             GameContent.getHud().drawPopupMessage("OUTATIME", 5);
             player.resetPlayer();
         }

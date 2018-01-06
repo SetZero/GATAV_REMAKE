@@ -73,7 +73,7 @@ public class AudioPlayer implements Runnable {
             descriptor.close();
 
             player.prepare();
-            player.setVolume(0.25f, 0.25f);
+            player.setVolume(0.1f, 0.1f);
             player.setLooping(true);
             player.start();
         } catch (IOException e) {

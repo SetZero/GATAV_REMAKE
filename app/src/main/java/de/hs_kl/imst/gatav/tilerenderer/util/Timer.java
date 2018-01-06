@@ -8,6 +8,7 @@ public class Timer {
     private volatile boolean runningTimeThread = false;
     private volatile double elapsedTime = 0.0;
     private  volatile int totalLevelTime = 0;
+    private  volatile double snapshotTime = 0.0;
 
     synchronized private void resetElapsedTime() {
         elapsedTime = 0.0;
@@ -49,5 +50,13 @@ public class Timer {
 
     public void stopTimeThread() {
         runningTimeThread = false;
+    }
+
+    public void snapshotTime() {
+        snapshotTime = elapsedTime;
+    }
+
+    public double getSnapshotTime() {
+        return snapshotTime;
     }
 }
