@@ -9,6 +9,9 @@ import de.hs_kl.imst.gatav.tilerenderer.R;
 public enum Sounds {
     BASS(R.raw.bass),
     COIN(R.raw.coin),
+    JUMP(R.raw.jump),
+    ENEMY_DEATH(R.raw.enemy_death),
+    ROBOT_LAUGH(R.raw.robot_laugh),
     OWL(R.raw.owl);
 
     private int soundResource = -1;

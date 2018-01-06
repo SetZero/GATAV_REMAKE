@@ -2,12 +2,16 @@ package de.hs_kl.imst.gatav.tilerenderer.drawable;
 
 
 import android.content.Context;
+import android.util.Pair;
 
 import java.io.InputStream;
+import java.util.concurrent.ThreadLocalRandom;
 
 import de.hs_kl.imst.gatav.tilerenderer.util.Animations;
 import de.hs_kl.imst.gatav.tilerenderer.util.Hitboxes.Rectangle;
 import de.hs_kl.imst.gatav.tilerenderer.util.ScaleHelper;
+import de.hs_kl.imst.gatav.tilerenderer.util.Vector2;
+import de.hs_kl.imst.gatav.tilerenderer.util.audio.Sounds;
 
 /**
  * Created by keven on 19.12.2017.
@@ -40,4 +44,14 @@ public final class Robotic extends Enemies implements CollisionReactive, Destroy
         }
     }
 
+    @Override
+    public void update(float delta) {
+        super.update(delta);
+        int random = ThreadLocalRandom.current().nextInt(1000);
+        if(random == 1) {
+            setChanged();
+            notifyObservers(new Pair<>(Sounds.ROBOT_LAUGH, Position));
+        }
+
+    }
 }

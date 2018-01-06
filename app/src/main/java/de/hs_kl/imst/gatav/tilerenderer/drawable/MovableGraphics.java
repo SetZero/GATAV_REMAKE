@@ -12,12 +12,13 @@ import android.util.Log;
 
 import java.io.InputStream;
 import java.util.ArrayList;
+import java.util.Observable;
 
 import de.hs_kl.imst.gatav.tilerenderer.util.Direction;
 import de.hs_kl.imst.gatav.tilerenderer.util.Hitboxes.Rectangle;
 import de.hs_kl.imst.gatav.tilerenderer.util.Vector2;
 
-public abstract class MovableGraphics implements Drawables,CollisionReactive {
+public abstract class MovableGraphics extends Observable implements Drawables,CollisionReactive {
 
     protected BitmapDrawable bmp = null;
     protected boolean isFlipped = false;

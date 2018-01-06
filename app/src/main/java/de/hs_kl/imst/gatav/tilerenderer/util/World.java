@@ -45,6 +45,7 @@ public class World {
 
     public void addCollectables(Collectable collectable) {
         this.collectables.add(collectable);
+        collectable.addObserver(gameEvents);
     }
 
     public Map<String, List<Collidable>> getObjects() {
@@ -136,6 +137,7 @@ public class World {
         dynamicObjects.add(object);
         physics.addPhysical(object);
         gameEvents.addDynamicObject(object);
+        object.addObserver(gameEvents);
     }
 
     public void removeGameObject(MovableGraphics object) {

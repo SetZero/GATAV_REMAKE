@@ -8,20 +8,22 @@ import android.graphics.drawable.BitmapDrawable;
 
 import java.io.IOException;
 import java.io.InputStream;
+import java.util.Observable;
 
 import de.hs_kl.imst.gatav.tilerenderer.util.Hitboxes.Rectangle;
 import de.hs_kl.imst.gatav.tilerenderer.util.ScaleHelper;
 import de.hs_kl.imst.gatav.tilerenderer.util.Vector2;
+import de.hs_kl.imst.gatav.tilerenderer.util.audio.AudioPlayer;
 
 /**
  * Created by keven on 31.12.2017.
  */
 
-public abstract class Collectable implements Drawables {
+public abstract class Collectable extends Observable implements Drawables {
 
     protected int width, height;
     protected Rectangle Hitbox;
-    private Vector2 Position;
+    protected Vector2 Position;
     private BitmapDrawable bmp;
     private boolean isCollected = false;
 

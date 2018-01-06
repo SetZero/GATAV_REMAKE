@@ -4,12 +4,14 @@ import android.graphics.Canvas;
 import android.graphics.Color;
 import android.graphics.Paint;
 import android.graphics.drawable.BitmapDrawable;
+import android.util.Pair;
 
 import de.hs_kl.imst.gatav.tilerenderer.util.Animations;
 import de.hs_kl.imst.gatav.tilerenderer.util.Contact;
 import de.hs_kl.imst.gatav.tilerenderer.util.Direction;
 import de.hs_kl.imst.gatav.tilerenderer.util.PhysicsController;
 import de.hs_kl.imst.gatav.tilerenderer.util.Vector2;
+import de.hs_kl.imst.gatav.tilerenderer.util.audio.Sounds;
 
 /**
  * Created by keven on 17.12.2017.
@@ -23,7 +25,7 @@ public abstract class Enemies extends MovableGraphics implements Destroyable, Co
     protected BitmapDrawable idle;
     protected int scorePoints;
     protected int drawOffsetY;
-    protected boolean isAlive =true;
+    protected boolean isAlive = true;
     public int hitPoints;
 
     public int getScorePoints() {
@@ -65,7 +67,11 @@ public abstract class Enemies extends MovableGraphics implements Destroyable, Co
     public void update(float delta){
         if(isAlive)
         super.update(delta);
-        if(this.lifePoints <= 0) isAlive =false;
+        if(isAlive && this.lifePoints <= 0) {
+            isAlive = false;
+            setChanged();
+            notifyObservers(new Pair<>(Sounds.ENEMY_DEATH, new Vector2(Position)));
+        }
         if(isActive) {
             if (isAlive) {
                 aIHandle();

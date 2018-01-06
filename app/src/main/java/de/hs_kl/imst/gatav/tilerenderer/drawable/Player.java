@@ -95,7 +95,7 @@ public final class Player extends MovableGraphics implements Destroyable, Collis
             case UP: {
                 if (velocity.getY() != 0 && previous == Direction.DOWN) doublejump++;
                 if (doublejump < 2) {
-                    audioPlayer.addSound(Sounds.COIN, getPosition());
+                    audioPlayer.addSound(Sounds.JUMP, getPosition());
                     velocity.setY(0f);
                     impact(new Vector2(0f, -550f));
                     currentDirection = Direction.UP;

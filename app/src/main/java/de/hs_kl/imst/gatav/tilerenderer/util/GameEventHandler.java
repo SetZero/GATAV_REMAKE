@@ -2,11 +2,17 @@ package de.hs_kl.imst.gatav.tilerenderer.util;
 
 import android.graphics.Rect;
 import android.util.Log;
+import android.util.Pair;
 
 import java.util.ArrayList;
 import java.util.List;
 import java.util.Map;
+import java.util.Observable;
+import java.util.Observer;
 
+import de.hs_kl.imst.gatav.tilerenderer.drawable.Coin;
+import de.hs_kl.imst.gatav.tilerenderer.drawable.Collectable;
+import de.hs_kl.imst.gatav.tilerenderer.drawable.Enemies;
 import de.hs_kl.imst.gatav.tilerenderer.drawable.GameContent;
 import de.hs_kl.imst.gatav.tilerenderer.drawable.MovableGraphics;
 import de.hs_kl.imst.gatav.tilerenderer.drawable.Player;
@@ -14,13 +20,14 @@ import de.hs_kl.imst.gatav.tilerenderer.util.Hitboxes.Collidable;
 import de.hs_kl.imst.gatav.tilerenderer.util.Hitboxes.GameStateHandler;
 import de.hs_kl.imst.gatav.tilerenderer.util.Hitboxes.Rectangle;
 import de.hs_kl.imst.gatav.tilerenderer.util.audio.AudioPlayer;
+import de.hs_kl.imst.gatav.tilerenderer.util.audio.Sounds;
 import de.hs_kl.imst.gatav.tilerenderer.util.audio.events.Owl;
 
 /**
  * Created by Sebastian on 2017-12-25.
  */
 
-public class GameEventHandler {
+public class GameEventHandler implements Observer {
     private final Timer timer;
     private final GameEventExecutioner executioner;
     private ArrayList<MovableGraphics> dynamics = new ArrayList<>();
@@ -78,7 +85,7 @@ public class GameEventHandler {
             }
         }
         //TODO: Add World Reset!
-        if (cam.isAttachedToObject() && (isOutOfBounds(cam) || isInDeathZone())) {
+        if (!failed && cam.isAttachedToObject() && (isOutOfBounds(cam) || isInDeathZone())) {
             if(currentGracePeriod >= timer.getElapsedTime()) return;
             //TODO: Add some Death Screen
             GameContent.getHud().drawPopupMessage("you Died :(", 5);
@@ -164,4 +171,15 @@ public class GameEventHandler {
         }
     }
 
+    @Override
+    public void update(Observable o, Object arg) {
+        if(o instanceof Collectable || o instanceof Enemies) {
+            if(arg instanceof Pair) {
+                if(((Pair) arg).first instanceof  Sounds) {
+                    Pair<Sounds, Vector2> soundInfo = (Pair) arg;
+                    audioPlayer.addSound(soundInfo.first, soundInfo.second);
+                }
+            }
+        }
+    }
 }
