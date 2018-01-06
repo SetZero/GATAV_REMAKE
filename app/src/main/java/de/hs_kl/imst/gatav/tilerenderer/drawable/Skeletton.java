@@ -21,9 +21,9 @@ public final class Skeletton extends Enemies implements Destroyable, CollisionRe
             is.close();
             run = new Animations(1f / 4f);
             run.addAnimation(Animations.frameLoad("dynamics/enemys/robo/run/Run", 8, 175, 175, context));
-            dieng = new Animations(1f / 4f);
+            dying = new Animations(1f / 4f);
             try {
-                dieng.addAnimation(Animations.frameLoad("dynamics/enemys/robo/die/Dead", 10, 175, 175, context));
+                dying.addAnimation(Animations.frameLoad("dynamics/enemys/robo/die/Dead", 10, 175, 175, context));
             } catch (Exception e) {
                 e.printStackTrace();
             }

@@ -22,6 +22,7 @@ import java.util.Random;
 
 import de.hs_kl.imst.gatav.tilerenderer.TileLoader;
 import de.hs_kl.imst.gatav.tilerenderer.util.Constants;
+import de.hs_kl.imst.gatav.tilerenderer.util.LoadingScreen;
 import de.hs_kl.imst.gatav.tilerenderer.util.states.Direction;
 import de.hs_kl.imst.gatav.tilerenderer.util.GameCamera;
 import de.hs_kl.imst.gatav.tilerenderer.util.GameEventExecutioner;
@@ -33,6 +34,8 @@ import de.hs_kl.imst.gatav.tilerenderer.util.World;
 import de.hs_kl.imst.gatav.tilerenderer.util.audio.AudioPlayer;
 
 public class GameContent implements Drawables, Observer {
+    //warum muss alles static sein? :-(
+    //es gibt so viele andere möglichkeiten das zu lösen...
     public static GameCamera camera = new GameCamera();
     public static World world;
     //Not Thread safe! Can even return  old instance of Player (static player = evil!)
@@ -51,13 +54,10 @@ public class GameContent implements Drawables, Observer {
      * Der Tile Loader in welchem das Aktuelle Level geladen wird
      */
     private TileLoader tileLoader;
-    private Random random = new Random();
     private AssetManager assetManager;
     private String levelName;
     private boolean finishedSetup = false;
-    private double loadingScreenColor;
-    private boolean loadingScreenFadeDirection = true;
-    private String loadingScreenText;
+    private LoadingScreen loadingScreen;
     private Timer timer = new Timer();
     private AudioPlayer audioPlayer;
 
@@ -68,11 +68,6 @@ public class GameContent implements Drawables, Observer {
         this.executioner = executioner;
         this.audioPlayer = player;
         timer.setTotalLevelTime(getLevelTime(levelName));
-        //Kamera setzen
-        //camera.setCameraYCenter(450);
-        //camera.setCameraXCenter(700);
-        int rnd = random.nextInt(LoadingScreenTexts.text.length);
-        loadingScreenText = LoadingScreenTexts.text[rnd];
 
         loadLevel();
         hud = new HUD(camera, timer, assetManager);
@@ -101,7 +96,7 @@ public class GameContent implements Drawables, Observer {
         if (finishedSetup) {
             world.draw(camera, canvas);
         } else {
-            showLoadingScreen(canvas);
+            loadingScreen.showLoadingScreen(canvas);
         }
     }
 
@@ -143,6 +138,7 @@ public class GameContent implements Drawables, Observer {
     private void loadLevel() {
         tileLoader = new TileLoader(context, levelName);
         tileLoader.addObserver(this);
+        loadingScreen = new LoadingScreen(tileLoader);
         new Thread(tileLoader).start();
     }
 
@@ -176,51 +172,6 @@ public class GameContent implements Drawables, Observer {
         for(Coin coin : coins) {
             world.addCollectables(coin);
         }
-    }
-
-    public void showLoadingScreen(Canvas canvas) {
-        if (loadingScreenFadeDirection) {
-            if (loadingScreenColor < 255) {
-                loadingScreenColor += 1;
-            } else {
-                loadingScreenFadeDirection = false;
-            }
-        } else {
-            if (loadingScreenColor > 0) {
-                loadingScreenColor -= 1;
-            } else {
-                loadingScreenFadeDirection = true;
-            }
-        }
-        int loaded = (tileLoader != null ? tileLoader.getLoadingPercentage() : 0);
-        canvas.drawARGB(255, 255, 255, 255);
-        String fpsText = String.format(Locale.GERMAN, "Loading... (%d / 100)", loaded);
-
-        Paint paint = new Paint();
-        paint.setColor(Color.GRAY);
-
-        paint.setTextSize(20 * ScaleHelper.getRatioY());
-
-        Rect loadingRect = new Rect();
-        loadingRect.top = (int) (250 * ScaleHelper.getRatioY());
-        loadingRect.left = (int) (40 * ScaleHelper.getRatioX());
-        loadingRect.bottom = (int) (120 * ScaleHelper.getRatioY());
-        loadingRect.right = (int) (560 * ScaleHelper.getRatioX());
-
-        canvas.drawRect(loadingRect, paint);
-        paint.setColor(Color.argb(255, 0, (int) loadingScreenColor, (int) (255 - loadingScreenColor)));
-        loadingRect.right = (int) ((40 + (560 * (loaded / 100f)) * ScaleHelper.getRatioY()));
-        canvas.drawRect(loadingRect, paint);
-
-        paint.setTextAlign(Paint.Align.CENTER);
-        paint.setColor(Color.WHITE);
-        paint.setFakeBoldText(true);
-        canvas.drawText(fpsText, (canvas.getWidth() / 2), 200 * ScaleHelper.getRatioY(), paint);
-
-        paint.setColor(Color.BLACK);
-        paint.setTextSize(20 * ScaleHelper.getRatioY() * (float) Math.min(1.5, (50f / loadingScreenText.length())));
-        canvas.drawText(loadingScreenText, (canvas.getWidth() / 2), 300 * ScaleHelper.getRatioY(), paint);
-
     }
 
     @Override

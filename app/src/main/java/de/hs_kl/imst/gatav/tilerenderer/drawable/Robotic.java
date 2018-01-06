@@ -26,9 +26,9 @@ public final class Robotic extends Enemies implements CollisionReactive, Destroy
             is.close();
             run = new Animations(1f / 8f);
             run.addAnimation(Animations.frameLoad("dynamics/enemys/robo/run/Run", 8, 33 * ScaleHelper.getEntitiyScale(), 33 * ScaleHelper.getEntitiyScale(), context));
-            dieng = new Animations(1f / 8f);
+            dying = new Animations(1f / 8f);
             try {
-                dieng.addAnimation(Animations.frameLoad("dynamics/enemys/robo/die/Dead", 10, 33 * ScaleHelper.getEntitiyScale(), 33 * ScaleHelper.getEntitiyScale(), context));
+                dying.addAnimation(Animations.frameLoad("dynamics/enemys/robo/die/Dead", 10, 33 * ScaleHelper.getEntitiyScale(), 33 * ScaleHelper.getEntitiyScale(), context));
             } catch (Exception e) {
                 e.printStackTrace();
             }

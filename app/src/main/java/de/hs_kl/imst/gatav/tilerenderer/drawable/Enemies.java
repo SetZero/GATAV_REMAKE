@@ -21,7 +21,7 @@ public abstract class Enemies extends MovableGraphics implements Destroyable, Co
     protected float lifePoints, animTime, speed;
     protected float dieTimer = 0.0f;
     protected Animations run;
-    protected Animations dieng;
+    protected Animations dying;
     protected BitmapDrawable idle;
     protected int scorePoints;
     protected int drawOffsetY;
@@ -78,10 +78,10 @@ public abstract class Enemies extends MovableGraphics implements Destroyable, Co
                 stateHandle();
                 animationHandle(delta);
             } else {
-                if (dieng.isFinished(dieTimer)) {
+                if (dying.isFinished(dieTimer)) {
                     GameContent.world.removeGameObject(this);
                 } else {
-                    bmp = dieng.getDrawable(dieTimer);
+                    bmp = dying.getDrawable(dieTimer);
                 }
                 dieTimer += delta;
             }
