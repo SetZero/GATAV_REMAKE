@@ -73,7 +73,7 @@ public class HUD {
             showPopupImage = false;
         }
 
-        if(timer.getElapsedTime() > popupImageLength - 1.5 && showPopupImage && popupImage != null) {
+        if(timer.getElapsedTime() > popupImageLength - 1 && showPopupImage && popupImage != null) {
             imagePosition.setY(imagePosition.getY() + (1/delta));
         }
     }
@@ -117,7 +117,7 @@ public class HUD {
 
 
     private void drawPopupImage(Canvas canvas) {
-        canvas.drawBitmap(popupImage, imagePosition.getX(), imagePosition.getY(), null);
+        canvas.drawBitmap(popupImage, imagePosition.getX() + (canvas.getWidth() / 2 - popupImage.getWidth() / 2), imagePosition.getY(), null);
     }
 
     private void drawPopup(Canvas canvas) {

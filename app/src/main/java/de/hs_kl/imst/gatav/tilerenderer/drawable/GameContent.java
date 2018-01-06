@@ -22,7 +22,7 @@ import java.util.Random;
 
 import de.hs_kl.imst.gatav.tilerenderer.TileLoader;
 import de.hs_kl.imst.gatav.tilerenderer.util.Constants;
-import de.hs_kl.imst.gatav.tilerenderer.util.Direction;
+import de.hs_kl.imst.gatav.tilerenderer.util.states.Direction;
 import de.hs_kl.imst.gatav.tilerenderer.util.GameCamera;
 import de.hs_kl.imst.gatav.tilerenderer.util.GameEventExecutioner;
 import de.hs_kl.imst.gatav.tilerenderer.util.GameEntityFactory;

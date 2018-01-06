@@ -12,13 +12,14 @@ import java.io.InputStream;
 import de.hs_kl.imst.gatav.tilerenderer.util.Animations;
 import de.hs_kl.imst.gatav.tilerenderer.util.Constants;
 import de.hs_kl.imst.gatav.tilerenderer.util.Contact;
-import de.hs_kl.imst.gatav.tilerenderer.util.Direction;
+import de.hs_kl.imst.gatav.tilerenderer.util.states.Direction;
 import de.hs_kl.imst.gatav.tilerenderer.util.Hitboxes.Rectangle;
 import de.hs_kl.imst.gatav.tilerenderer.util.PhysicsController;
 import de.hs_kl.imst.gatav.tilerenderer.util.ScaleHelper;
 import de.hs_kl.imst.gatav.tilerenderer.util.Vector2;
 import de.hs_kl.imst.gatav.tilerenderer.util.audio.AudioPlayer;
 import de.hs_kl.imst.gatav.tilerenderer.util.audio.Sounds;
+import de.hs_kl.imst.gatav.tilerenderer.util.states.PlayerStates;
 
 public final class Player extends MovableGraphics implements Destroyable, CollisionReactive {
     public static int hitPoints = 40;
@@ -66,11 +67,17 @@ public final class Player extends MovableGraphics implements Destroyable, Collis
         this.startPosition = startPosition;
     }
 
-    public void resetPlayer() {
-        setPosition(startPosition);
-        setScore(0);
+    public void softResetPlayer() {
         setIsAlive(true);
         setActive(true);
+        setVelocity(new Vector2(0, 0));
+        setLinearImpulse(new Vector2(0, 0));
+    }
+
+    public void resetPlayer() {
+        softResetPlayer();
+        setPosition(startPosition);
+        setScore(0);
     }
 
     public float getLifePoints() {
@@ -166,6 +173,8 @@ public final class Player extends MovableGraphics implements Destroyable, Collis
         } else {
             if (dieng.isFinished(dieTimer)) {
                 // GameContent.world.removeGameObject(this);
+                setChanged();
+                notifyObservers(PlayerStates.DEAD);
             } else {
                 bmp = dieng.getDrawable(dieTimer);
             }

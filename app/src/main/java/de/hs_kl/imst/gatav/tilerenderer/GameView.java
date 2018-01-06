@@ -4,7 +4,6 @@ import android.content.Context;
 import android.graphics.Canvas;
 import android.graphics.Color;
 import android.support.v4.view.GestureDetectorCompat;
-import android.util.Log;
 import android.view.GestureDetector;
 import android.view.MotionEvent;
 import android.view.SurfaceHolder;
@@ -12,7 +11,7 @@ import android.view.SurfaceView;
 import android.view.View;
 
 import de.hs_kl.imst.gatav.tilerenderer.drawable.GameContent;
-import de.hs_kl.imst.gatav.tilerenderer.util.Direction;
+import de.hs_kl.imst.gatav.tilerenderer.util.states.Direction;
 import de.hs_kl.imst.gatav.tilerenderer.util.FPSHelper;
 import de.hs_kl.imst.gatav.tilerenderer.util.GameEventExecutioner;
 import de.hs_kl.imst.gatav.tilerenderer.util.ScaleHelper;

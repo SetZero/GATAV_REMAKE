@@ -22,6 +22,7 @@ import de.hs_kl.imst.gatav.tilerenderer.util.Hitboxes.Rectangle;
 import de.hs_kl.imst.gatav.tilerenderer.util.audio.AudioPlayer;
 import de.hs_kl.imst.gatav.tilerenderer.util.audio.Sounds;
 import de.hs_kl.imst.gatav.tilerenderer.util.audio.events.Owl;
+import de.hs_kl.imst.gatav.tilerenderer.util.states.PlayerStates;
 
 /**
  * Created by Sebastian on 2017-12-25.
@@ -34,7 +35,7 @@ public class GameEventHandler implements Observer {
     private Map<String, List<Collidable>> objects;
     private Player player;
     private GameStateHandler gameState = new GameStateHandler();
-    private double gracePeriod = 3;
+    private double gracePeriod = 2;
     private double currentGracePeriod = 0;
     private AudioPlayer audioPlayer;
     private boolean finished = false;
@@ -88,7 +89,8 @@ public class GameEventHandler implements Observer {
         if (!failed && cam.isAttachedToObject() && (isOutOfBounds(cam) || isInDeathZone())) {
             if(currentGracePeriod >= timer.getElapsedTime()) return;
             //TODO: Add some Death Screen
-            GameContent.getHud().drawPopupMessage("you Died :(", 5);
+            //GameContent.getHud().drawPopupMessage("you Died :(", 5);
+            GameContent.getHud().drawPopupImage("hudImages/rip.png", (float)gracePeriod);
             failed = true;
             currentGracePeriod = timer.getElapsedTime() + gracePeriod;
         }
@@ -107,12 +109,13 @@ public class GameEventHandler implements Observer {
         }
 
         if(failed && timer.getElapsedTime() > currentGracePeriod) {
+            failed = false;
             timer.resetElapsedTime();
+            currentGracePeriod = 0;
 
             if (gameState.getLastCheckpoint() != null) {
                 player.setPosition(gameState.getLastCheckpoint());
-                player.setActive(true);
-                player.setIsAlive(true);
+                player.softResetPlayer();
             } else {
                 player.resetPlayer();
             }
@@ -178,6 +181,13 @@ public class GameEventHandler implements Observer {
                 if(((Pair) arg).first instanceof  Sounds) {
                     Pair<Sounds, Vector2> soundInfo = (Pair) arg;
                     audioPlayer.addSound(soundInfo.first, soundInfo.second);
+                }
+            }
+        } else if(o instanceof Player) {
+            if(arg instanceof PlayerStates) {
+                if(arg == PlayerStates.DEAD) {
+                    failed = true;
+                    currentGracePeriod = timer.getElapsedTime();
                 }
             }
         }
