@@ -2,7 +2,6 @@ package de.hs_kl.imst.gatav.tilerenderer.util;
 
 import android.graphics.Canvas;
 import android.graphics.Rect;
-import android.util.Log;
 
 import de.hs_kl.imst.gatav.tilerenderer.drawable.MovableGraphics;
 
@@ -70,42 +69,23 @@ public class GameCamera {
         int yPos = cameraYCenter - (canvasHeight / 2);
 
 
+        /* Out of Bounds Check */
         if (xPos < 0) {
             // Links
             cameraXCenter = canvasWidth / 2;
             xPos = 0;
-        } else if(cameraXCenter > (levelWidth - canvasWidth / 2)) {
-            cameraXCenter = (levelWidth - canvasWidth/2);
+        } else if (cameraXCenter > (levelWidth - canvasWidth / 2)) {
+            cameraXCenter = (levelWidth - canvasWidth / 2);
             xPos = cameraXCenter - (canvasWidth / 2);
         }
         if (yPos < 0) {
             //oben
             cameraYCenter = canvasHeight / 2;
             yPos = 0;
-        } else if(cameraYCenter > (levelHeight - canvasHeight/2)) {
-            cameraYCenter = (levelHeight - canvasHeight/2);
+        } else if (cameraYCenter > (levelHeight - canvasHeight / 2)) {
+            cameraYCenter = (levelHeight - canvasHeight / 2);
             yPos = cameraYCenter - (canvasHeight / 2);
         }
-        /* Out of Bounds Check */
-        /*if (xPos < 0) {
-            // Links
-            cameraXCenter = canvasWidth / 2;
-            xPos = 0;
-        } else if (xPos > (levelWidth*ScaleHelper.getRatioY()) - canvasWidth) {
-            // rechts
-            cameraXCenter = levelWidth - (canvasWidth / 2);
-            xPos = levelWidth - canvasWidth;
-        }
-        if (yPos < 0) {
-            //oben
-            cameraYCenter = canvasHeight / 2;
-            yPos = 0;
-        } else if (yPos > levelHeight - canvasHeight) {
-            //unten
-            cameraYCenter = levelHeight - (canvasHeight / 2);
-            yPos = levelHeight - canvasHeight;
-        }*/
-        //canvas.scale(ratioX, ratioY);
         canvas.translate(-xPos, -yPos);
     }
 
