@@ -75,7 +75,7 @@ public class GameContent implements Drawables, Observer {
         loadingScreenText = LoadingScreenTexts.text[rnd];
 
         loadLevel();
-        hud = new HUD(camera, timer);
+        hud = new HUD(camera, timer, assetManager);
     }
 
     public static HUD getHud() {

@@ -68,6 +68,7 @@ public final class Player extends MovableGraphics implements Destroyable, Collis
 
     public void resetPlayer() {
         setPosition(startPosition);
+        setScore(0);
         setIsAlive(true);
         setActive(true);
     }

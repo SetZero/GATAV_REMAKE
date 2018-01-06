@@ -10,7 +10,7 @@ public class Timer {
     private  volatile int totalLevelTime = 0;
     private  volatile double snapshotTime = 0.0;
 
-    synchronized private void resetElapsedTime() {
+    synchronized public void resetElapsedTime() {
         elapsedTime = 0.0;
     }
 

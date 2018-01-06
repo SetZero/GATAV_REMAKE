@@ -31,6 +31,7 @@ public class GameEventHandler {
     private double currentGracePeriod = 0;
     private AudioPlayer audioPlayer;
     private boolean finished = false;
+    private boolean failed = false;
 
 
     //Audio Events
@@ -81,14 +82,8 @@ public class GameEventHandler {
             if(currentGracePeriod >= timer.getElapsedTime()) return;
             //TODO: Add some Death Screen
             GameContent.getHud().drawPopupMessage("you Died :(", 5);
+            failed = true;
             currentGracePeriod = timer.getElapsedTime() + gracePeriod;
-            if (gameState.getLastCheckpoint() != null) {
-                player.setPosition(gameState.getLastCheckpoint());
-                player.setActive(true);
-                player.setIsAlive(true);
-            } else {
-                player.resetPlayer();
-            }
         }
 
         if(!finished && timer.getElapsedTime() > timer.getTotalLevelTime() * speedUpSoundTime) {
@@ -98,10 +93,27 @@ public class GameEventHandler {
             }
         }
 
-        if(!finished && isOutOfTime()) {
-            GameContent.getHud().drawPopupMessage("OUTATIME", 5);
-            player.resetPlayer();
+        if(!finished && !failed && isOutOfTime()) {
+            failed = true;
+            GameContent.getHud().drawPopupImage("hudImages/outatime.png", (float)gracePeriod);
+            currentGracePeriod = timer.getElapsedTime() + gracePeriod;
         }
+
+        if(failed && timer.getElapsedTime() > currentGracePeriod) {
+            timer.resetElapsedTime();
+
+            if (gameState.getLastCheckpoint() != null) {
+                player.setPosition(gameState.getLastCheckpoint());
+                player.setActive(true);
+                player.setIsAlive(true);
+            } else {
+                player.resetPlayer();
+            }
+
+            audioPlayer.changeBGMSpeed(1);
+            failed = false;
+        }
+
         owlAudioEvent.update();
     }
 
