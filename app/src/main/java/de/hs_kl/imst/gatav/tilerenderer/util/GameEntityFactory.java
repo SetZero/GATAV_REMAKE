@@ -68,7 +68,7 @@ public class GameEntityFactory {
                 coins.add(coin);
                 int coinAmount = coinZoneRect.width() / coin.getHitbox().getWidth();
                 for (int i = 0; i < coinAmount; i++) {
-                    coins.add(new Coin(coinZoneRect.left + (i*coin.getHitbox().getWidth()), coinZoneRect.top - coin.getHitbox().getHeight(), context));
+                    coins.add(new Coin(coinZoneRect.left + (i * coin.getHitbox().getWidth()), coinZoneRect.top - coin.getHitbox().getHeight(), context));
                 }
 
             }

@@ -12,13 +12,11 @@ import java.util.Locale;
  */
 
 public class FPSHelper {
-    private static LinkedList<Long> times = new LinkedList<Long>(){{
-        add(System.nanoTime());
-    }};
-
     private static final int MAX_SIZE = 100;
     private static final double NANOS = 1000000000.0;
-
+    private static LinkedList<Long> times = new LinkedList<Long>() {{
+        add(System.nanoTime());
+    }};
 
     public static void draw(Canvas canvas) {
         String fpsText = String.format(Locale.GERMAN, "FPS: %.2f", fps());
@@ -30,7 +28,9 @@ public class FPSHelper {
         canvas.drawText(fpsText, 10, 25, paint);
     }
 
-    /** Calculates and returns frames per second */
+    /**
+     * Calculates and returns frames per second
+     */
     public static double fps() {
         long lastTime = System.nanoTime();
         double difference = (lastTime - times.getFirst()) / NANOS;

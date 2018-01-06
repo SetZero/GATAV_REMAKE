@@ -1,7 +1,6 @@
 package de.hs_kl.imst.gatav.tilerenderer.util;
 
 import android.support.v7.app.AppCompatActivity;
-import android.util.Log;
 
 /**
  * Created by Sebastian on 2017-12-25.

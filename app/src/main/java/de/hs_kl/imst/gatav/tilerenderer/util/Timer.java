@@ -7,8 +7,8 @@ package de.hs_kl.imst.gatav.tilerenderer.util;
 public class Timer {
     private volatile boolean runningTimeThread = false;
     private volatile double elapsedTime = 0.0;
-    private  volatile int totalLevelTime = 0;
-    private  volatile double snapshotTime = 0.0;
+    private volatile int totalLevelTime = 0;
+    private volatile double snapshotTime = 0.0;
 
     synchronized public void resetElapsedTime() {
         elapsedTime = 0.0;

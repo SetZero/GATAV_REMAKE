@@ -11,13 +11,13 @@ import android.view.SurfaceView;
 import android.view.View;
 
 import de.hs_kl.imst.gatav.tilerenderer.drawable.GameContent;
-import de.hs_kl.imst.gatav.tilerenderer.util.states.Direction;
 import de.hs_kl.imst.gatav.tilerenderer.util.FPSHelper;
 import de.hs_kl.imst.gatav.tilerenderer.util.GameEventExecutioner;
 import de.hs_kl.imst.gatav.tilerenderer.util.ScaleHelper;
 import de.hs_kl.imst.gatav.tilerenderer.util.Vector2;
 import de.hs_kl.imst.gatav.tilerenderer.util.audio.AudioPlayer;
 import de.hs_kl.imst.gatav.tilerenderer.util.audio.Sounds;
+import de.hs_kl.imst.gatav.tilerenderer.util.states.Direction;
 
 
 /**

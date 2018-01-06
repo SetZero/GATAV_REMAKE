@@ -8,7 +8,6 @@ import android.graphics.Color;
 import android.graphics.Matrix;
 import android.graphics.Paint;
 import android.graphics.Rect;
-import android.util.Log;
 
 import java.io.IOException;
 import java.io.InputStream;
@@ -73,8 +72,8 @@ public class HUD {
             showPopupImage = false;
         }
 
-        if(timer.getElapsedTime() > popupImageLength - 1 && showPopupImage && popupImage != null) {
-            imagePosition.setY(imagePosition.getY() + (1/delta));
+        if (timer.getElapsedTime() > popupImageLength - 1 && showPopupImage && popupImage != null) {
+            imagePosition.setY(imagePosition.getY() + (1 / delta));
         }
     }
 

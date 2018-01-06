@@ -12,13 +12,13 @@ import java.io.InputStream;
 import de.hs_kl.imst.gatav.tilerenderer.util.Animations;
 import de.hs_kl.imst.gatav.tilerenderer.util.Constants;
 import de.hs_kl.imst.gatav.tilerenderer.util.Contact;
-import de.hs_kl.imst.gatav.tilerenderer.util.states.Direction;
 import de.hs_kl.imst.gatav.tilerenderer.util.Hitboxes.Rectangle;
 import de.hs_kl.imst.gatav.tilerenderer.util.PhysicsController;
 import de.hs_kl.imst.gatav.tilerenderer.util.ScaleHelper;
 import de.hs_kl.imst.gatav.tilerenderer.util.Vector2;
 import de.hs_kl.imst.gatav.tilerenderer.util.audio.AudioPlayer;
 import de.hs_kl.imst.gatav.tilerenderer.util.audio.Sounds;
+import de.hs_kl.imst.gatav.tilerenderer.util.states.Direction;
 import de.hs_kl.imst.gatav.tilerenderer.util.states.PlayerStates;
 
 public final class Player extends MovableGraphics implements Destroyable, CollisionReactive {

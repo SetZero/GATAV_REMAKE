@@ -5,7 +5,6 @@ import android.content.res.AssetFileDescriptor;
 import android.media.AudioAttributes;
 import android.media.MediaPlayer;
 import android.media.SoundPool;
-import android.util.Log;
 import android.util.LruCache;
 import android.util.Pair;
 

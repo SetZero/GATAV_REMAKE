@@ -26,14 +26,14 @@ public class ScaleHelper {
     }
 
     public static void calculateRatio(int canvasWidth, int canvasHeight) {
-        float aspectRatio = canvasHeight / (float)canvasWidth;
-        cameraViewHeight = (int)(cameraViewWidth * aspectRatio);
+        float aspectRatio = canvasHeight / (float) canvasWidth;
+        cameraViewHeight = (int) (cameraViewWidth * aspectRatio);
 
-        ratioX = (int)(canvasHeight / (float)cameraViewHeight);
-        ratioY = (int)(canvasWidth / (float)cameraViewWidth);
+        ratioX = (int) (canvasHeight / (float) cameraViewHeight);
+        ratioY = (int) (canvasWidth / (float) cameraViewWidth);
     }
 
     public static int getEntitiyScale() {
-        return (int)((5f / 3f) * getRatioY());
+        return (int) ((5f / 3f) * getRatioY());
     }
 }

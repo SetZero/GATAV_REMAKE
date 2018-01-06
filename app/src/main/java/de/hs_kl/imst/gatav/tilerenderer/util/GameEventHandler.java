@@ -10,7 +10,6 @@ import java.util.Map;
 import java.util.Observable;
 import java.util.Observer;
 
-import de.hs_kl.imst.gatav.tilerenderer.drawable.Coin;
 import de.hs_kl.imst.gatav.tilerenderer.drawable.Collectable;
 import de.hs_kl.imst.gatav.tilerenderer.drawable.Enemies;
 import de.hs_kl.imst.gatav.tilerenderer.drawable.GameContent;
@@ -31,6 +30,8 @@ import de.hs_kl.imst.gatav.tilerenderer.util.states.PlayerStates;
 public class GameEventHandler implements Observer {
     private final Timer timer;
     private final GameEventExecutioner executioner;
+    private final float speedUpSoundAmount = 1.25f;
+    private final float speedUpSoundTime = 0.8f;
     private ArrayList<MovableGraphics> dynamics = new ArrayList<>();
     private Map<String, List<Collidable>> objects;
     private Player player;
@@ -40,12 +41,8 @@ public class GameEventHandler implements Observer {
     private AudioPlayer audioPlayer;
     private boolean finished = false;
     private boolean failed = false;
-
-
     //Audio Events
     private boolean speedUpSound = false;
-    private final float speedUpSoundAmount = 1.25f;
-    private final float speedUpSoundTime = 0.8f;
     private Owl owlAudioEvent;
 
     public GameEventHandler(Map<String, List<Collidable>> objects, Timer timer, GameEventExecutioner executioner, AudioPlayer audioPlayer) {
@@ -67,12 +64,12 @@ public class GameEventHandler implements Observer {
             //TODO: If Player is not active don't let him move...
             finished = true;
             timer.snapshotTime();
-            player.setScore(player.getScore() + (int)(timer.getTotalLevelTime() - timer.getSnapshotTime()));
+            player.setScore(player.getScore() + (int) (timer.getTotalLevelTime() - timer.getSnapshotTime()));
             GameContent.getHud().drawPopupMessage("Finished!", 5);
             player.setActive(false);
         }
 
-        if(finished && timer.getElapsedTime() > timer.getSnapshotTime() + 3) {
+        if (finished && timer.getElapsedTime() > timer.getSnapshotTime() + 3) {
             executioner.finishLevel();
         }
 
@@ -87,28 +84,28 @@ public class GameEventHandler implements Observer {
         }
         //TODO: Add World Reset!
         if (!failed && cam.isAttachedToObject() && (isOutOfBounds(cam) || isInDeathZone())) {
-            if(currentGracePeriod >= timer.getElapsedTime()) return;
+            if (currentGracePeriod >= timer.getElapsedTime()) return;
             //TODO: Add some Death Screen
             //GameContent.getHud().drawPopupMessage("you Died :(", 5);
-            GameContent.getHud().drawPopupImage("hudImages/rip.png", (float)gracePeriod);
+            GameContent.getHud().drawPopupImage("hudImages/rip.png", (float) gracePeriod);
             failed = true;
             currentGracePeriod = timer.getElapsedTime() + gracePeriod;
         }
 
-        if(!finished && timer.getElapsedTime() > timer.getTotalLevelTime() * speedUpSoundTime) {
-            if(!speedUpSound) {
+        if (!finished && timer.getElapsedTime() > timer.getTotalLevelTime() * speedUpSoundTime) {
+            if (!speedUpSound) {
                 audioPlayer.changeBGMSpeed(speedUpSoundAmount);
                 speedUpSound = true;
             }
         }
 
-        if(!finished && !failed && isOutOfTime()) {
+        if (!finished && !failed && isOutOfTime()) {
             failed = true;
-            GameContent.getHud().drawPopupImage("hudImages/outatime.png", (float)gracePeriod);
+            GameContent.getHud().drawPopupImage("hudImages/outatime.png", (float) gracePeriod);
             currentGracePeriod = timer.getElapsedTime() + gracePeriod;
         }
 
-        if(failed && timer.getElapsedTime() > currentGracePeriod) {
+        if (failed && timer.getElapsedTime() > currentGracePeriod) {
             failed = false;
             timer.resetElapsedTime();
             currentGracePeriod = 0;
@@ -176,16 +173,16 @@ public class GameEventHandler implements Observer {
 
     @Override
     public void update(Observable o, Object arg) {
-        if(o instanceof Collectable || o instanceof Enemies) {
-            if(arg instanceof Pair) {
-                if(((Pair) arg).first instanceof  Sounds) {
+        if (o instanceof Collectable || o instanceof Enemies) {
+            if (arg instanceof Pair) {
+                if (((Pair) arg).first instanceof Sounds) {
                     Pair<Sounds, Vector2> soundInfo = (Pair) arg;
                     audioPlayer.addSound(soundInfo.first, soundInfo.second);
                 }
             }
-        } else if(o instanceof Player) {
-            if(arg instanceof PlayerStates) {
-                if(arg == PlayerStates.DEAD) {
+        } else if (o instanceof Player) {
+            if (arg instanceof PlayerStates) {
+                if (arg == PlayerStates.DEAD) {
                     failed = true;
                     currentGracePeriod = timer.getElapsedTime();
                 }

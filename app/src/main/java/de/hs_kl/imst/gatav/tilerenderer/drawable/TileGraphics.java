@@ -12,36 +12,43 @@ import java.io.InputStream;
  * ist es sinnvoll, sie mit ihren Koordinaten im Gitter, und nicht mit x und y Pixelkoordinaten zu
  * positionieren. Dementsprechend beziehen sich {@link TileGraphics#x} und {@link TileGraphics#y}
  * auf diese Koordinaten im Gitter.
- *
+ * <p>
  * Die endgültige (Pixel-)Position des Blocks ergibt sich durch Multiplikation der Gitterkoordinaten
  * mit dem vor Instanziierung (hoffentlich) sinnvoll gesetzten Attribut {@link TileGraphics#tileSize}
  */
 public abstract class TileGraphics implements Drawables {
+    protected static float tileSize = 16f;
     protected int x;
     protected int y;
-
-    protected static float tileSize = 16f;
-
     protected Paint tilePaint = new Paint();
     protected Bitmap tileBitmap = null;
-
-    /**
-     * Liefert Auskunft darüber, ob ein Block für den Spieler passierbar ist
-     * @return <code>true</code> wenn passierbar, andernfalls <code>false</code>
-     */
-    public abstract boolean isPassable();
 
     public TileGraphics(int x, int y, InputStream is) {
         this.x = x;
         this.y = y;
-        if(is != null) {
-            tileBitmap = Bitmap.createScaledBitmap(BitmapFactory.decodeStream(is), (int)tileSize, (int)tileSize, true);
+        if (is != null) {
+            tileBitmap = Bitmap.createScaledBitmap(BitmapFactory.decodeStream(is), (int) tileSize, (int) tileSize, true);
         }
     }
 
+    public static float getTileSize() {
+        return tileSize;
+    }
+
+    public static void setTileSize(float blockSize) {
+        TileGraphics.tileSize = blockSize;
+    }
+
+    /**
+     * Liefert Auskunft darüber, ob ein Block für den Spieler passierbar ist
+     *
+     * @return <code>true</code> wenn passierbar, andernfalls <code>false</code>
+     */
+    public abstract boolean isPassable();
 
     /**
      * Verschieben des Blockes an neue Gitterkoordinaten
+     *
      * @param x neue X-Koordinate
      * @param y neue Y-Koordinate
      */
@@ -50,13 +57,12 @@ public abstract class TileGraphics implements Drawables {
         this.y = y;
     }
 
-
     /**
      * {@inheritDoc}
      */
     @Override
-    public void update(float fracsec) {}
-
+    public void update(float fracsec) {
+    }
 
     /**
      * {@inheritDoc}
@@ -68,7 +74,7 @@ public abstract class TileGraphics implements Drawables {
         // Transformationsmatrix an Pixel-Koordinate von Block verschieben
         canvas.translate(x * tileSize, y * tileSize);
         // An der aktuellen Position ein Rechteck entsprechender Größe oder die existierende Bitmap
-        if(tileBitmap == null)
+        if (tileBitmap == null)
             canvas.drawRect(0, 0, tileSize, tileSize, tilePaint);
         else
             canvas.drawBitmap(tileBitmap, 0, 0, null);
@@ -82,13 +88,5 @@ public abstract class TileGraphics implements Drawables {
 
     public int getY() {
         return y;
-    }
-
-    public static void setTileSize(float blockSize) {
-        TileGraphics.tileSize = blockSize;
-    }
-
-    public static float getTileSize() {
-        return tileSize;
     }
 }
