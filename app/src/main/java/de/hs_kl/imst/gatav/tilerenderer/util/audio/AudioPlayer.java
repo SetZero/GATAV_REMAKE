@@ -73,12 +73,16 @@ public class AudioPlayer implements Runnable {
             descriptor.close();
 
             player.prepare();
-            player.setVolume(0.5f, 0.5f);
+            player.setVolume(0.25f, 0.25f);
             player.setLooping(true);
-            //player.start();
+            player.start();
         } catch (IOException e) {
             e.printStackTrace();
         }
+    }
+
+    public void changeBGMSpeed(float speed) {
+        player.setPlaybackParams(player.getPlaybackParams().setSpeed(speed));
     }
 
     private void initSoundPool() {
@@ -109,7 +113,7 @@ public class AudioPlayer implements Runnable {
         if (playing.get() && playerCharacter != null) {
             double distance = Math.abs(Vector2.distance(source, playerCharacter.getPosition()));
             //don't add out of reach sounds
-            if (distance > 3900) return;
+            if (distance > 4000) return;
             if (cache.get(s.getSoundResource()) != null) {
                 //...get it from the cache and play it
                 int soundId = cache.get(s.getSoundResource());

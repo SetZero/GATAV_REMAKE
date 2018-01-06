@@ -19,10 +19,10 @@ import de.hs_kl.imst.gatav.tilerenderer.util.audio.AudioPlayer;
  * Created by Sebastian on 2018-01-05.
  */
 
-public class GameObjectFactory {
+public class GameEntityFactory {
     private Map<String, List<Collidable>> objects;
 
-    public GameObjectFactory(Map<String, List<Collidable>> objects) {
+    public GameEntityFactory(Map<String, List<Collidable>> objects) {
         this.objects = objects;
     }
 
@@ -35,7 +35,9 @@ public class GameObjectFactory {
         if (playerStart instanceof Rectangle) {
             Rect startRect = ((Rectangle) playerStart).getRect();
             Player player = new Player(0, 0, context, audioPlayer);
-            player.setPosition(new Vector2(startRect.left, startRect.top - player.getHitbox().getHeight()));
+            Vector2 startPosition = new Vector2(startRect.left, startRect.top - player.getHitbox().getHeight());
+            player.setPosition(startPosition);
+            player.setStartPosition(startPosition);
             return player;
         }
         return null;

@@ -97,7 +97,9 @@ public class GameView extends SurfaceView implements SurfaceHolder.Callback, Run
         canvas.restore();
         GameContent.getHud().draw(canvas);
         // Layer 2 (Collected Targets, Score and Elapsed Time)
-        FPSHelper.draw(canvas);
+        if (BuildConfig.DEBUG) {
+            FPSHelper.draw(canvas);
+        }
     }
 
     /**

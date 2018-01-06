@@ -32,6 +32,9 @@ public class GameEventHandler {
     private AudioPlayer audioPlayer;
 
     //Audio Events
+    private boolean speedUpSound = false;
+    private final float speedUpSoundAmount = 1.25f;
+    private final float speedUpSoundTime = 0.8f;
     private Owl owlAudioEvent;
 
     public GameEventHandler(Map<String, List<Collidable>> objects, Timer timer, GameEventExecutioner executioner, AudioPlayer audioPlayer) {
@@ -48,9 +51,10 @@ public class GameEventHandler {
     }
 
     public void update(GameCamera cam) {
-        if (hasReachedFinish(cam)) {
+        if (hasReachedFinish()) {
             //TODO: add some Finish Screen
             executioner.finishLevel();
+            player.setActive(false);
         }
 
         if (hasReachCheckpoint()) {
@@ -62,23 +66,36 @@ public class GameEventHandler {
                 gameState.setLastCheckpoint(new Vector2(player.getPosition()));
             }
         }
-
+        //TODO: Add World Reset!
         if (cam.isAttachedToObject() && (isOutOfBounds(cam) || isInDeathZone())) {
             if(currentGracePeriod >= timer.getElapsedTime()) return;
             //TODO: Add some Death Screen
             GameContent.getHud().drawPopupMessage("you Died :(", 5);
             currentGracePeriod = timer.getElapsedTime() + gracePeriod;
             if (gameState.getLastCheckpoint() != null) {
-                Log.d("GameEventHandler", "Reset!");
                 player.setPosition(gameState.getLastCheckpoint());
                 player.setActive(true);
                 player.setIsAlive(true);
+            } else {
+                player.resetPlayer();
             }
+        }
+
+        if(timer.getElapsedTime() > timer.getTotalLevelTime() * speedUpSoundTime) {
+            if(!speedUpSound) {
+                audioPlayer.changeBGMSpeed(speedUpSoundAmount);
+                speedUpSound = true;
+            }
+        }
+
+        if(isOutOfTime()) {
+            GameContent.getHud().drawPopupMessage("OUTATIME", 5);
+            player.resetPlayer();
         }
         owlAudioEvent.update();
     }
 
-    private boolean hasReachedFinish(GameCamera cam) {
+    private boolean hasReachedFinish() {
         if (player == null) return false;
 
         List<Collidable> finishObjs = objects.get(Constants.finishObjectGroupString);
@@ -114,10 +131,15 @@ public class GameEventHandler {
         return !cam.isRectInView(player.getHitbox().getRect());
     }
 
+    private boolean isOutOfTime() {
+        return timer.getElapsedTime() > timer.getTotalLevelTime();
+    }
+
     void addDynamicObject(MovableGraphics dynamic) {
         dynamics.add(dynamic);
         if (dynamic instanceof Player) {
             this.player = (Player) dynamic;
         }
     }
+
 }

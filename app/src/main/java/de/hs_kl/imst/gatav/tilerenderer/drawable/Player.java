@@ -21,18 +21,56 @@ import de.hs_kl.imst.gatav.tilerenderer.util.audio.AudioPlayer;
 import de.hs_kl.imst.gatav.tilerenderer.util.audio.Sounds;
 
 public final class Player extends MovableGraphics implements Destroyable, CollisionReactive {
+    public static int hitPoints = 40;
+    protected Animations dieng;
+    float dieTimer = 0.0f;
     private byte doublejump = 0;
     private float lifePoints = 150;
-    public static int hitPoints = 40;
     private float speed = 300f;
     private boolean isAlive = true;
     private Direction stopDirection = Direction.IDLE;
     private BitmapDrawable idle;
     private Animations run;
-    protected Animations dieng;
-    float dieTimer = 0.0f;
     private int score;
     private AudioPlayer audioPlayer;
+    private Vector2 startPosition;
+    private float animTime = 0f;
+
+    public Player(float x, float y, Context context, AudioPlayer audioPlayer) {
+        super(x, y);
+        try {
+            InputStream is = context.getAssets().open("dynamics/player/Player.png");
+            loadGraphic(is, 17, 35, ScaleHelper.getEntitiyScale());
+            run = new Animations(1f / 4f);
+            is.close();
+            is = context.getAssets().open("dynamics/player/Player.png");
+            run.addAnimation(super.loadTextures(is, 17, 35, 1, 4, ScaleHelper.getEntitiyScale()));
+            idle = run.getDrawable(0f);
+            dieng = new Animations(1f / 4f);
+            friction = 0.0f;
+            dieng.addAnimation(Animations.frameLoad("dynamics/player/Die", 4, 25 * ScaleHelper.getEntitiyScale(), 40 * ScaleHelper.getEntitiyScale(), context));
+            hitbox = new Rectangle((int) x, (int) y, width - 35, height - 5);
+            isActive = true;
+            this.audioPlayer = audioPlayer;
+            is.close();
+        } catch (IOException e) {
+            e.printStackTrace();
+        }
+    }
+
+    public Vector2 getStartPosition() {
+        return startPosition;
+    }
+
+    public void setStartPosition(Vector2 startPosition) {
+        this.startPosition = startPosition;
+    }
+
+    public void resetPlayer() {
+        setPosition(startPosition);
+        setIsAlive(true);
+        setActive(true);
+    }
 
     public float getLifePoints() {
         return lifePoints;
@@ -48,30 +86,6 @@ public final class Player extends MovableGraphics implements Destroyable, Collis
 
     public void setScore(int score) {
         this.score = score;
-    }
-
-    private float animTime = 0f;
-
-    public Player(float x, float y, Context context, AudioPlayer audioPlayer) {
-        super(x, y);
-        try {
-            InputStream is = context.getAssets().open("dynamics/player/Player.png");
-            loadGraphic(is, 17, 35, ScaleHelper.getEntitiyScale());
-            run = new Animations(1f / 4f);
-            is.close();
-            is = context.getAssets().open("dynamics/player/Player.png");
-            run.addAnimation(super.loadTextures(is, 17, 35, 1, 4, ScaleHelper.getEntitiyScale()));
-            idle = run.getDrawable(0f);
-            dieng = new Animations(1f / 4f);
-            friction = 0.0f;
-            dieng.addAnimation(Animations.frameLoad("dynamics/player/Die", 4, 25 * ScaleHelper.getEntitiyScale(), 40 * ScaleHelper.getEntitiyScale(),context));
-            hitbox = new Rectangle((int) x, (int) y, width - 35, height-5);
-            isActive = true;
-            this.audioPlayer = audioPlayer;
-            is.close();
-        } catch (IOException e) {
-            e.printStackTrace();
-        }
     }
 
     public void move(Direction direction) {
@@ -123,7 +137,8 @@ public final class Player extends MovableGraphics implements Destroyable, Collis
     public boolean isAlive() {
         return isAlive;
     }
-    public void setIsAlive(boolean b){
+
+    public void setIsAlive(boolean b) {
         isAlive = b;
     }
 
@@ -249,8 +264,7 @@ public final class Player extends MovableGraphics implements Destroyable, Collis
                     score += ((Enemies) c.collisionObject).getScorePoints();
             }
 
-        }
-        else if(c.collisionObject instanceof Collectable){
+        } else if (c.collisionObject instanceof Collectable) {
 
         }
 

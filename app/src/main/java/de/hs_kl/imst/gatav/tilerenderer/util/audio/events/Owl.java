@@ -1,7 +1,5 @@
 package de.hs_kl.imst.gatav.tilerenderer.util.audio.events;
 
-import android.util.Log;
-
 import java.util.concurrent.ThreadLocalRandom;
 
 import de.hs_kl.imst.gatav.tilerenderer.util.Timer;
@@ -13,7 +11,7 @@ import de.hs_kl.imst.gatav.tilerenderer.util.audio.Sounds;
  * Created by Sebastian on 2018-01-05.
  */
 
-public class Owl {
+public class Owl implements AudioEvent {
     private Timer timer;
     private AudioPlayer audioPlayer;
     private double lastOwl = -3;
@@ -26,8 +24,9 @@ public class Owl {
         this.position = position;
     }
 
+    @Override
     public void update() {
-        if(lastOwl + timeBetween <= timer.getElapsedTime()) {
+        if (lastOwl + timeBetween <= timer.getElapsedTime()) {
             int randomNum = ThreadLocalRandom.current().nextInt(-2, 3);
             lastOwl = timer.getElapsedTime() + randomNum;
             audioPlayer.addSound(Sounds.OWL, position);

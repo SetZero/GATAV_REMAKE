@@ -6,6 +6,8 @@ import android.graphics.Paint;
 import android.graphics.Rect;
 import android.util.Log;
 
+import java.util.Locale;
+
 import de.hs_kl.imst.gatav.tilerenderer.util.GameCamera;
 import de.hs_kl.imst.gatav.tilerenderer.util.Timer;
 
@@ -73,7 +75,7 @@ public class HUD {
 
     private void drawTimer(Canvas canvas) {
 
-        String timeText = "Time: " + String.format("%03d", (long)timer.getElapsedTime());
+        String timeText = "Time: " + String.format(Locale.GERMAN, "%03d", (long)(timer.getTotalLevelTime() - timer.getElapsedTime()));
         paint.setTextSize(50);
         paint.setTextAlign(Paint.Align.RIGHT);
         canvas.drawText(timeText, canvas.getWidth() - timeText.length(), 60, paint);

@@ -8,6 +8,12 @@ import android.graphics.Paint;
 import android.graphics.Rect;
 import android.util.Log;
 
+import org.json.JSONArray;
+import org.json.JSONException;
+import org.json.JSONObject;
+
+import java.io.IOException;
+import java.io.InputStream;
 import java.util.List;
 import java.util.Locale;
 import java.util.Observable;
@@ -15,10 +21,11 @@ import java.util.Observer;
 import java.util.Random;
 
 import de.hs_kl.imst.gatav.tilerenderer.TileLoader;
+import de.hs_kl.imst.gatav.tilerenderer.util.Constants;
 import de.hs_kl.imst.gatav.tilerenderer.util.Direction;
 import de.hs_kl.imst.gatav.tilerenderer.util.GameCamera;
 import de.hs_kl.imst.gatav.tilerenderer.util.GameEventExecutioner;
-import de.hs_kl.imst.gatav.tilerenderer.util.GameObjectFactory;
+import de.hs_kl.imst.gatav.tilerenderer.util.GameEntityFactory;
 import de.hs_kl.imst.gatav.tilerenderer.util.LoadingScreenTexts;
 import de.hs_kl.imst.gatav.tilerenderer.util.ScaleHelper;
 import de.hs_kl.imst.gatav.tilerenderer.util.Timer;
@@ -60,7 +67,7 @@ public class GameContent implements Drawables, Observer {
         this.levelName = levelName;
         this.executioner = executioner;
         this.audioPlayer = player;
-
+        timer.setTotalLevelTime(getLevelTime(levelName));
         //Kamera setzen
         //camera.setCameraYCenter(450);
         //camera.setCameraXCenter(700);
@@ -110,6 +117,29 @@ public class GameContent implements Drawables, Observer {
         }
     }
 
+    private int getLevelTime(String levelName) {
+        try {
+            InputStream is = assetManager.open(Constants.worldInfoSaveLocation + Constants.worldInfoFileName);
+            int size = is.available();
+            byte[] buffer = new byte[size];
+            is.read(buffer);
+            is.close();
+            String json = new String(buffer, "UTF-8");
+            JSONObject jObject = new JSONObject(json);
+            JSONArray jArray = jObject.getJSONArray("maps");
+            for (int i = 0; i < jArray.length(); i++){
+                JSONObject oneObject = jArray.getJSONObject(i);
+                String saveLocation = oneObject.getString("saveLocation");
+                if(saveLocation.equals(levelName)) {
+                    return oneObject.getInt("time");
+                }
+            }
+        } catch (IOException | JSONException e) {
+            e.printStackTrace();
+        }
+        return -1;
+    }
+
     private void loadLevel() {
         tileLoader = new TileLoader(context, levelName);
         tileLoader.addObserver(this);
@@ -132,7 +162,7 @@ public class GameContent implements Drawables, Observer {
     }
 
     public void generateGameElements() {
-        GameObjectFactory factory = new GameObjectFactory(tileLoader.getObjectGroups());
+        GameEntityFactory factory = new GameEntityFactory(tileLoader.getObjectGroups());
         player = factory.generatePlayer(context, audioPlayer);
         world.addGameObject(player);
         camera.attach(player);

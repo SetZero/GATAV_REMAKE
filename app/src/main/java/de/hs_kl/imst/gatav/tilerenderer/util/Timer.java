@@ -7,6 +7,7 @@ package de.hs_kl.imst.gatav.tilerenderer.util;
 public class Timer {
     private volatile boolean runningTimeThread = false;
     private volatile double elapsedTime = 0.0;
+    private  volatile int totalLevelTime = 0;
 
     synchronized private void resetElapsedTime() {
         elapsedTime = 0.0;
@@ -18,6 +19,14 @@ public class Timer {
 
     synchronized private void increaseElapsedTime(double increment) {
         elapsedTime += increment;
+    }
+
+    public int getTotalLevelTime() {
+        return totalLevelTime;
+    }
+
+    public void setTotalLevelTime(int totalLevelTime) {
+        this.totalLevelTime = totalLevelTime;
     }
 
     public void startTimeThread() {

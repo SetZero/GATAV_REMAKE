@@ -4,22 +4,26 @@
     {
       "name": "Welt 1",
       "description": "Aller Anfang ist Schwer",
-      "saveLocation": "Welt1"
+      "saveLocation": "Welt1",
+      "time": 100
     },
     {
       "name": "Fertige Welt",
       "description": "Zum Testen",
-      "saveLocation": "finished"
+      "saveLocation": "finished",
+      "time": 100
     },
     {
       "name": "Test Welt",
       "description": "Zum Testen",
-      "saveLocation": "test"
+      "saveLocation": "test",
+      "time": 100
     },
     {
       "name": "Test Backup",
       "description": "Backup von test",
-      "saveLocation": "test_backup"
+      "saveLocation": "test_backup",
+      "time": 100
     }
   ]
 }
