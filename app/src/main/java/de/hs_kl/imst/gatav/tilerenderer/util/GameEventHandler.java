@@ -59,13 +59,18 @@ public class GameEventHandler implements Observer {
     }
 
     public void update(GameCamera cam) {
-        if (hasReachedFinish() && !finished) {
+        if (!finished && hasReachedFinish()) {
             //TODO: add some Finish Screen
             //TODO: If Player is not active don't let him move...
             finished = true;
             timer.snapshotTime();
             player.setScore(player.getScore() + (int) (timer.getTotalLevelTime() - timer.getSnapshotTime()));
             GameContent.getHud().drawPopupMessage("Finished!", 5);
+
+            audioPlayer.addSound(Sounds.FINISH, new Vector2(player.getPosition()));
+            audioPlayer.addSound(Sounds.OH_YEAH, player.getPosition());
+            audioPlayer.stopBGM();
+
             player.setActive(false);
         }
 
@@ -92,19 +97,32 @@ public class GameEventHandler implements Observer {
             currentGracePeriod = timer.getElapsedTime() + gracePeriod;
         }
 
+        //If is in water
+        if(!failed && isInWaterZone()) {
+            failed = true;
+            //Todo: Some water joke with electronics
+            GameContent.getHud().drawPopupImage("hudImages/rip.png", (float) gracePeriod);
+            audioPlayer.addSound(Sounds.WATERDROP, new Vector2(player.getPosition()));
+            currentGracePeriod = timer.getElapsedTime() + gracePeriod;
+        }
+
+        //If time is getting short
         if (!finished && timer.getElapsedTime() > timer.getTotalLevelTime() * speedUpSoundTime) {
             if (!speedUpSound) {
+                audioPlayer.addSound(Sounds.HAHA_FUCK, player.getPosition());
                 audioPlayer.changeBGMSpeed(speedUpSoundAmount);
                 speedUpSound = true;
             }
         }
 
+        // If player is out of time
         if (!finished && !failed && isOutOfTime()) {
             failed = true;
             GameContent.getHud().drawPopupImage("hudImages/outatime.png", (float) gracePeriod);
             currentGracePeriod = timer.getElapsedTime() + gracePeriod;
         }
 
+        // If player is dead...
         if (failed && timer.getElapsedTime() > currentGracePeriod) {
             failed = false;
             timer.resetElapsedTime();
@@ -135,6 +153,12 @@ public class GameEventHandler implements Observer {
         List<Collidable> deathZones = objects.get(Constants.deathzoneObjectGroupString);
         return isInTheZone(deathZones);
     }
+
+    private boolean isInWaterZone() {
+        List<Collidable> waterZones = objects.get(Constants.waterObjectGroupString);
+        return isInTheZone(waterZones);
+    }
+
 
     private boolean hasReachCheckpoint() {
         List<Collidable> checkpoints = objects.get(Constants.checkpointsObjectGroupString);
@@ -175,9 +199,9 @@ public class GameEventHandler implements Observer {
     public void update(Observable o, Object arg) {
         if (o instanceof Collectable || o instanceof Enemies) {
             if (arg instanceof Pair) {
-                if (((Pair) arg).first instanceof Sounds) {
+                if (((Pair) arg).first instanceof Sounds && ((Pair) arg).second instanceof Vector2) {
                     Pair<Sounds, Vector2> soundInfo = (Pair) arg;
-                    audioPlayer.addSound(soundInfo.first, soundInfo.second);
+                    audioPlayer.addSound(soundInfo.first, soundInfo.second, 75);
                 }
             }
         } else if (o instanceof Player) {

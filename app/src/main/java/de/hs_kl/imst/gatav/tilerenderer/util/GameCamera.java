@@ -45,9 +45,16 @@ public class GameCamera {
         return attachedTo != null;
     }
 
+    public int getLevelHeight() {
+        return levelHeight;
+    }
 
     public void setLevelHeight(int levelHeight) {
         this.levelHeight = levelHeight;
+    }
+
+    public int getLevelWidth() {
+        return levelWidth;
     }
 
     public void setLevelWidth(int levelWidth) {

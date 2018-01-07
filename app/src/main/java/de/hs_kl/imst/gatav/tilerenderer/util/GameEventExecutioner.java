@@ -15,8 +15,5 @@ public class GameEventExecutioner {
 
     public void finishLevel() {
         activity.finish();
-        //Intent intent = new Intent(activity, MainActivity.class);
-        //.putExtra("level", level);
-        //activity.startActivity(intent);
     }
 }

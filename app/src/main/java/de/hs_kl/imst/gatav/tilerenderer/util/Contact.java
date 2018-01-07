@@ -20,14 +20,12 @@ public class Contact {
     }
 
     public Contact(intersectDirection siteHit, Collidable other, String param) {
-        siteHidden = (siteHit);
-        collisions = (other);
+        this(siteHit, other);
         params = (param);
     }
 
     public Contact(intersectDirection siteHit, Collidable other, MovableGraphics item) {
-        siteHidden = (siteHit);
-        collisions = (other);
+        this(siteHit, other);
         collisionObject = (item);
     }
 

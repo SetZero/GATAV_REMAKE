@@ -1,5 +1,6 @@
 package de.hs_kl.imst.gatav.tilerenderer.util;
 
+import android.graphics.Bitmap;
 import android.graphics.Canvas;
 import android.graphics.Color;
 import android.graphics.Paint;
@@ -16,6 +17,8 @@ import de.hs_kl.imst.gatav.tilerenderer.drawable.MovableGraphics;
 import de.hs_kl.imst.gatav.tilerenderer.util.Hitboxes.Collidable;
 import de.hs_kl.imst.gatav.tilerenderer.util.Hitboxes.Rectangle;
 import de.hs_kl.imst.gatav.tilerenderer.util.audio.AudioPlayer;
+
+import static de.hs_kl.imst.gatav.tilerenderer.util.Constants.enableEyeCandy;
 
 /**
  * Created by Sebastian on 2017-12-06.
@@ -89,6 +92,24 @@ public class World {
         canvas.drawBitmap(croppedBitmap, tmp.left, tmp.top, null);*/
 
         //Screw RAM, modern Smartphones have 4GB of RAM anyways...
+
+        //Draw parallax background
+        if(enableEyeCandy) {
+            canvas.drawARGB(255, 109, 165, 255);
+            Bitmap background = tileLoader.getBackgroundBitmap();
+            int firstBackgroundOffset = 0;
+            int secondBackgroundOffset = 0;
+            int backgroundLeftPosition = (int) (camera.getCameraViewRect().left / 1.2);
+            if (firstBackgroundOffset + backgroundLeftPosition + background.getWidth() < camera.getCameraViewRect().right) {
+                secondBackgroundOffset = secondBackgroundOffset + background.getWidth();
+            }
+            if (secondBackgroundOffset + backgroundLeftPosition + background.getWidth() < camera.getCameraViewRect().right) {
+                firstBackgroundOffset = secondBackgroundOffset + background.getWidth();
+            }
+            canvas.drawBitmap(background, firstBackgroundOffset + backgroundLeftPosition, camera.getLevelHeight() - background.getHeight(), null);
+            canvas.drawBitmap(background, secondBackgroundOffset + backgroundLeftPosition, camera.getLevelHeight() - background.getHeight(), null);
+        }
+        //draw main level
         canvas.drawBitmap(tileLoader.getSceneBitmap(), 0, 0, null);
 
         //2. Draw all Debug Hitboxes

@@ -5,6 +5,8 @@ package de.hs_kl.imst.gatav.tilerenderer.util;
  */
 
 public class Constants {
+    public static final boolean enableEyeCandy = false;
+
     public static final boolean debugBuild = false;
     public static final String worldInfoSaveLocation = "levels/worldInfo/";
     public static final String worldInfoFileName = "worlds.json";
@@ -17,5 +19,6 @@ public class Constants {
     public static final String playerStartObjectGroupString = "Start";
     public static final String enemyObjectGroupString = "Gegner";
     public static final String coinObjectGroupString = "Coin";
+    public static final String waterObjectGroupString = "Water";
     public static final String bossObjectGroupString = "Boss";
 }

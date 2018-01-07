@@ -68,6 +68,7 @@ public final class Player extends MovableGraphics implements Destroyable, Collis
     }
 
     public void softResetPlayer() {
+        setLifePoints(150);
         setIsAlive(true);
         setActive(true);
         setVelocity(new Vector2(0, 0));

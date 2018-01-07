@@ -4,6 +4,7 @@ package de.hs_kl.imst.gatav.tilerenderer;
 import android.content.Context;
 import android.content.res.AssetManager;
 import android.graphics.Bitmap;
+import android.graphics.BitmapFactory;
 import android.graphics.BitmapRegionDecoder;
 import android.graphics.Canvas;
 import android.graphics.Rect;
@@ -18,7 +19,6 @@ import org.w3c.dom.NodeList;
 import org.xml.sax.InputSource;
 import org.xml.sax.SAXException;
 
-import java.io.FileNotFoundException;
 import java.io.IOException;
 import java.io.InputStream;
 import java.util.ArrayList;
@@ -40,6 +40,8 @@ import de.hs_kl.imst.gatav.tilerenderer.util.Hitboxes.Collidable;
 import de.hs_kl.imst.gatav.tilerenderer.util.Hitboxes.Rectangle;
 import de.hs_kl.imst.gatav.tilerenderer.util.ScaleHelper;
 import de.hs_kl.imst.gatav.tilerenderer.util.TileInformation;
+
+import static de.hs_kl.imst.gatav.tilerenderer.util.Constants.enableEyeCandy;
 
 /**
  * Created by Sebastian on 2017-12-05.
@@ -66,6 +68,7 @@ public class TileLoader extends Observable implements Runnable {
     private int loadingPercentage = 0;
 
     private Bitmap sceneBitmap;
+    private Bitmap backgroundBitmap;
     //private Bitmap[][] chunkArray;
     //private LruCache<Pair<Integer, Integer>, Bitmap> chunkArray;
 
@@ -142,14 +145,9 @@ public class TileLoader extends Observable implements Runnable {
         return sceneBitmap;
     }
 
-    /*public LruCache<Pair<Integer, Integer>, Bitmap> getChunkArray() {
-        return chunkArray;
+    public Bitmap getBackgroundBitmap() {
+        return backgroundBitmap;
     }
-
-    public void cleanup() {
-        chunkArray = null;
-        objectGroups = null;
-    }*/
 
     private void xmlLoadMap() {
         try {
@@ -228,18 +226,15 @@ public class TileLoader extends Observable implements Runnable {
             tileWidth = tileWidth * ratioX;
             tileHeight = tileHeight * ratioY;
             sceneBitmap = generateGameBitmap(this.map);
+            if(enableEyeCandy) {
+                backgroundBitmap = generateBackground();
+            }
             loadingPercentage = 100;
             //width = width / (int) ScaleHelper.getRatioX();
             //height = height / (int) ScaleHelper.getRatioY();
             Log.d("TileLoader", "Height: " + height);
             fis.close();
-        } catch (FileNotFoundException e) {
-            e.printStackTrace();
-        } catch (SAXException e) {
-            e.printStackTrace();
-        } catch (IOException e) {
-            e.printStackTrace();
-        } catch (ParserConfigurationException e) {
+        } catch (ParserConfigurationException | SAXException | IOException e) {
             e.printStackTrace();
         }
     }
@@ -263,7 +258,7 @@ public class TileLoader extends Observable implements Runnable {
             Node image = doc.getElementsByTagName("image").item(0);
             Element imageElement = (Element) image;
             String sourceImage = imageElement.getAttribute("source");
-            BitmapRegionDecoder decoder = BitmapRegionDecoder.newInstance(getGraphicsStream(sourceImage), false);
+            BitmapRegionDecoder decoder = BitmapRegionDecoder.newInstance(getSpriteGraphicsStream(sourceImage), false);
 
             for (Integer i : usedTilesInTileset) {
                 if (i < firstGID || i > firstGID + tiles) continue;
@@ -276,13 +271,7 @@ public class TileLoader extends Observable implements Runnable {
             }
             Log.d("TileLoader", "Finished Generating Bitmaps " + this.tiles.size());
 
-        } catch (FileNotFoundException e) {
-            e.printStackTrace();
-        } catch (ParserConfigurationException e) {
-            e.printStackTrace();
-        } catch (IOException e) {
-            e.printStackTrace();
-        } catch (SAXException e) {
+        } catch (ParserConfigurationException | SAXException | IOException e) {
             e.printStackTrace();
         }
     }
@@ -359,11 +348,18 @@ public class TileLoader extends Observable implements Runnable {
     private Bitmap generateGameBitmap(ArrayList<List<TileInformation>> map) {
         int w = width * tileWidth;
         int h = height * tileHeight;
-        //Bitmap.Config conf = Bitmap.Config.ARGB_8888;
-        Bitmap.Config conf = Bitmap.Config.RGB_565;
+        Bitmap.Config conf;
+        if(enableEyeCandy) {
+            conf = Bitmap.Config.ARGB_8888;
+        }else {
+           conf = Bitmap.Config.RGB_565;
+        }
         Bitmap bmp = Bitmap.createBitmap(w, h, conf);
         Canvas canvas = new Canvas(bmp);
-        canvas.drawARGB(255, 109, 165, 255);
+
+        if(!enableEyeCandy)
+            canvas.drawARGB(255, 109, 165, 255);
+
         for (List<TileInformation> currentLayerTiles : map) {
             for (TileInformation currentTile : currentLayerTiles) {
                 Rect test = currentTile.getTileRect();
@@ -375,8 +371,16 @@ public class TileLoader extends Observable implements Runnable {
         //cleanup
         tiles.clear();
         this.tiles = null;
+        this.map = null;
 
         return bmp;
+    }
+
+    private Bitmap generateBackground() {
+        Bitmap.Config conf = Bitmap.Config.RGB_565;
+        Bitmap bmp = BitmapFactory.decodeStream(getGraphicsStream("background1.png", "levels/backgrounds/"));
+        //bmp.setConfig(conf);
+        return Bitmap.createScaledBitmap(bmp, (int) (bmp.getWidth() * ScaleHelper.getRatioX()), (int) (bmp.getHeight() * ScaleHelper.getRatioY()), false);
     }
 
     /*private void splitBitmapToChunk(Bitmap sceneBitmap) {
@@ -409,12 +413,16 @@ public class TileLoader extends Observable implements Runnable {
         }
     }*/
 
-    private InputStream getGraphicsStream(String graphicsName) {
+    private InputStream getGraphicsStream(String graphicsName, String folder) {
         try {
-            return assetManager.open("levels/spritesheets/" + graphicsName);
+            return assetManager.open(folder + graphicsName);
         } catch (IOException e2) {
             return null;
         }
+    }
+
+    private InputStream getSpriteGraphicsStream(String graphicsName) {
+        return getGraphicsStream(graphicsName, "levels/spritesheets/");
     }
 
     public void cleanup() {

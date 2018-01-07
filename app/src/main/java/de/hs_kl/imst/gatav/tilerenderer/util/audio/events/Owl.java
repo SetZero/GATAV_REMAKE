@@ -29,7 +29,7 @@ public class Owl implements AudioEvent {
         if (lastOwl + timeBetween <= timer.getElapsedTime()) {
             int randomNum = ThreadLocalRandom.current().nextInt(-2, 3);
             lastOwl = timer.getElapsedTime() + randomNum;
-            audioPlayer.addSound(Sounds.OWL, position);
+            audioPlayer.addSound(Sounds.OWL, position, 90);
         }
     }
 }
