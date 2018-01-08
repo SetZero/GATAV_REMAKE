@@ -59,11 +59,8 @@ public class PhysicsController {
             item.isLeftColliding = false;
             Rect r = (item.getHitbox().getRect());
             if (cam.isRectInView(r)) {
-                //gravity
-                //Log.d("velocity",item.getVelocity().x+"");
                 ArrayList<Contact> collision = isColliding(item, cam);
                 for (Contact c : collision) {
-                    // Log.d("proof", ""+c.siteHit.name());
                     if (c.siteHit == intersectDirection.BOTTOM) {
                         groundY = ((Rectangle) c.collisions).getRect().top;
                         groundCollision = true;
@@ -151,7 +148,7 @@ public class PhysicsController {
     }
 
     private Contact collisionDirection(Collidable c, MovableGraphics item) {
-        Rect rectA = (item.getHitbox().getRect()); // side effekt hier
+        Rect rectA = (item.getHitbox().getRect());
         Rect rectB = (((Rectangle) c).getRect());
         if (rectA.intersect(rectB)) {
 
@@ -176,7 +173,7 @@ public class PhysicsController {
     }
 
     public enum intersectDirection {
-        LEFT, RIGHT, TOP, BOTTOM, DONT, DEFAULT;
+        LEFT, RIGHT, TOP, BOTTOM, DONT
     }
 
 }

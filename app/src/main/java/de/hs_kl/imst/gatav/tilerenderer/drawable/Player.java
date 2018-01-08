@@ -116,11 +116,9 @@ public final class Player extends MovableGraphics implements Destroyable, Collis
                     if (velocity.getX() > 0 && velocity.x <= speed && !isOnGround) {
                         velocity.x = 0f;
                         impact(new Vector2(-speed, 0f));
-                        // movementInput = true;
                     }
                     if (velocity.x > -speed) {
                         impact(new Vector2(-speed, 0f));
-                        //movementInput = true;
                     }
                 }
                 break;
@@ -130,11 +128,9 @@ public final class Player extends MovableGraphics implements Destroyable, Collis
                     if (velocity.getX() < 0 && velocity.x >= -speed && !isOnGround) {
                         velocity.x = 0f;
                         impact(new Vector2(speed, 0f));
-                        // movementInput = true;
                     }
                     if (velocity.x < speed) {
                         impact(new Vector2(speed, 0f));
-                        // movementInput = true;
                     }
                 }
                 break;
@@ -154,8 +150,7 @@ public final class Player extends MovableGraphics implements Destroyable, Collis
     /**
      * interrupts LEFT or RIGHT movement the correct way (is the player on Ground?)
      * this interrupt will occur on the next update (if interrupt is possible)
-     *
-     * @param direction
+     * @param direction which the movement should be stopped
      */
     public void stopMove(Direction direction) {
         stopDirection = direction;
@@ -166,14 +161,12 @@ public final class Player extends MovableGraphics implements Destroyable, Collis
     public void update(float delta) {
         if (isAlive) {
             super.update(delta);
-            //movementInput = false;
             if (lifePoints <= 0)
                 isAlive = false;
             stateHandle();
             animationHandle(delta);
         } else {
             if (dieng.isFinished(dieTimer)) {
-                // GameContent.world.removeGameObject(this);
                 setChanged();
                 notifyObservers(PlayerStates.DEAD);
             } else {
@@ -209,7 +202,6 @@ public final class Player extends MovableGraphics implements Destroyable, Collis
     }
 
     private void animationHandle(float delta) {
-        //noFlip
         if (run.isFinished(animTime)) animTime = 0;
         if (currentDirection == Direction.LEFT || currentDirection == Direction.RIGHT)
             animTime += delta;
@@ -261,8 +253,7 @@ public final class Player extends MovableGraphics implements Destroyable, Collis
 
     @Override
     public boolean isDestroyed() {
-        if (lifePoints > 0f) return false;
-        return true;
+        return !(lifePoints > 0f);
     }
 
     @Override
