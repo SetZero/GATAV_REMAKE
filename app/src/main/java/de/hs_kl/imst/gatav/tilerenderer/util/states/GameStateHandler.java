@@ -1,4 +1,4 @@
-package de.hs_kl.imst.gatav.tilerenderer.util.Hitboxes;
+package de.hs_kl.imst.gatav.tilerenderer.util.states;
 
 import de.hs_kl.imst.gatav.tilerenderer.util.Vector2;
 
@@ -8,6 +8,7 @@ import de.hs_kl.imst.gatav.tilerenderer.util.Vector2;
 
 public class GameStateHandler {
     private Vector2 lastCheckpoint;
+    private double lastCheckpointTime = 0.0;
     private long score = 0;
 
     public Vector2 getLastCheckpoint() {
@@ -18,11 +19,11 @@ public class GameStateHandler {
         this.lastCheckpoint = lastCheckpoint;
     }
 
-    public long getScore() {
-        return score;
+    public double getLastCheckpointTime() {
+        return lastCheckpointTime;
     }
 
-    public void setScore(long score) {
-        this.score = score;
+    public void setLastCheckpointTime(double lastCheckpointTime) {
+        this.lastCheckpointTime = lastCheckpointTime;
     }
 }

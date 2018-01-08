@@ -16,7 +16,7 @@ import de.hs_kl.imst.gatav.tilerenderer.drawable.GameContent;
 import de.hs_kl.imst.gatav.tilerenderer.drawable.MovableGraphics;
 import de.hs_kl.imst.gatav.tilerenderer.drawable.Player;
 import de.hs_kl.imst.gatav.tilerenderer.util.Hitboxes.Collidable;
-import de.hs_kl.imst.gatav.tilerenderer.util.Hitboxes.GameStateHandler;
+import de.hs_kl.imst.gatav.tilerenderer.util.states.GameStateHandler;
 import de.hs_kl.imst.gatav.tilerenderer.util.Hitboxes.Rectangle;
 import de.hs_kl.imst.gatav.tilerenderer.util.audio.AudioPlayer;
 import de.hs_kl.imst.gatav.tilerenderer.util.audio.Sounds;
@@ -52,6 +52,7 @@ public class GameEventHandler implements Observer {
         this.executioner = executioner;
         this.audioPlayer = audioPlayer;
         this.owlAudioEvent = new Owl(new Vector2(4000, 600), audioPlayer, timer);
+        this.gameState.setLastCheckpointTime(timer.getTotalLevelTime());
     }
 
     public ArrayList<MovableGraphics> getDynamics() {
@@ -80,12 +81,11 @@ public class GameEventHandler implements Observer {
 
         if (hasReachCheckpoint()) {
             if (gameState.getLastCheckpoint() == null) {
-                Log.d("GameEventHandler", "New Checkpoint!");
                 gameState.setLastCheckpoint(new Vector2(player.getPosition()));
             } else if (gameState.getLastCheckpoint().getX() < player.getPosition().getX()) {
-                Log.d("GameEventHandler", "Even Newer Checkpoint!");
                 gameState.setLastCheckpoint(new Vector2(player.getPosition()));
             }
+            gameState.setLastCheckpointTime(timer.getElapsedTime());
         }
         //TODO: Add World Reset!
         if (!failed && cam.isAttachedToObject() && (isOutOfBounds(cam) || isInDeathZone())) {
@@ -131,6 +131,9 @@ public class GameEventHandler implements Observer {
             if (gameState.getLastCheckpoint() != null) {
                 player.setPosition(gameState.getLastCheckpoint());
                 player.softResetPlayer();
+                double calculatedTime = timer.getTotalLevelTime() - calculateRemaingTimeAfterCheckpoint(gameState.getLastCheckpoint());
+                double lastCheckpointTime = gameState.getLastCheckpointTime();
+                timer.increaseElapsedTime(Math.min(calculatedTime, lastCheckpointTime));
             } else {
                 player.resetPlayer();
             }
@@ -186,6 +189,14 @@ public class GameEventHandler implements Observer {
 
     private boolean isOutOfTime() {
         return timer.getElapsedTime() > timer.getTotalLevelTime();
+    }
+
+    private double calculateRemaingTimeAfterCheckpoint(Vector2 checkpointCoordinates) {
+        Rect finishObj = ((Rectangle) objects.get(Constants.finishObjectGroupString).get(0)).getRect();
+        Vector2 centerOfRectangle = new Vector2(finishObj.centerX(), finishObj.centerY());
+        double remainingDistance = Vector2.distance(player.getPosition(), centerOfRectangle);
+        double totalDistance = Vector2.distance(player.getStartPosition(), centerOfRectangle);
+        return (timer.getTotalLevelTime() / totalDistance) * remainingDistance;
     }
 
     void addDynamicObject(MovableGraphics dynamic) {

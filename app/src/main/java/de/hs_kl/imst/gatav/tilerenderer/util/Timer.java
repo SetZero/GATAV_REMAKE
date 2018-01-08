@@ -18,7 +18,7 @@ public class Timer {
         return elapsedTime;
     }
 
-    synchronized private void increaseElapsedTime(double increment) {
+    synchronized public void increaseElapsedTime(double increment) {
         elapsedTime += increment;
     }
 
