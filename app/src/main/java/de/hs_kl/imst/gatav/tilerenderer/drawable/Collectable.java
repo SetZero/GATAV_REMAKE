@@ -86,7 +86,7 @@ public abstract class Collectable extends Observable implements Drawables {
     /*
     @Override
     public void onCollision(Contact c){
-        if(c.collisionObject instanceof  Player && c.siteHidden != PhysicsController.intersectDirection.DONT){
+        if(c.collisionObject instanceof  Player && c.siteHit != PhysicsController.intersectDirection.DONT){
             isCollected = true;
         }
     }

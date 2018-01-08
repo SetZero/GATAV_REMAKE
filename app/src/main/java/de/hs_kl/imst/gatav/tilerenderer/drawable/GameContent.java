@@ -105,10 +105,6 @@ public class GameContent implements Drawables, Observer {
         if (finishedSetup) {
             world.update(delta, camera);
             getHud().update(delta);
-            if (!player.isAlive() && test) {
-                test = false;
-                getHud().drawPopupMessage("You Died", 5);
-            }
         }
     }
 

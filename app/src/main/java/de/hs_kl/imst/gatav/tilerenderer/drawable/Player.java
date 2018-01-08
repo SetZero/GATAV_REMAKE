@@ -267,15 +267,13 @@ public final class Player extends MovableGraphics implements Destroyable, Collis
 
     @Override
     public void onCollision(Contact c) {
-        if (c.siteHidden == PhysicsController.intersectDirection.BOTTOM && c.collisionObject instanceof Enemies) {
+        if (c.siteHit == PhysicsController.intersectDirection.BOTTOM && c.collisionObject instanceof Enemies) {
             if (((Enemies) c.collisionObject).isAlive() && isAlive) {
                 velocity.y = 0.0f;
                 impact(new Vector2(0f, -400f));
                 if (((Enemies) c.collisionObject).decreaseLife(hitPoints))
                     score += ((Enemies) c.collisionObject).getScorePoints();
             }
-
-        } else if (c.collisionObject instanceof Collectable) {
 
         }
 

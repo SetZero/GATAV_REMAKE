@@ -16,7 +16,7 @@ import de.hs_kl.imst.gatav.tilerenderer.util.Hitboxes.Rectangle;
 
 public class PhysicsController {
     private ArrayList<MovableGraphics> physicals = new ArrayList<MovableGraphics>();
-    private float gravity = 680.5f;
+    private float gravity = 10f;//680.5f;
     private List<Collidable> list;
     private List<MovableGraphics> toRemove = new ArrayList<>();
 
@@ -63,29 +63,29 @@ public class PhysicsController {
                 //Log.d("velocity",item.getVelocity().x+"");
                 ArrayList<Contact> collision = isColliding(item, cam);
                 for (Contact c : collision) {
-                    // Log.d("proof", ""+c.siteHidden.name());
-                    if (c.siteHidden == intersectDirection.BOTTOM) {
+                    // Log.d("proof", ""+c.siteHit.name());
+                    if (c.siteHit == intersectDirection.BOTTOM) {
                         groundY = ((Rectangle) c.collisions).getRect().top;
                         groundCollision = true;
                         noCollision = false;
                     }
-                    if (c.siteHidden == intersectDirection.TOP) {
+                    if (c.siteHit == intersectDirection.TOP) {
                         topCollision = true;
                         noCollision = false;
                     }
-                    if (c.siteHidden == intersectDirection.LEFT) {
+                    if (c.siteHit == intersectDirection.LEFT) {
                         leftCollision = true;
                         noCollision = false;
                         item.isLeftColliding = true;
                     }
-                    if (c.siteHidden == intersectDirection.RIGHT) {
+                    if (c.siteHit == intersectDirection.RIGHT) {
                         rightCollision = true;
                         noCollision = false;
                         item.isRightColliding = true;
                     }
                 }
                 if (noCollision) {
-                    item.impact(new Vector2(0f, gravity * delta));
+                    item.impact(new Vector2(0f, gravity ));
                     item.isOnGround = false;
                 } else {
                     item.isOnGround = groundCollision;
@@ -94,7 +94,7 @@ public class PhysicsController {
                             item.setVelocity(new Vector2(0f, item.getVelocity().y));
                         item.setLinearImpulse(new Vector2(0f, item.getLinearImpulse().y));
                         if (!item.isOnGround) {
-                            item.impact(new Vector2(0f, gravity * delta));
+                            item.impact(new Vector2(0f, gravity ));
                         }
                     }
                     if (rightCollision) {
@@ -103,7 +103,7 @@ public class PhysicsController {
                         item.setLinearImpulse(new Vector2(0f, item.getLinearImpulse().y));
 
                         if (!item.isOnGround) {
-                            item.impact(new Vector2(0f, gravity * delta));
+                            item.impact(new Vector2(0f, gravity ));
                         }
                     }
                     if (topCollision) {
@@ -112,7 +112,7 @@ public class PhysicsController {
                         item.setLinearImpulse(new Vector2(item.getLinearImpulse().x, 0f));
 
                         if (!item.isOnGround) {
-                            item.impact(new Vector2(0f, gravity * delta));
+                            item.impact(new Vector2(0f, gravity ));
                         }
                     }
                     if (groundCollision) {
@@ -151,7 +151,7 @@ public class PhysicsController {
     }
 
     private Contact collisionDirection(Collidable c, MovableGraphics item) {
-        Rect rectA = new Rect(item.getHitbox().getRect()); // side effekt hier
+        Rect rectA = (item.getHitbox().getRect()); // side effekt hier
         Rect rectB = (((Rectangle) c).getRect());
         if (rectA.intersect(rectB)) {
 

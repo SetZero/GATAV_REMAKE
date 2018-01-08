@@ -9,13 +9,13 @@ import de.hs_kl.imst.gatav.tilerenderer.util.PhysicsController.intersectDirectio
  */
 
 public class Contact {
-    public intersectDirection siteHidden;
+    public intersectDirection siteHit;
     public Collidable collisions;
     public Object collisionObject;
     public String params;
 
     public Contact(intersectDirection siteHit, Collidable other) {
-        siteHidden = siteHit;
+        this.siteHit = siteHit;
         collisions = other;
     }
 
