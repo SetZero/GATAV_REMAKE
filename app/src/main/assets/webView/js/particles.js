@@ -1,9 +1,14 @@
-var canvas = document.getElementById("canvas");
-var ctx = canvas.getContext("2d");
-canvas.width = window.innerWidth;
-canvas.height = window.innerHeight;
+var canvas;
+var ctx;
 var particles = [];
 var num_particles = 1000;//Change that to your liking
+
+function initParticles() {
+    canvas = document.getElementById("canvas");  
+    ctx = canvas.getContext("2d");  
+    canvas.width = window.innerWidth;
+    canvas.height = window.innerHeight;
+}
 
 //Helper function to get a random color - but not too dark
 function GetRandomColor() {
@@ -37,16 +42,12 @@ Particle.prototype.Update = function () {
     if (this.y > canvas.height)
         this.y = 0;
 }
-function loop() {
+function loopParticles() {
     ctx.clearRect(0, 0, canvas.width, canvas.height);
 
     for (var i = 0; i < num_particles; i++) {
         particles[i].Update();
         particles[i].Draw(ctx);
     }
-    requestAnimationFrame(loop);
+    requestAnimationFrame(loopParticles);
 }
-//Create particles
-for (var i = 0; i < num_particles; i++)
-    particles.push(new Particle());
-loop();

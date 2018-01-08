@@ -17,6 +17,7 @@ import java.util.concurrent.ConcurrentLinkedQueue;
 import java.util.concurrent.atomic.AtomicBoolean;
 
 import de.hs_kl.imst.gatav.tilerenderer.drawable.Player;
+import de.hs_kl.imst.gatav.tilerenderer.util.Constants;
 import de.hs_kl.imst.gatav.tilerenderer.util.Vector2;
 
 /**
@@ -90,7 +91,7 @@ public class AudioPlayer implements Runnable {
             descriptor.close();
 
             player.prepare();
-            player.setVolume(0.01f, 0.01f);
+            player.setVolume(Constants.backgroundSoundVolume, Constants.backgroundSoundVolume);
             player.setLooping(true);
         } catch (IOException e) {
             e.printStackTrace();
@@ -119,7 +120,7 @@ public class AudioPlayer implements Runnable {
             ArrayList<Integer> tmp = new ArrayList<>();
             for (Pair<AudioDataKeeper, Integer> sound : loadingQueue) {
                 if (sound.second == sampleId) {
-                    int id = sp.play(sound.second, 0.5f, 0.5f, 1, 0, 1);
+                    int id = sp.play(sound.second, 0.0f, 0.0f, 1, 0, 1);
                     soundToPlay.put(id, sound.first);
                     tmp.add(sound.second);
                 }
@@ -141,7 +142,7 @@ public class AudioPlayer implements Runnable {
             if (cache.get(s.getSoundResource()) != null) {
                 //...get it from the cache and play it
                 int soundId = cache.get(s.getSoundResource());
-                int id = sp.play(soundId, 0.5f, 0.5f, 1, 0, 1);
+                int id = sp.play(soundId, 0.0f, 0.0f, 1, 0, 1);
                 //soundToPlay.add(new Pair<>(source, id));
                 AudioDataKeeper data = new AudioDataKeeper(source, decibel);
                 soundToPlay.put(id, data);

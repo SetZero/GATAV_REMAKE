@@ -6,6 +6,7 @@ package de.hs_kl.imst.gatav.tilerenderer.util;
 
 public class Constants {
     public static final boolean enableEyeCandy = false;
+    public static final float backgroundSoundVolume = 0.1f;
 
     public static final boolean debugBuild = false;
     public static final String worldInfoSaveLocation = "levels/worldInfo/";
