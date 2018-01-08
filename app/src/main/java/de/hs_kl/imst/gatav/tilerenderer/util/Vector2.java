@@ -72,9 +72,7 @@ public class Vector2 {
     public boolean equals(Vector2 v2) {
         float diffX = getX() - v2.getX();
         float diffY = getY() - v2.getY();
-        if (Math.abs(diffX - 1.0) <= 0.0001 && Math.abs(diffY - 1.0) <= 0.0001)
-            return true;
-        return false;
+        return Math.abs(diffX - 1.0) <= 0.0001 && Math.abs(diffY - 1.0) <= 0.0001;
     }
 
     public float unitVector() {

@@ -12,6 +12,7 @@ import de.hs_kl.imst.gatav.tilerenderer.util.states.Direction;
 import de.hs_kl.imst.gatav.tilerenderer.util.PhysicsController;
 import de.hs_kl.imst.gatav.tilerenderer.util.Vector2;
 import de.hs_kl.imst.gatav.tilerenderer.util.audio.Sounds;
+import de.hs_kl.imst.gatav.tilerenderer.util.Constants;
 
 /**
  * Created by keven on 17.12.2017.
@@ -59,8 +60,7 @@ public abstract class Enemies extends MovableGraphics implements Destroyable, Co
 
     @Override
     public boolean isDestroyed() {
-        if(lifePoints <= 0) return true;
-        return false;
+        return lifePoints <= 0;
     }
 
     @Override
@@ -175,12 +175,12 @@ public abstract class Enemies extends MovableGraphics implements Destroyable, Co
 
     @Override
     public void onCollision(Contact c) {
-        if(c.collisionObject instanceof Player && (c.siteHidden == PhysicsController.intersectDirection.LEFT || c.siteHidden == PhysicsController.intersectDirection.RIGHT) && ((Player)c.collisionObject).isAlive()){
-            if(c.siteHidden == PhysicsController.intersectDirection.LEFT) {
+        if(c.collisionObject instanceof Player && (c.siteHit == PhysicsController.intersectDirection.LEFT || c.siteHit == PhysicsController.intersectDirection.RIGHT) && ((Player)c.collisionObject).isAlive()){
+            if(c.siteHit == PhysicsController.intersectDirection.LEFT) {
                 ((Player) c.collisionObject).setLifePoints(((Player) c.collisionObject).getLifePoints() - hitPoints);
                 ((Player) c.collisionObject).applyLinearImpulse(new Vector2(-630f,-280f));
             }
-            if(c.siteHidden == PhysicsController.intersectDirection.RIGHT){
+            if(c.siteHit == PhysicsController.intersectDirection.RIGHT){
                 ((Player) c.collisionObject).setLifePoints(((Player) c.collisionObject).getLifePoints() - hitPoints);
                 ((Player) c.collisionObject).applyLinearImpulse(new Vector2(630f,-280f));
             }
@@ -196,18 +196,18 @@ public abstract class Enemies extends MovableGraphics implements Destroyable, Co
     public void draw(Canvas canvas){
         if(isActive){
             if (bmp != null && isActive && !isFlipped) {
-                //if(Constants.debugBuild) {
+                if(Constants.debugBuild) {
                     Paint p = new Paint();
                     p.setColor(Color.argb(128, 0, 65, 200));
                     canvas.drawRect(hitbox.getRect(), p);
-                //}
+                }
                 canvas.drawBitmap(bmp.getBitmap(), Position.getX(), Position.getY()+drawOffsetY, null);
             } else if (isFlipped) {
-                //if(Constants.debugBuild) {
+                if(Constants.debugBuild) {
                     Paint p = new Paint();
                     p.setColor(Color.argb(128, 0, 65, 200));
                     canvas.drawRect(hitbox.getRect(), p);
-                //}
+                }
                 BitmapDrawable bmp = flip(this.bmp);
                 canvas.drawBitmap(bmp.getBitmap(), Position.getX(), Position.getY()+drawOffsetY, null);
             }
@@ -220,7 +220,6 @@ public abstract class Enemies extends MovableGraphics implements Destroyable, Co
      */
     public boolean decreaseLife(int hitPoints){
         lifePoints -= hitPoints;
-        if(lifePoints <= 0) return true;
-        return false;
+        return lifePoints <= 0;
     }
 }

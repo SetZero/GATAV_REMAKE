@@ -207,7 +207,7 @@ public class GameView extends SurfaceView implements SurfaceHolder.Callback, Run
     @Override
     public boolean onTouchEvent(MotionEvent event) {
         if (gameContent == null) return false;
-        if (gameContent.player == null) return false;
+        if (GameContent.player == null) return false;
 
         int displayW = getWidth();
         int displayH = getHeight();
@@ -215,11 +215,11 @@ public class GameView extends SurfaceView implements SurfaceHolder.Callback, Run
         if (event.getAction() == MotionEvent.ACTION_UP && event.getPointerCount() < 2) {
             if (leftmove) {
                 leftmove = false;
-                gameContent.player.stopMove(Direction.LEFT);
+                GameContent.player.stopMove(Direction.LEFT);
             }
             if (rightmove) {
                 rightmove = false;
-                gameContent.player.stopMove(Direction.RIGHT);
+                GameContent.player.stopMove(Direction.RIGHT);
             }
         }
         if (event.getAction() == MotionEvent.ACTION_DOWN) {

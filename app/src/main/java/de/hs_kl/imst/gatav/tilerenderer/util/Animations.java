@@ -64,9 +64,6 @@ public class Animations {
 
     public boolean isFinished(float faded) {
         int x = Math.round(faded / timeStep);
-        if (x >= animations.size()) {
-            return true;
-        }
-        return false;
+        return x >= animations.size();
     }
 }

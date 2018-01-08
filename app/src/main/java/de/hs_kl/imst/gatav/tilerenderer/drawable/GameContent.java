@@ -48,8 +48,6 @@ public class GameContent implements Drawables, Observer {
      */
     private int gameWidth = -1;
     private int gameHeight = -1;
-    //TODO wieder entfernen
-    private boolean test = true;
     /**
      * Der Tile Loader in welchem das Aktuelle Level geladen wird
      */
@@ -105,10 +103,6 @@ public class GameContent implements Drawables, Observer {
         if (finishedSetup) {
             world.update(delta, camera);
             getHud().update(delta);
-            if (!player.isAlive() && test) {
-                test = false;
-                getHud().drawPopupMessage("You Died", 5);
-            }
         }
     }
 

@@ -83,12 +83,4 @@ public abstract class Collectable extends Observable implements Drawables {
             canvas.drawBitmap(bmp.getBitmap(), Position.getX(), Position.getY(), null);
     }
 
-    /*
-    @Override
-    public void onCollision(Contact c){
-        if(c.collisionObject instanceof  Player && c.siteHidden != PhysicsController.intersectDirection.DONT){
-            isCollected = true;
-        }
-    }
-    */
 }

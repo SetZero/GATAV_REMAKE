@@ -129,8 +129,7 @@ public abstract class MovableGraphics extends Observable implements Drawables, C
     public void update(float delta) {
         Rect temp = (hitbox.getRect());
         if (velocity.x < 1 && velocity.x > -1) velocity.x = 0f;
-        if (GameContent.camera.isRectInView(temp)) isActive = true;
-        else isActive = false;
+        isActive = GameContent.camera.isRectInView(temp);
         if (isActive) {
             move(delta);
             impulse(delta);
