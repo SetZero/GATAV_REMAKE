@@ -23,7 +23,6 @@ import de.hs_kl.imst.gatav.tilerenderer.util.Vector2;
  */
 
 public class HUD {
-    //private GameCamera camera;
     private String msg;
     private double popupLength;
 
@@ -40,7 +39,6 @@ public class HUD {
 
 
     public HUD(GameCamera camera, Timer timer, AssetManager assetManager) {
-        //this.camera = camera;
         this.timer = timer;
         this.assetManager = assetManager;
         paint = new Paint();
@@ -90,7 +88,6 @@ public class HUD {
 
     private void drawScore(Canvas canvas) {
         String scoreText = "Score: " + GameContent.player.getScore();
-        //paint.getTextBounds(lpText, 0, 0, lp);
         canvas.drawText(scoreText, lp.width() + 60, 60, paint);
     }
 
@@ -120,7 +117,6 @@ public class HUD {
     }
 
     private void drawPopup(Canvas canvas) {
-        //paint.getTextBounds(msg, 0, 0, lp);
         paint.setTextSize(80);
         canvas.drawText(msg, (canvas.getWidth() / 2) * ScaleHelper.getRatioX(), (canvas.getHeight() / 2) * ScaleHelper.getRatioY(), paint);
         paint.setTextSize(50);

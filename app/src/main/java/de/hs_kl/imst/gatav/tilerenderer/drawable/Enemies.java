@@ -60,8 +60,7 @@ public abstract class Enemies extends MovableGraphics implements Destroyable, Co
 
     @Override
     public boolean isDestroyed() {
-        if(lifePoints <= 0) return true;
-        return false;
+        return lifePoints <= 0;
     }
 
     @Override
@@ -221,7 +220,6 @@ public abstract class Enemies extends MovableGraphics implements Destroyable, Co
      */
     public boolean decreaseLife(int hitPoints){
         lifePoints -= hitPoints;
-        if(lifePoints <= 0) return true;
-        return false;
+        return lifePoints <= 0;
     }
 }
