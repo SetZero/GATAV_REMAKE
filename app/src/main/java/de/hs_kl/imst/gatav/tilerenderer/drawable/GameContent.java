@@ -149,6 +149,7 @@ public class GameContent implements Drawables, Observer {
         audioPlayer.setPlayerCharacter(player);
         timer.startTimeThread();
         finishedSetup = true;
+        player.isActive = true;
     }
 
     public void generateGameElements() {

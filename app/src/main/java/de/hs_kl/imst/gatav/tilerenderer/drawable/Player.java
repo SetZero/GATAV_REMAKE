@@ -159,20 +159,22 @@ public final class Player extends MovableGraphics implements Destroyable, Collis
 
     @Override
     public void update(float delta) {
-        if (isAlive) {
-            super.update(delta);
-            if (lifePoints <= 0)
-                isAlive = false;
-            stateHandle();
-            animationHandle(delta);
-        } else {
-            if (dieng.isFinished(dieTimer)) {
-                setChanged();
-                notifyObservers(PlayerStates.DEAD);
+        if(isActive) {
+            if (isAlive) {
+                super.update(delta);
+                if (lifePoints <= 0)
+                    isAlive = false;
+                stateHandle();
+                animationHandle(delta);
             } else {
-                bmp = dieng.getDrawable(dieTimer);
+                if (dieng.isFinished(dieTimer)) {
+                    setChanged();
+                    notifyObservers(PlayerStates.DEAD);
+                } else {
+                    bmp = dieng.getDrawable(dieTimer);
+                }
+                dieTimer += delta;
             }
-            dieTimer += delta;
         }
     }
 
@@ -181,7 +183,7 @@ public final class Player extends MovableGraphics implements Destroyable, Collis
             previous = currentDirection;
             currentDirection = Direction.IDLE;
         }
-        if (doublejump != 0 && velocity.getY() == 0) doublejump = 0;
+        if (doublejump != 0 && velocity.getY() == 0 && isOnGround) doublejump = 0;
         if (isOnGround && stopDirection != Direction.IDLE) {
             if (stopDirection == Direction.LEFT && velocity.getX() < 0f) {
                 impact(new Vector2(speed, 0f));
@@ -228,7 +230,7 @@ public final class Player extends MovableGraphics implements Destroyable, Collis
 
     @Override
     public void draw(Canvas canvas) {
-        if (bmp != null && isActive && !isFlipped) {
+        if (bmp != null  && !isFlipped) {
             if (Constants.debugBuild) {
                 Paint p = new Paint();
                 p.setColor(Color.argb(128, 0, 65, 200));
