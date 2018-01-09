@@ -264,6 +264,7 @@ public final class Player extends MovableGraphics implements Destroyable, Collis
                 impact(new Vector2(0f, -400f));
                 if (((Enemies) c.collisionObject).decreaseLife(hitPoints))
                     score += ((Enemies) c.collisionObject).getScorePoints();
+                //TODO: Hit sound
             }
 
         }
