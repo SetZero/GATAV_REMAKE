@@ -23,7 +23,7 @@ public abstract class MovableGraphics extends Observable implements Drawables, C
     public boolean isOnGround = false;
     public boolean isRightColliding = false;
     public boolean isLeftColliding = false;
-    public boolean isActive = false;
+    public boolean isActive = true;
     protected BitmapDrawable bmp = null;
     protected boolean isFlipped = false;
     //koordinaten als Vektor

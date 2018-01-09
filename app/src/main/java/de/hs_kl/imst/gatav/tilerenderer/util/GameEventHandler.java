@@ -60,9 +60,11 @@ public class GameEventHandler implements Observer {
     }
 
     public void update(GameCamera cam) {
+        if(!hasReachedFinish()&& (timer.getElapsedTime() > 0.2&& timer.getElapsedTime() < 0.5)){
+            player.isActive = true;
+        }
         if (!finished && hasReachedFinish()) {
             //TODO: add some Finish Screen
-            //TODO: If Player is not active don't let him move...
             finished = true;
             timer.snapshotTime();
             player.setScore(player.getScore() + (int) (timer.getTotalLevelTime() - timer.getSnapshotTime()));
