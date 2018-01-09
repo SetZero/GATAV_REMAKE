@@ -181,7 +181,7 @@ public final class Player extends MovableGraphics implements Destroyable, Collis
             previous = currentDirection;
             currentDirection = Direction.IDLE;
         }
-        if (doublejump != 0 && velocity.getY() == 0) doublejump = 0;
+        if (doublejump != 0 && velocity.getY() == 0 && isOnGround) doublejump = 0;
         if (isOnGround && stopDirection != Direction.IDLE) {
             if (stopDirection == Direction.LEFT && velocity.getX() < 0f) {
                 impact(new Vector2(speed, 0f));
