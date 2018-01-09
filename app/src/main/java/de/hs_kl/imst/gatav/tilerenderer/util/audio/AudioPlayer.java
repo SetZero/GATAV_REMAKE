@@ -99,7 +99,9 @@ public class AudioPlayer implements Runnable {
     }
 
     public void changeBGMSpeed(float speed) {
-        player.setPlaybackParams(player.getPlaybackParams().setSpeed(speed));
+        if(player.isPlaying()) {
+            player.setPlaybackParams(player.getPlaybackParams().setSpeed(speed));
+        }
     }
 
     public void stopBGM() {

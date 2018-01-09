@@ -88,7 +88,7 @@ public class GameEventHandler implements Observer {
             gameState.setLastCheckpointTime(timer.getElapsedTime());
         }
         //TODO: Add World Reset!
-        if (!failed && cam.isAttachedToObject() && (isOutOfBounds(cam) || isInDeathZone())) {
+        if (!finished && !failed && cam.isAttachedToObject() && (isOutOfBounds(cam) || isInDeathZone())) {
             if (currentGracePeriod >= timer.getElapsedTime()) return;
             //TODO: Add some Death Screen
             //GameContent.getHud().drawPopupMessage("you Died :(", 5);
@@ -123,7 +123,7 @@ public class GameEventHandler implements Observer {
         }
 
         // If player is dead...
-        if (failed && timer.getElapsedTime() > currentGracePeriod) {
+        if (!finished && failed && timer.getElapsedTime() > currentGracePeriod) {
             failed = false;
             timer.resetElapsedTime();
             currentGracePeriod = 0;
