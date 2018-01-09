@@ -9,9 +9,40 @@
     <body>
 
         <h1 id="gameName">Generic Game Name</h1>
-        <div class="main-container">
-            <ul id="level-selector">
-                <li id="level-select-title">Select Level</li>
+        <div class="main-container" id="level-container">
+            <ul class="selector" id="level-selector">
+                <li class="select-title">Select Level</li>
+            </ul>
+        </div>
+        <div class="main-container" id="main-menu-container">
+            <ul class="selector" id="main-menu-selector">
+                <li class="select-title">Main Menu</li>
+                <li id="play-game">Play Game</li>
+                <li id="settings">Options</li>
+            </ul>
+        </div>
+        <div class="main-container" id="main-settings-container">
+            <ul class="selector" id="main-settings-selector">
+                <li class="select-title">Settings</li>
+                <li>
+                    <div>
+                        Play Background Music
+                    </div>
+                    <label class="switch">
+                        <input id="enable-bgm" type="checkbox">
+                        <span class="slider"></span>
+                    </label>
+                </li>
+                <li>
+                    <div>
+                        Enable Eyecandy Effects
+                    </div>
+                    <label class="switch">
+                        <input id="enable-eyecandy" type="checkbox">
+                        <span class="slider"></span>
+                    </label>
+                </li>
+                <li id="go-back">Save and Exit</li>
             </ul>
         </div>
         <canvas id="canvas"></canvas>

@@ -1,5 +1,6 @@
 package webview;
 
+import android.content.SharedPreferences;
 import android.content.res.AssetManager;
 import android.webkit.JavascriptInterface;
 
@@ -17,14 +18,16 @@ public class WebAppInterface {
     private MainActivity mContext;
     private AssetManager am;
     private String gameName;
+    private SharedPreferences settings;
 
     /**
      * Instantiate the interface and set the context + AssetManager
      */
-    public WebAppInterface(MainActivity c, AssetManager am, String gameName) {
+    public WebAppInterface(MainActivity c, AssetManager am, String gameName, SharedPreferences settings) {
         mContext = c;
         this.am = am;
         this.gameName = gameName;
+        this.settings = settings;
     }
 
     /**
@@ -66,5 +69,33 @@ public class WebAppInterface {
     @JavascriptInterface
     public String getGameName() {
         return gameName;
+    }
+
+    @JavascriptInterface
+    public boolean getBGMEnabledValue() {
+        return settings.getBoolean("enableBGM", true);
+    }
+
+
+    @JavascriptInterface
+    public void setBGMEnabledValue(boolean value) {
+        SharedPreferences.Editor editor = settings.edit();
+        editor.putBoolean("enableBGM", value);
+        editor.apply();
+        Constants.backgroundSoundVolume = (value ? 0.1f : 0.0f);
+    }
+
+    @JavascriptInterface
+    public boolean getEyecandyValue() {
+        return settings.getBoolean("enableEyecandy", false);
+    }
+
+
+    @JavascriptInterface
+    public void setEyecandyValue(boolean value) {
+        SharedPreferences.Editor editor = settings.edit();
+        editor.putBoolean("enableEyecandy", value);
+        editor.apply();
+        Constants.enableEyeCandy = value;
     }
 }

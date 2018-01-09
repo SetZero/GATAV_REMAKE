@@ -33,25 +33,82 @@ canvas {
     background: url(../img/cityscape.png) repeat-x;
 }
 
-#level-selector {
+.selector {
     margin: 0 auto;
     list-style: none;
     padding: 0;
     width: 60vh;
 }
 
-#level-selector li {
+.selector li {
     color: #A9AFBE;
     padding: 10px;
     background-color: #202930;
 }
 
-#level-selector li a {
+.selector li a {
     color: #646C79;
     text-decoration: none;
     display: block;
 }
 
-#level-select-title {
+.select-title {
     background-color: #393D49 !important;
+}
+
+#level-container {
+    display: none;
+}
+
+#main-settings-container {
+    display: none;
+}
+
+/* Switches, Source: https://www.w3schools.com/howto/howto_css_switch.asp */
+.switch {
+  position: relative;
+  display: inline-block;
+  width: 60px;
+  height: 34px;
+}
+.switch input {
+    display:none;
+}
+
+.slider {
+  position: absolute;
+  cursor: pointer;
+  top: 0;
+  left: 0;
+  right: 0;
+  bottom: 0;
+  background-color: #333;
+  -webkit-transition: .4s;
+  transition: .4s;
+}
+
+.slider:before {
+  position: absolute;
+  content: "";
+  height: 26px;
+  width: 26px;
+  left: 4px;
+  bottom: 4px;
+  background-color: white;
+  -webkit-transition: .4s;
+  transition: .4s;
+}
+
+input:checked + .slider {
+  background-color: #204e99;
+}
+
+input:focus + .slider {
+  box-shadow: 0 0 1px #204e99;
+}
+
+input:checked + .slider:before {
+  -webkit-transform: translateX(26px);
+  -ms-transform: translateX(26px);
+  transform: translateX(26px);
 }

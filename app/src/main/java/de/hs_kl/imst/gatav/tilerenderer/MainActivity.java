@@ -1,12 +1,14 @@
 package de.hs_kl.imst.gatav.tilerenderer;
 
 import android.content.Intent;
+import android.content.SharedPreferences;
 import android.content.res.AssetManager;
 import android.os.Bundle;
 import android.support.v7.app.AppCompatActivity;
 import android.webkit.WebSettings;
 import android.webkit.WebView;
 
+import de.hs_kl.imst.gatav.tilerenderer.util.Constants;
 import webview.WebAppInterface;
 
 public class MainActivity extends AppCompatActivity {
@@ -14,6 +16,10 @@ public class MainActivity extends AppCompatActivity {
     @Override
     protected void onCreate(Bundle savedInstanceState) {
         super.onCreate(savedInstanceState);
+        SharedPreferences settings = getSharedPreferences(Constants.prefernceName, 0);
+        Constants.backgroundSoundVolume = (settings.getBoolean("enableBGM", true) ? 0.1f : 0.0f);
+        Constants.enableEyeCandy = settings.getBoolean("enableEyecandy", false);
+
         setContentView(R.layout.web_activity);
         AssetManager am = getResources().getAssets();
 
@@ -26,7 +32,7 @@ public class MainActivity extends AppCompatActivity {
         mainMenuView.setHapticFeedbackEnabled(false);
         mainMenuView.setOnLongClickListener(v -> true);
 
-        mainMenuView.addJavascriptInterface(new WebAppInterface(this, am, getResources().getString(R.string.app_name)), "Android");
+        mainMenuView.addJavascriptInterface(new WebAppInterface(this, am, getResources().getString(R.string.app_name), settings), "Android");
     }
 
     public void loadLevel(String level) {
