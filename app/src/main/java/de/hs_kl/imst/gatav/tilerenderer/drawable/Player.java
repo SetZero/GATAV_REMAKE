@@ -5,6 +5,7 @@ import android.graphics.Canvas;
 import android.graphics.Color;
 import android.graphics.Paint;
 import android.graphics.drawable.BitmapDrawable;
+import android.util.Pair;
 
 import java.io.IOException;
 import java.io.InputStream;
@@ -261,12 +262,19 @@ public final class Player extends MovableGraphics implements Destroyable, Collis
     @Override
     public void onCollision(Contact c) {
         if (c.siteHit == PhysicsController.intersectDirection.BOTTOM && c.collisionObject instanceof Enemies) {
-            if (((Enemies) c.collisionObject).isAlive() && isAlive) {
+            Enemies enemy = (Enemies) c.collisionObject;
+            if (enemy.isAlive() && isAlive) {
                 velocity.y = 0.0f;
                 impact(new Vector2(0f, -400f));
-                if (((Enemies) c.collisionObject).decreaseLife(hitPoints))
-                    score += ((Enemies) c.collisionObject).getScorePoints();
+                if (enemy.decreaseLife(hitPoints))
+                    score += enemy.getScorePoints();
                 //TODO: Hit sound
+                if(c.collisionObject instanceof Robotic) {
+                    if(enemy.isAlive) {
+                        setChanged();
+                        notifyObservers(new Pair<>(Sounds.ROBOT_HIT_BY_PLAYER, new Vector2(Position)));
+                    }
+                }
             }
 
         }

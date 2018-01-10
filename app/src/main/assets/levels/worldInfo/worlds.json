@@ -8,6 +8,18 @@
       "time": 100
     },
     {
+      "name": "Desert",
+      "description": "Aller Anfang ist Schwer",
+      "saveLocation": "Level 2",
+      "time": 150
+    },
+    {
+      "name": "???",
+      "description": "Aller Anfang ist Schwer",
+      "saveLocation": "Level 3",
+      "time": 150
+    },
+    {
       "name": "Fertige Welt",
       "description": "Zum Testen",
       "saveLocation": "finished",

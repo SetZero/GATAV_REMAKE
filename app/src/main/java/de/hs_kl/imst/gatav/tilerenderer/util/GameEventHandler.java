@@ -223,6 +223,11 @@ public class GameEventHandler implements Observer {
                     failed = true;
                     currentGracePeriod = timer.getElapsedTime();
                 }
+            } else if (arg instanceof Pair) {
+                if (((Pair) arg).first instanceof Sounds && ((Pair) arg).second instanceof Vector2) {
+                    Pair<Sounds, Vector2> soundInfo = (Pair) arg;
+                    audioPlayer.addSound(soundInfo.first, soundInfo.second, 75);
+                }
             }
         }
     }

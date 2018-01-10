@@ -213,6 +213,7 @@ public class TileLoader extends Observable implements Runnable {
                 Element tileElement = (Element) tilesets.item(i);
                 String src = tileElement.getAttribute("source");
                 int firstGID = Integer.parseInt(tileElement.getAttribute("firstgid"));
+                Log.d("TileLoader", "Loading: " + src);
                 generateBitmaps(src, firstGID, usedTilesInMap);
             }
 
@@ -261,7 +262,7 @@ public class TileLoader extends Observable implements Runnable {
             BitmapRegionDecoder decoder = BitmapRegionDecoder.newInstance(getSpriteGraphicsStream(sourceImage), false);
 
             for (Integer i : usedTilesInTileset) {
-                if (i < firstGID || i > firstGID + tiles) continue;
+                if (i < firstGID || i >= firstGID + tiles) continue;
                 int realPosInTileset = i - firstGID;
                 int xPos = (realPosInTileset % columns) * tileWidth;
                 int yPos = (realPosInTileset / columns) * tileHeight;

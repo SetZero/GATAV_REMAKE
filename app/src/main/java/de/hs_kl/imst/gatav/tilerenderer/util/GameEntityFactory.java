@@ -45,6 +45,8 @@ public class GameEntityFactory {
 
     public List<Enemies> generateEnemies(Context context) {
         List<Collidable> zones = objects.get(Constants.enemyObjectGroupString);
+        if(zones == null) return new ArrayList<>();
+
         List<Enemies> enemies = new ArrayList<>();
         for (Collidable zone : zones) {
             if (zone instanceof Rectangle) {
@@ -59,6 +61,8 @@ public class GameEntityFactory {
 
     public List<Coin> generateCoins(Context context) {
         List<Collidable> zones = objects.get(Constants.coinObjectGroupString);
+        if(zones == null) return new ArrayList<>();
+
         List<Coin> coins = new ArrayList<>();
         for (Collidable zone : zones) {
             if (zone instanceof Rectangle) {
