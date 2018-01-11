@@ -40,6 +40,8 @@ import de.hs_kl.imst.gatav.tilerenderer.util.Hitboxes.Collidable;
 import de.hs_kl.imst.gatav.tilerenderer.util.Hitboxes.Rectangle;
 import de.hs_kl.imst.gatav.tilerenderer.util.ScaleHelper;
 import de.hs_kl.imst.gatav.tilerenderer.util.TileInformation;
+import de.hs_kl.imst.gatav.tilerenderer.util.Vector2;
+import de.hs_kl.imst.gatav.tilerenderer.util.audio.events.EventContainer;
 
 import static de.hs_kl.imst.gatav.tilerenderer.util.Constants.enableEyeCandy;
 
@@ -71,6 +73,8 @@ public class TileLoader extends Observable implements Runnable {
     private Bitmap backgroundBitmap;
     //private Bitmap[][] chunkArray;
     //private LruCache<Pair<Integer, Integer>, Bitmap> chunkArray;
+
+    private List<EventContainer> audioEventList = new ArrayList<>();
 
     public TileLoader(Context context, String filename) {
         assert (ratioX > 0) : "Scale Helper never initialized!";
@@ -227,7 +231,7 @@ public class TileLoader extends Observable implements Runnable {
             tileWidth = tileWidth * ratioX;
             tileHeight = tileHeight * ratioY;
             sceneBitmap = generateGameBitmap(this.map, loadStaticBackgroundImage(doc));
-            if(enableEyeCandy) {
+            if (enableEyeCandy) {
                 backgroundBitmap = generateBackground(doc);
             }
             loadingPercentage = 100;
@@ -300,26 +304,48 @@ public class TileLoader extends Observable implements Runnable {
             NodeList objects = groupElement.getElementsByTagName("object");
             int objectAmount = objects.getLength();
 
-            List<Collidable> list = IntStream.range(0, objectAmount).parallel().mapToObj(obj -> {
-                Element objectElement = (Element) objects.item(obj);
-                int id = Integer.parseInt(objectElement.getAttribute("id"));
-                int x = (int) (Double.parseDouble(objectElement.getAttribute("x")) * ratioX);
-                int y = (int) (Double.parseDouble(objectElement.getAttribute("y")) * ratioY);
-                String width = objectElement.getAttribute("width");
-                String height = objectElement.getAttribute("height");
-                if (width != null && height != null && !width.isEmpty() && !height.isEmpty()) {
-                    int tmpWidth = (int) Double.parseDouble(width);
-                    int tmpHeight = (int) Double.parseDouble(height);
-                    tmpWidth *= ratioX;
-                    tmpHeight *= ratioY;
-                    Rectangle tmpRect = new Rectangle(x, y, tmpWidth, tmpHeight);
-                    tmpRect.setId(id);
-                    return tmpRect;
-                }
-                return null;
-            }).filter(Objects::nonNull).collect(Collectors.toList());
-            return new Pair<>(name, list);
-        }).collect(Collectors.toMap(i -> i.first, i -> i.second));
+            if(!Objects.equals(name, Constants.musicObjectGroupString)) {
+                List<Collidable> list = IntStream.range(0, objectAmount).parallel().mapToObj(obj -> {
+                    Element objectElement = (Element) objects.item(obj);
+                    int id = Integer.parseInt(objectElement.getAttribute("id"));
+                    int x = (int) (Double.parseDouble(objectElement.getAttribute("x")) * ratioX);
+                    int y = (int) (Double.parseDouble(objectElement.getAttribute("y")) * ratioY);
+                    String width = objectElement.getAttribute("width");
+                    String height = objectElement.getAttribute("height");
+                    if (width != null && height != null && !width.isEmpty() && !height.isEmpty()) {
+                        int tmpWidth = (int) Double.parseDouble(width);
+                        int tmpHeight = (int) Double.parseDouble(height);
+                        tmpWidth *= ratioX;
+                        tmpHeight *= ratioY;
+                        Rectangle tmpRect = new Rectangle(x, y, tmpWidth, tmpHeight);
+                        tmpRect.setId(id);
+                        return tmpRect;
+                    }
+                    return null;
+                }).filter(Objects::nonNull).collect(Collectors.toList());
+                return new Pair<>(name, list);
+            } else {
+                audioEventList = IntStream.range(0, objectAmount).parallel().mapToObj(obj -> {
+                    Element objectElement = (Element) objects.item(obj);
+                    int x = (int) (Double.parseDouble(objectElement.getAttribute("x")) * ratioX);
+                    int y = (int) (Double.parseDouble(objectElement.getAttribute("y")) * ratioY);
+                    String type = objectElement.getAttribute("type");
+                    if (type != null && type.equals("music")) {
+                        String event = objectElement.getAttribute("name");
+                        if (event != null) {
+                            try {
+                                Class<?> myAudioEvent = Class.forName("de.hs_kl.imst.gatav.tilerenderer.util.audio.events." + event);
+                                return new EventContainer(myAudioEvent, new Vector2(x, y));
+                            } catch (ClassNotFoundException e) {
+                                e.printStackTrace();
+                            }
+                        }
+                    }
+                    return null;
+                }).filter(Objects::nonNull).collect(Collectors.toList());
+            }
+            return null;
+        }).filter(Objects::nonNull).collect(Collectors.toMap(i -> i.first, i -> i.second));
 
         /*for (int group = 0; group < groups; group++) {
             //loadingPercentage += (40 / groups) * group;
@@ -361,10 +387,10 @@ public class TileLoader extends Observable implements Runnable {
         NodeList backgroundImage = doc.getElementsByTagName("imagelayer");
         int amount = backgroundImage.getLength();
         assert amount < 2 : "There can only be a maximum of ONE background image!";
-        if(amount > 0) {
+        if (amount > 0) {
             Element backgroundElement = (Element) backgroundImage.item(0);
             NodeList image = backgroundElement.getElementsByTagName("image");
-            if(image.getLength() > 0) {
+            if (image.getLength() > 0) {
                 Element imageElement = (Element) image.item(0);
                 String imageName = imageElement.getAttribute("source");
                 return imageName;
@@ -374,7 +400,7 @@ public class TileLoader extends Observable implements Runnable {
     }
 
     private Bitmap loadStaticBackgroundImage(Document doc) {
-        if(enableEyeCandy) return null;
+        if (enableEyeCandy) return null;
         String name = loadBackgroundImageString(doc);
         return (name != null ? BitmapFactory.decodeStream(getGraphicsStream(name, "levels/backgrounds/")) : null);
     }
@@ -383,26 +409,26 @@ public class TileLoader extends Observable implements Runnable {
         int w = width * tileWidth;
         int h = height * tileHeight;
         Bitmap.Config conf;
-        if(enableEyeCandy) {
+        if (enableEyeCandy) {
             conf = Bitmap.Config.ARGB_8888;
-        }else {
-           conf = Bitmap.Config.RGB_565;
+        } else {
+            conf = Bitmap.Config.RGB_565;
         }
         Bitmap backgroundBMP = null;
-        if(backgroundImage != null) {
-            double scale = Math.ceil(h / (double)backgroundImage.getHeight());
-            backgroundBMP = Bitmap.createScaledBitmap(backgroundImage, (int)(backgroundImage.getWidth()*scale), (int)(backgroundImage.getHeight()*scale), false);
+        if (backgroundImage != null) {
+            double scale = Math.ceil(h / (double) backgroundImage.getHeight());
+            backgroundBMP = Bitmap.createScaledBitmap(backgroundImage, (int) (backgroundImage.getWidth() * scale), (int) (backgroundImage.getHeight() * scale), false);
             backgroundImage = null;
         }
         Bitmap bmp = Bitmap.createBitmap(w, h, conf);
         Canvas canvas = new Canvas(bmp);
 
-        if(!enableEyeCandy && backgroundBMP == null)
+        if (!enableEyeCandy && backgroundBMP == null)
             canvas.drawARGB(255, 109, 165, 255);
-        else if(!enableEyeCandy && backgroundBMP != null) {
-            Log.d("TileLoader", "Adding " + Math.ceil(w / (double)backgroundBMP.getWidth()) + "x Background");
-            for(int i = 0; i<Math.ceil(w / (double)backgroundBMP.getWidth()); i++) {
-                canvas.drawBitmap(backgroundBMP, backgroundBMP.getWidth()*i, 0, null);
+        else if (!enableEyeCandy && backgroundBMP != null) {
+            Log.d("TileLoader", "Adding " + Math.ceil(w / (double) backgroundBMP.getWidth()) + "x Background");
+            for (int i = 0; i < Math.ceil(w / (double) backgroundBMP.getWidth()); i++) {
+                canvas.drawBitmap(backgroundBMP, backgroundBMP.getWidth() * i, 0, null);
             }
             backgroundBMP = null;
         }
@@ -426,7 +452,7 @@ public class TileLoader extends Observable implements Runnable {
     private Bitmap generateBackground(Document doc) {
         Bitmap.Config conf = Bitmap.Config.RGB_565;
         String name = loadBackgroundImageString(doc);
-        if(name == null) return null;
+        if (name == null) return null;
         Bitmap bmp = BitmapFactory.decodeStream(getGraphicsStream(name, "levels/backgrounds/"));
         //bmp.setConfig(conf);
         return Bitmap.createScaledBitmap(bmp, (int) (bmp.getWidth() * ScaleHelper.getRatioX()), (int) (bmp.getHeight() * ScaleHelper.getRatioY()), false);
@@ -476,5 +502,13 @@ public class TileLoader extends Observable implements Runnable {
 
     public void cleanup() {
         sceneBitmap = null;
+    }
+
+    public List<EventContainer> getAudioEventList() {
+        return audioEventList;
+    }
+
+    public void setAudioEventList(List<EventContainer> audioEventList) {
+        this.audioEventList = audioEventList;
     }
 }

@@ -1,7 +1,6 @@
 package de.hs_kl.imst.gatav.tilerenderer.util;
 
 import android.graphics.Rect;
-import android.util.Log;
 import android.util.Pair;
 
 import java.util.ArrayList;
@@ -16,11 +15,11 @@ import de.hs_kl.imst.gatav.tilerenderer.drawable.GameContent;
 import de.hs_kl.imst.gatav.tilerenderer.drawable.MovableGraphics;
 import de.hs_kl.imst.gatav.tilerenderer.drawable.Player;
 import de.hs_kl.imst.gatav.tilerenderer.util.Hitboxes.Collidable;
-import de.hs_kl.imst.gatav.tilerenderer.util.states.GameStateHandler;
 import de.hs_kl.imst.gatav.tilerenderer.util.Hitboxes.Rectangle;
 import de.hs_kl.imst.gatav.tilerenderer.util.audio.AudioPlayer;
 import de.hs_kl.imst.gatav.tilerenderer.util.audio.Sounds;
-import de.hs_kl.imst.gatav.tilerenderer.util.audio.events.Owl;
+import de.hs_kl.imst.gatav.tilerenderer.util.audio.events.EventContainer;
+import de.hs_kl.imst.gatav.tilerenderer.util.states.GameStateHandler;
 import de.hs_kl.imst.gatav.tilerenderer.util.states.PlayerStates;
 
 /**
@@ -43,16 +42,20 @@ public class GameEventHandler implements Observer {
     private boolean failed = false;
     //Audio Events
     private boolean speedUpSound = false;
-    private Owl owlAudioEvent;
+    private List<EventContainer> audioEventList;
 
-    public GameEventHandler(Map<String, List<Collidable>> objects, Timer timer, GameEventExecutioner executioner, AudioPlayer audioPlayer) {
+    public GameEventHandler(Map<String, List<Collidable>> objects, Timer timer, GameEventExecutioner executioner, AudioPlayer audioPlayer, List<EventContainer> audioEventList) {
         this.objects = objects;
         this.timer = timer;
         currentGracePeriod = timer.getElapsedTime() + gracePeriod;
         this.executioner = executioner;
         this.audioPlayer = audioPlayer;
-        this.owlAudioEvent = new Owl(new Vector2(4000, 600), audioPlayer, timer);
         this.gameState.setLastCheckpointTime(timer.getTotalLevelTime());
+        this.audioEventList = audioEventList;
+
+        for (EventContainer event : audioEventList) {
+            event.start(timer, audioPlayer);
+        }
     }
 
     public ArrayList<MovableGraphics> getDynamics() {
@@ -60,7 +63,7 @@ public class GameEventHandler implements Observer {
     }
 
     public void update(GameCamera cam) {
-        if(!hasReachedFinish()&& (timer.getElapsedTime() > 0.2&& timer.getElapsedTime() < 0.5)){
+        if (!hasReachedFinish() && (timer.getElapsedTime() > 0.2 && timer.getElapsedTime() < 0.5)) {
             player.isActive = true;
         }
         if (!finished && hasReachedFinish()) {
@@ -100,7 +103,7 @@ public class GameEventHandler implements Observer {
         }
 
         //If is in water
-        if(!failed && isInWaterZone()) {
+        if (!failed && isInWaterZone()) {
             failed = true;
             //Todo: Some water joke with electronics
             GameContent.getHud().drawPopupImage("hudImages/rip.png", (float) gracePeriod);
@@ -144,7 +147,9 @@ public class GameEventHandler implements Observer {
             failed = false;
         }
 
-        owlAudioEvent.update();
+        for (EventContainer event : audioEventList) {
+            event.update();
+        }
     }
 
     private boolean hasReachedFinish() {
@@ -195,7 +200,7 @@ public class GameEventHandler implements Observer {
 
     private double calculateRemaingTimeAfterCheckpoint(Vector2 checkpointCoordinates) {
         List<Collidable> finishZones = objects.get(Constants.finishObjectGroupString);
-        if(finishZones != null && finishZones.get(0) != null) {
+        if (finishZones != null && finishZones.get(0) != null) {
             Rect finishObj = ((Rectangle) finishZones.get(0)).getRect();
             Vector2 centerOfRectangle = new Vector2(finishObj.centerX(), finishObj.centerY());
             double remainingDistance = Vector2.distance(checkpointCoordinates, centerOfRectangle);

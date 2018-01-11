@@ -24,4 +24,5 @@ public class Constants {
     public static final String coinObjectGroupString = "Coin";
     public static final String waterObjectGroupString = "Water";
     public static final String bossObjectGroupString = "Boss";
+    public static final String musicObjectGroupString = "Musik";
 }

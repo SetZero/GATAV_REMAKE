@@ -7,6 +7,7 @@ import java.util.ArrayList;
 import java.util.List;
 import java.util.Map;
 
+import de.hs_kl.imst.gatav.tilerenderer.BuildConfig;
 import de.hs_kl.imst.gatav.tilerenderer.drawable.Coin;
 import de.hs_kl.imst.gatav.tilerenderer.drawable.Enemies;
 import de.hs_kl.imst.gatav.tilerenderer.drawable.Player;
@@ -28,8 +29,8 @@ public class GameEntityFactory {
 
     public Player generatePlayer(Context context, AudioPlayer audioPlayer) {
         List<Collidable> zone = objects.get(Constants.playerStartObjectGroupString);
-        assert zone != null : "Level without Start Position!";
-        assert zone.size() == 1 : "Level with multiple Starts";
+        if (BuildConfig.DEBUG && zone == null) throw new AssertionError("Level without Start Position!");
+        if (BuildConfig.DEBUG && zone.size() != 1) throw new AssertionError("Level with multiple Starts");
 
         Collidable playerStart = zone.get(0);
         if (playerStart instanceof Rectangle) {

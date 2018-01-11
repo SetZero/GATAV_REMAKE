@@ -11,10 +11,11 @@ import de.hs_kl.imst.gatav.tilerenderer.util.audio.Sounds;
  * Created by Sebastian on 2018-01-05.
  */
 
-public class Owl extends RepeatingEvent {
+public class Sea extends RepeatingEvent {
 
-    public Owl(Vector2 position, AudioPlayer audioPlayer, Timer timer) {
+    public Sea(Vector2 position, AudioPlayer audioPlayer, Timer timer) {
         super(position, audioPlayer, timer);
+        this.timeBetween = 4;
     }
 
     @Override
@@ -22,7 +23,7 @@ public class Owl extends RepeatingEvent {
         if (lastSound + timeBetween <= timer.getElapsedTime()) {
             int randomNum = ThreadLocalRandom.current().nextInt(-2, 3);
             lastSound = timer.getElapsedTime() + randomNum;
-            audioPlayer.addSound(Sounds.OWL, position, 90);
+            audioPlayer.addSound(Sounds.SEA, position, 90);
         }
     }
 }

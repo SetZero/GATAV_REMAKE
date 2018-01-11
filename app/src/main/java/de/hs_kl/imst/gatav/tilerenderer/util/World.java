@@ -38,7 +38,7 @@ public class World {
         this.tileLoader = tileLoader;
         objects = tileLoader.getObjectGroups();
         physics = new PhysicsController(this);
-        gameEvents = new GameEventHandler(this.getObjects(), timer, executioner, audioPlayer);
+        gameEvents = new GameEventHandler(this.getObjects(), timer, executioner, audioPlayer, tileLoader.getAudioEventList());
         this.step = step;
         this.timer = timer;
     }
@@ -94,10 +94,10 @@ public class World {
         //Screw RAM, modern Smartphones have 4GB of RAM anyways...
 
         //Draw parallax background
-        if(enableEyeCandy) {
+        if (enableEyeCandy) {
             canvas.drawARGB(255, 109, 165, 255);
             Bitmap background = tileLoader.getBackgroundBitmap();
-            if(background != null) {
+            if (background != null) {
                 int firstBackgroundOffset = 0;
                 int secondBackgroundOffset = 0;
                 final double parallaxOffset = 1.2;
