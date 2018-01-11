@@ -390,7 +390,7 @@ public class TileLoader extends Observable implements Runnable {
         }
         Bitmap backgroundBMP = null;
         if(backgroundImage != null) {
-            double scale = h / backgroundImage.getHeight();
+            double scale = Math.ceil(h / (double)backgroundImage.getHeight());
             backgroundBMP = Bitmap.createScaledBitmap(backgroundImage, (int)(backgroundImage.getWidth()*scale), (int)(backgroundImage.getHeight()*scale), false);
             backgroundImage = null;
         }
@@ -399,8 +399,9 @@ public class TileLoader extends Observable implements Runnable {
 
         if(!enableEyeCandy && backgroundBMP == null)
             canvas.drawARGB(255, 109, 165, 255);
-        else if(!enableEyeCandy) {
-            for(int i=0;i<Math.ceil(w / backgroundBMP.getWidth()); i++) {
+        else if(!enableEyeCandy && backgroundBMP != null) {
+            Log.d("TileLoader", "Adding " + Math.ceil(w / (double)backgroundBMP.getWidth()) + "x Background");
+            for(int i = 0; i<Math.ceil(w / (double)backgroundBMP.getWidth()); i++) {
                 canvas.drawBitmap(backgroundBMP, backgroundBMP.getWidth()*i, 0, null);
             }
             backgroundBMP = null;

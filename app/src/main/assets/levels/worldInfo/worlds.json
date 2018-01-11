@@ -2,40 +2,22 @@
   "version": "0.1",
   "maps": [
     {
-      "name": "Welt 1",
-      "description": "Aller Anfang ist Schwer",
-      "saveLocation": "Welt1",
-      "time": 100
-    },
-    {
-      "name": "Desert",
-      "description": "Aller Anfang ist Schwer",
-      "saveLocation": "Level 2",
-      "time": 150
-    },
-    {
-      "name": "???",
-      "description": "Aller Anfang ist Schwer",
-      "saveLocation": "Level 3",
-      "time": 150
-    },
-    {
-      "name": "Fertige Welt",
-      "description": "Zum Testen",
+      "name": "Wild World",
+      "description": "Dance to the plastic beat",
       "saveLocation": "finished",
       "time": 100
     },
     {
-      "name": "Test Welt",
-      "description": "Zum Testen",
-      "saveLocation": "test",
-      "time": 100
+      "name": "Desert Storm",
+      "description": "Enter sandman",
+      "saveLocation": "Level 2",
+      "time": 150
     },
     {
-      "name": "Test Backup",
-      "description": "Backup von test",
-      "saveLocation": "test_backup",
-      "time": 100
+      "name": "Warehouse District",
+      "description": "I'm just playing games",
+      "saveLocation": "Level 3",
+      "time": 150
     }
   ]
 }

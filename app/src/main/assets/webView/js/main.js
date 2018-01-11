@@ -3,7 +3,7 @@ var dice = Math.floor(Math.random() * 6) + 1
 
 console.log(dice + " rolled");
 
-if(supportsWebGL && dice > 3) {
+if(supportsWebGL() && dice > 3) {
     $('.bottom-cityscape').hide();
     init3D();
     // Schedule the first frame.
@@ -63,13 +63,13 @@ $('#enable-eyecandy').change(function() {
 
 
 // FUNCTIONS
-var supportsWebGL = () => {
+function supportsWebGL() {
     if (!window.WebGLRenderingContext) {
         return false;
     } else {
         try {
-            var canvas = document.getElementById("myCanvas");
-            var context = canvas.getContext("webgl");
+            var canvas = document.getElementById("testCanvas");
+            var context = canvas.getContext("webgl") || canvas.getContext("experimental-webgl");
             if (!context) {
                 return false;
             }
