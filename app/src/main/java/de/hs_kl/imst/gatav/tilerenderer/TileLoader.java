@@ -425,7 +425,7 @@ public class TileLoader extends Observable implements Runnable {
     private Bitmap generateBackground(Document doc) {
         Bitmap.Config conf = Bitmap.Config.RGB_565;
         String name = loadBackgroundImageString(doc);
-        Log.d("TileLoader", "Name: " + name);
+        if(name == null) return null;
         Bitmap bmp = BitmapFactory.decodeStream(getGraphicsStream(name, "levels/backgrounds/"));
         //bmp.setConfig(conf);
         return Bitmap.createScaledBitmap(bmp, (int) (bmp.getWidth() * ScaleHelper.getRatioX()), (int) (bmp.getHeight() * ScaleHelper.getRatioY()), false);

@@ -97,24 +97,26 @@ public class World {
         if(enableEyeCandy) {
             canvas.drawARGB(255, 109, 165, 255);
             Bitmap background = tileLoader.getBackgroundBitmap();
-            int firstBackgroundOffset = 0;
-            int secondBackgroundOffset = 0;
-            final double parallaxOffset = 1.2;
-            int backgroundLeftPosition = (int) (camera.getCameraViewRect().left / parallaxOffset);
-            if (firstBackgroundOffset + backgroundLeftPosition + background.getWidth() < camera.getCameraViewRect().right) {
-                secondBackgroundOffset = secondBackgroundOffset + background.getWidth();
-            }
-            if (secondBackgroundOffset + backgroundLeftPosition + background.getWidth() < camera.getCameraViewRect().right) {
-                firstBackgroundOffset = secondBackgroundOffset + background.getWidth();
-            }
+            if(background != null) {
+                int firstBackgroundOffset = 0;
+                int secondBackgroundOffset = 0;
+                final double parallaxOffset = 1.2;
+                int backgroundLeftPosition = (int) (camera.getCameraViewRect().left / parallaxOffset);
+                if (firstBackgroundOffset + backgroundLeftPosition + background.getWidth() < camera.getCameraViewRect().right) {
+                    secondBackgroundOffset = secondBackgroundOffset + background.getWidth();
+                }
+                if (secondBackgroundOffset + backgroundLeftPosition + background.getWidth() < camera.getCameraViewRect().right) {
+                    firstBackgroundOffset = secondBackgroundOffset + background.getWidth();
+                }
 
-            final int firstLeftPosition = firstBackgroundOffset + backgroundLeftPosition;
-            final int firstTopPosition = camera.getLevelHeight() - background.getHeight();
-            canvas.drawBitmap(background, firstLeftPosition, firstTopPosition, null);
+                final int firstLeftPosition = firstBackgroundOffset + backgroundLeftPosition;
+                final int firstTopPosition = camera.getLevelHeight() - background.getHeight();
+                canvas.drawBitmap(background, firstLeftPosition, firstTopPosition, null);
 
-            final int secondLeftPosition = secondBackgroundOffset + backgroundLeftPosition;
-            final int secondTopPosition = camera.getLevelHeight() - background.getHeight();
-            canvas.drawBitmap(background, secondLeftPosition, secondTopPosition, null);
+                final int secondLeftPosition = secondBackgroundOffset + backgroundLeftPosition;
+                final int secondTopPosition = camera.getLevelHeight() - background.getHeight();
+                canvas.drawBitmap(background, secondLeftPosition, secondTopPosition, null);
+            }
         }
         //draw main level
         canvas.drawBitmap(tileLoader.getSceneBitmap(), 0, 0, null);
