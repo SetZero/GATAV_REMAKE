@@ -214,7 +214,7 @@ public class TileLoader extends Observable implements Runnable {
                 String src = tileElement.getAttribute("source");
                 int firstGID = Integer.parseInt(tileElement.getAttribute("firstgid"));
                 Log.d("TileLoader", "Loading: " + src);
-                generateBitmaps(src, firstGID, usedTilesInMap);
+                this.tiles.putAll(generateBitmaps(src, firstGID, usedTilesInMap));
             }
 
             loadingPercentage = 60;
@@ -226,9 +226,9 @@ public class TileLoader extends Observable implements Runnable {
             //splitBitmapToChunk(tmpMap);
             tileWidth = tileWidth * ratioX;
             tileHeight = tileHeight * ratioY;
-            sceneBitmap = generateGameBitmap(this.map);
+            sceneBitmap = generateGameBitmap(this.map, loadStaticBackgroundImage(doc));
             if(enableEyeCandy) {
-                backgroundBitmap = generateBackground();
+                backgroundBitmap = generateBackground(doc);
             }
             loadingPercentage = 100;
             //width = width / (int) ScaleHelper.getRatioX();
@@ -240,7 +240,8 @@ public class TileLoader extends Observable implements Runnable {
         }
     }
 
-    private void generateBitmaps(String src, int firstGID, Set<Integer> usedTilesInTileset) {
+
+    private Map<Integer, Bitmap> generateBitmaps(String src, int firstGID, Set<Integer> usedTilesInTileset) {
         Log.d("TileLoader", "Start Generating Bitmaps");
         try {
             DocumentBuilderFactory factory = DocumentBuilderFactory.newInstance();
@@ -260,8 +261,17 @@ public class TileLoader extends Observable implements Runnable {
             Element imageElement = (Element) image;
             String sourceImage = imageElement.getAttribute("source");
             BitmapRegionDecoder decoder = BitmapRegionDecoder.newInstance(getSpriteGraphicsStream(sourceImage), false);
-
-            for (Integer i : usedTilesInTileset) {
+            return usedTilesInTileset.parallelStream()
+                    .filter(i -> i >= firstGID && i < firstGID + tiles)
+                    .map(i -> {
+                        int realPosInTileset = i - firstGID;
+                        int xPos = (realPosInTileset % columns) * tileWidth;
+                        int yPos = (realPosInTileset / columns) * tileHeight;
+                        Bitmap region = decoder.decodeRegion(new Rect(xPos, yPos, xPos + tileWidth, yPos + tileHeight), null);
+                        region = Bitmap.createScaledBitmap(region, region.getWidth() * ratioX, region.getHeight() * ratioY, false);
+                        return new Pair<Integer, Bitmap>(i, region);
+                    }).collect(Collectors.toMap(i -> i.first, i -> i.second));
+            /*for (Integer i : usedTilesInTileset) {
                 if (i < firstGID || i >= firstGID + tiles) continue;
                 int realPosInTileset = i - firstGID;
                 int xPos = (realPosInTileset % columns) * tileWidth;
@@ -269,12 +279,13 @@ public class TileLoader extends Observable implements Runnable {
                 Bitmap region = decoder.decodeRegion(new Rect(xPos, yPos, xPos + tileWidth, yPos + tileHeight), null);
                 region = Bitmap.createScaledBitmap(region, region.getWidth() * ratioX, region.getHeight() * ratioY, false);
                 this.tiles.put(i, region);
-            }
-            Log.d("TileLoader", "Finished Generating Bitmaps " + this.tiles.size());
+            } */
+            //Log.d("TileLoader", "Finished Generating Bitmaps " + this.tiles.size());
 
         } catch (ParserConfigurationException | SAXException | IOException e) {
             e.printStackTrace();
         }
+        return new HashMap<>();
     }
 
     private void loadObjectGroups(Document doc) {
@@ -346,7 +357,29 @@ public class TileLoader extends Observable implements Runnable {
         Log.d("TileLoader", "Finished Hitboxes");*/
     }
 
-    private Bitmap generateGameBitmap(ArrayList<List<TileInformation>> map) {
+    private String loadBackgroundImageString(Document doc) {
+        NodeList backgroundImage = doc.getElementsByTagName("imagelayer");
+        int amount = backgroundImage.getLength();
+        assert amount < 2 : "There can only be a maximum of ONE background image!";
+        if(amount > 0) {
+            Element backgroundElement = (Element) backgroundImage.item(0);
+            NodeList image = backgroundElement.getElementsByTagName("image");
+            if(image.getLength() > 0) {
+                Element imageElement = (Element) image.item(0);
+                String imageName = imageElement.getAttribute("source");
+                return imageName;
+            }
+        }
+        return null;
+    }
+
+    private Bitmap loadStaticBackgroundImage(Document doc) {
+        if(enableEyeCandy) return null;
+        String name = loadBackgroundImageString(doc);
+        return (name != null ? BitmapFactory.decodeStream(getGraphicsStream(name, "levels/backgrounds/")) : null);
+    }
+
+    private Bitmap generateGameBitmap(ArrayList<List<TileInformation>> map, Bitmap backgroundImage) {
         int w = width * tileWidth;
         int h = height * tileHeight;
         Bitmap.Config conf;
@@ -355,11 +388,23 @@ public class TileLoader extends Observable implements Runnable {
         }else {
            conf = Bitmap.Config.RGB_565;
         }
+        Bitmap backgroundBMP = null;
+        if(backgroundImage != null) {
+            double scale = h / backgroundImage.getHeight();
+            backgroundBMP = Bitmap.createScaledBitmap(backgroundImage, (int)(backgroundImage.getWidth()*scale), (int)(backgroundImage.getHeight()*scale), false);
+            backgroundImage = null;
+        }
         Bitmap bmp = Bitmap.createBitmap(w, h, conf);
         Canvas canvas = new Canvas(bmp);
 
-        if(!enableEyeCandy)
+        if(!enableEyeCandy && backgroundBMP == null)
             canvas.drawARGB(255, 109, 165, 255);
+        else if(!enableEyeCandy) {
+            for(int i=0;i<Math.ceil(w / backgroundBMP.getWidth()); i++) {
+                canvas.drawBitmap(backgroundBMP, backgroundBMP.getWidth()*i, 0, null);
+            }
+            backgroundBMP = null;
+        }
 
         for (List<TileInformation> currentLayerTiles : map) {
             for (TileInformation currentTile : currentLayerTiles) {
@@ -377,9 +422,11 @@ public class TileLoader extends Observable implements Runnable {
         return bmp;
     }
 
-    private Bitmap generateBackground() {
+    private Bitmap generateBackground(Document doc) {
         Bitmap.Config conf = Bitmap.Config.RGB_565;
-        Bitmap bmp = BitmapFactory.decodeStream(getGraphicsStream("background1.png", "levels/backgrounds/"));
+        String name = loadBackgroundImageString(doc);
+        Log.d("TileLoader", "Name: " + name);
+        Bitmap bmp = BitmapFactory.decodeStream(getGraphicsStream(name, "levels/backgrounds/"));
         //bmp.setConfig(conf);
         return Bitmap.createScaledBitmap(bmp, (int) (bmp.getWidth() * ScaleHelper.getRatioX()), (int) (bmp.getHeight() * ScaleHelper.getRatioY()), false);
     }

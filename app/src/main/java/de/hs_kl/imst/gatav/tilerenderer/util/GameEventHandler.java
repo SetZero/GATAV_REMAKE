@@ -194,11 +194,16 @@ public class GameEventHandler implements Observer {
     }
 
     private double calculateRemaingTimeAfterCheckpoint(Vector2 checkpointCoordinates) {
-        Rect finishObj = ((Rectangle) objects.get(Constants.finishObjectGroupString).get(0)).getRect();
-        Vector2 centerOfRectangle = new Vector2(finishObj.centerX(), finishObj.centerY());
-        double remainingDistance = Vector2.distance(player.getPosition(), centerOfRectangle);
-        double totalDistance = Vector2.distance(player.getStartPosition(), centerOfRectangle);
-        return (timer.getTotalLevelTime() / totalDistance) * remainingDistance;
+        List<Collidable> finishZones = objects.get(Constants.finishObjectGroupString);
+        if(finishZones != null && finishZones.get(0) != null) {
+            Rect finishObj = ((Rectangle) finishZones.get(0)).getRect();
+            Vector2 centerOfRectangle = new Vector2(finishObj.centerX(), finishObj.centerY());
+            double remainingDistance = Vector2.distance(checkpointCoordinates, centerOfRectangle);
+            double totalDistance = Vector2.distance(player.getStartPosition(), centerOfRectangle);
+            return (timer.getTotalLevelTime() / totalDistance) * remainingDistance;
+        }
+        //guess it
+        return (timer.getElapsedTime() > timer.getTotalLevelTime() * 0.8 ? timer.getTotalLevelTime() * 0.2 : timer.getElapsedTime());
     }
 
     void addDynamicObject(MovableGraphics dynamic) {

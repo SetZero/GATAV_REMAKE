@@ -355,7 +355,7 @@
  <objectgroup color="#ff00ff" name="Boss" visible="0">
   <object id="64" x="5999" y="735" width="115" height="55"/>
  </objectgroup>
- <objectgroup color="#ffff00" name="Checkpoint" visible="0">
+ <objectgroup color="#ffff00" name="Checkpoints" visible="0">
   <object id="65" x="1430" y="52" width="46" height="620"/>
   <object id="66" x="3692" y="29" width="43" height="494"/>
   <object id="67" x="5844" y="55" width="46" height="189"/>
