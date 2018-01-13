@@ -109,7 +109,7 @@ public class PhysicsController {
                         item.setLinearImpulse(new Vector2(item.getLinearImpulse().x, 0f));
 
                         if (!item.isOnGround) {
-                            item.impact(new Vector2(0f, gravity ));
+                            item.impact(new Vector2(0f, gravity * delta ));
                         }
                     }
                     if (groundCollision) {
