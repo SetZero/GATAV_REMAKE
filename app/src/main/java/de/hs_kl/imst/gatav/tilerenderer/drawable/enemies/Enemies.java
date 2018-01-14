@@ -1,4 +1,4 @@
-package de.hs_kl.imst.gatav.tilerenderer.drawable;
+package de.hs_kl.imst.gatav.tilerenderer.drawable.enemies;
 
 import android.graphics.Canvas;
 import android.graphics.Color;
@@ -6,6 +6,11 @@ import android.graphics.Paint;
 import android.graphics.drawable.BitmapDrawable;
 import android.util.Pair;
 
+import de.hs_kl.imst.gatav.tilerenderer.drawable.CollisionReactive;
+import de.hs_kl.imst.gatav.tilerenderer.drawable.Destroyable;
+import de.hs_kl.imst.gatav.tilerenderer.drawable.GameContent;
+import de.hs_kl.imst.gatav.tilerenderer.drawable.MovableGraphics;
+import de.hs_kl.imst.gatav.tilerenderer.drawable.Player;
 import de.hs_kl.imst.gatav.tilerenderer.util.Animations;
 import de.hs_kl.imst.gatav.tilerenderer.util.Contact;
 import de.hs_kl.imst.gatav.tilerenderer.util.states.Direction;
@@ -18,7 +23,7 @@ import de.hs_kl.imst.gatav.tilerenderer.util.Constants;
  * Created by keven on 17.12.2017.
  */
 
-public abstract class Enemies extends MovableGraphics implements Destroyable, CollisionReactive  {
+public abstract class Enemies extends MovableGraphics implements Destroyable, CollisionReactive {
     protected float lifePoints, animTime, speed;
     protected float dieTimer = 0.0f;
     protected Animations run;

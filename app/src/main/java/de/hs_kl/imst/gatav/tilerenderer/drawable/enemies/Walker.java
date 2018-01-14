@@ -1,4 +1,4 @@
-package de.hs_kl.imst.gatav.tilerenderer.drawable;
+package de.hs_kl.imst.gatav.tilerenderer.drawable.enemies;
 
 
 import android.content.Context;
@@ -9,6 +9,9 @@ import android.util.Pair;
 import java.io.InputStream;
 import java.util.concurrent.ThreadLocalRandom;
 
+import de.hs_kl.imst.gatav.tilerenderer.drawable.CollisionReactive;
+import de.hs_kl.imst.gatav.tilerenderer.drawable.Destroyable;
+import de.hs_kl.imst.gatav.tilerenderer.drawable.GameContent;
 import de.hs_kl.imst.gatav.tilerenderer.util.Animations;
 import de.hs_kl.imst.gatav.tilerenderer.util.Hitboxes.Rectangle;
 import de.hs_kl.imst.gatav.tilerenderer.util.ScaleHelper;

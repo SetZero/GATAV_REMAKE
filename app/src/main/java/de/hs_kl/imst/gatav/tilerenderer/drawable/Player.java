@@ -10,6 +10,7 @@ import android.util.Pair;
 import java.io.IOException;
 import java.io.InputStream;
 
+import de.hs_kl.imst.gatav.tilerenderer.drawable.enemies.Enemies;
 import de.hs_kl.imst.gatav.tilerenderer.util.Animations;
 import de.hs_kl.imst.gatav.tilerenderer.util.Constants;
 import de.hs_kl.imst.gatav.tilerenderer.util.Contact;
@@ -270,7 +271,7 @@ public final class Player extends MovableGraphics implements Destroyable, Collis
                     score += enemy.getScorePoints();
                 //TODO: Hit sound
                 if(c.collisionObject instanceof Robotic) {
-                    if(enemy.isAlive) {
+                    if(enemy.isAlive()) {
                         setChanged();
                         notifyObservers(new Pair<>(Sounds.ROBOT_HIT_BY_PLAYER, new Vector2(Position)));
                     }

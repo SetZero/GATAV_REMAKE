@@ -9,10 +9,10 @@ import java.util.Map;
 
 import de.hs_kl.imst.gatav.tilerenderer.BuildConfig;
 import de.hs_kl.imst.gatav.tilerenderer.drawable.Coin;
-import de.hs_kl.imst.gatav.tilerenderer.drawable.Enemies;
+import de.hs_kl.imst.gatav.tilerenderer.drawable.enemies.Enemies;
 import de.hs_kl.imst.gatav.tilerenderer.drawable.Player;
 import de.hs_kl.imst.gatav.tilerenderer.drawable.Robotic;
-import de.hs_kl.imst.gatav.tilerenderer.drawable.Walker;
+import de.hs_kl.imst.gatav.tilerenderer.drawable.enemies.Walker;
 import de.hs_kl.imst.gatav.tilerenderer.util.Hitboxes.Collidable;
 import de.hs_kl.imst.gatav.tilerenderer.util.Hitboxes.Rectangle;
 import de.hs_kl.imst.gatav.tilerenderer.util.audio.AudioPlayer;
