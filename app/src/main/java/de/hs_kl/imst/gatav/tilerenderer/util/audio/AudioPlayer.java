@@ -5,12 +5,14 @@ import android.content.res.AssetFileDescriptor;
 import android.media.AudioAttributes;
 import android.media.MediaPlayer;
 import android.media.SoundPool;
+import android.media.audiofx.Equalizer;
 import android.util.Log;
 import android.util.LruCache;
 import android.util.Pair;
 
 import java.io.IOException;
 import java.util.ArrayList;
+import java.util.List;
 import java.util.Map;
 import java.util.Queue;
 import java.util.concurrent.ConcurrentLinkedQueue;
@@ -31,6 +33,7 @@ public class AudioPlayer implements Runnable {
     // ~83.2 = 100% volume => @ ~4000 Units = 0%
     private final double audioThreshold = 83.2;
     private final Queue<Pair<AudioDataKeeper, Integer>> loadingQueue = new ConcurrentLinkedQueue<>();
+    private List<Equalizer> eq = new ArrayList<>();
     private final AtomicBoolean playing = new AtomicBoolean(true);
     private final Context ctx;
     private SoundPool sp;
@@ -122,7 +125,7 @@ public class AudioPlayer implements Runnable {
             ArrayList<Integer> tmp = new ArrayList<>();
             for (Pair<AudioDataKeeper, Integer> sound : loadingQueue) {
                 if (sound.second == sampleId) {
-                    int id = sp.play(sound.second, 0.0f, 0.0f, 1, 0, 1);
+                    int id = startPlay(sound.second);
                     soundToPlay.put(id, sound.first);
                     tmp.add(sound.second);
                 }
@@ -144,7 +147,7 @@ public class AudioPlayer implements Runnable {
             if (cache.get(s.getSoundResource()) != null) {
                 //...get it from the cache and play it
                 int soundId = cache.get(s.getSoundResource());
-                int id = sp.play(soundId, 0.0f, 0.0f, 1, 0, 1);
+                int id = startPlay(soundId);
                 //soundToPlay.add(new Pair<>(source, id));
                 AudioDataKeeper data = new AudioDataKeeper(source, decibel);
                 soundToPlay.put(id, data);
@@ -171,6 +174,10 @@ public class AudioPlayer implements Runnable {
 
     public void setPlayerCharacter(Player playerCharacter) {
         this.playerCharacter = playerCharacter;
+    }
+
+    private int startPlay(int soundID) {
+        return sp.play(soundID, 0.0f, 0.0f, 1, 0, 1);
     }
 
     @Override

@@ -12,9 +12,11 @@ import de.hs_kl.imst.gatav.tilerenderer.drawable.Coin;
 import de.hs_kl.imst.gatav.tilerenderer.drawable.Enemies;
 import de.hs_kl.imst.gatav.tilerenderer.drawable.Player;
 import de.hs_kl.imst.gatav.tilerenderer.drawable.Robotic;
+import de.hs_kl.imst.gatav.tilerenderer.drawable.Walker;
 import de.hs_kl.imst.gatav.tilerenderer.util.Hitboxes.Collidable;
 import de.hs_kl.imst.gatav.tilerenderer.util.Hitboxes.Rectangle;
 import de.hs_kl.imst.gatav.tilerenderer.util.audio.AudioPlayer;
+import de.hs_kl.imst.gatav.tilerenderer.util.types.EnemyTypes;
 
 /**
  * Created by Sebastian on 2018-01-05.
@@ -51,8 +53,21 @@ public class GameEntityFactory {
         List<Enemies> enemies = new ArrayList<>();
         for (Collidable zone : zones) {
             if (zone instanceof Rectangle) {
-                Rect enemyRect = ((Rectangle) zone).getRect();
-                Enemies enemy = new Robotic(0, 0, context);
+                Rectangle zoneRectangle = (Rectangle) zone;
+                Rect enemyRect = zoneRectangle.getRect();
+                Enemies enemy;
+                String name = zoneRectangle.getType();
+                EnemyTypes type = name != null ? EnemyTypes.valueOf(name.toUpperCase()) : EnemyTypes.ROBOT;
+
+                switch(type) {
+                    case WALKER:
+                        enemy = new Walker(0, 0, context, enemyRect);
+                        break;
+                    default:
+                    case ROBOT:
+                        enemy = new Robotic(0, 0, context);
+                        break;
+                }
                 enemy.setPosition(new Vector2(enemyRect.left, enemyRect.top - enemy.getHitbox().getHeight()));
                 enemies.add(enemy);
             }

@@ -275,16 +275,7 @@ public class TileLoader extends Observable implements Runnable {
                         region = Bitmap.createScaledBitmap(region, region.getWidth() * ratioX, region.getHeight() * ratioY, false);
                         return new Pair<Integer, Bitmap>(i, region);
                     }).collect(Collectors.toMap(i -> i.first, i -> i.second));
-            /*for (Integer i : usedTilesInTileset) {
-                if (i < firstGID || i >= firstGID + tiles) continue;
-                int realPosInTileset = i - firstGID;
-                int xPos = (realPosInTileset % columns) * tileWidth;
-                int yPos = (realPosInTileset / columns) * tileHeight;
-                Bitmap region = decoder.decodeRegion(new Rect(xPos, yPos, xPos + tileWidth, yPos + tileHeight), null);
-                region = Bitmap.createScaledBitmap(region, region.getWidth() * ratioX, region.getHeight() * ratioY, false);
-                this.tiles.put(i, region);
-            } */
-            //Log.d("TileLoader", "Finished Generating Bitmaps " + this.tiles.size());
+
 
         } catch (ParserConfigurationException | SAXException | IOException e) {
             e.printStackTrace();
@@ -315,9 +306,10 @@ public class TileLoader extends Observable implements Runnable {
                     if (width != null && height != null && !width.isEmpty() && !height.isEmpty()) {
                         int tmpWidth = (int) Double.parseDouble(width);
                         int tmpHeight = (int) Double.parseDouble(height);
+                        String type = objectElement.getAttribute("type");
                         tmpWidth *= ratioX;
                         tmpHeight *= ratioY;
-                        Rectangle tmpRect = new Rectangle(x, y, tmpWidth, tmpHeight);
+                        Rectangle tmpRect = new Rectangle(x, y, tmpWidth, tmpHeight, type);
                         tmpRect.setId(id);
                         return tmpRect;
                     }
@@ -346,41 +338,6 @@ public class TileLoader extends Observable implements Runnable {
             }
             return null;
         }).filter(Objects::nonNull).collect(Collectors.toMap(i -> i.first, i -> i.second));
-
-        /*for (int group = 0; group < groups; group++) {
-            //loadingPercentage += (40 / groups) * group;
-
-            Log.d("TileLoader", "Hitbox Layer: " + group);
-            Element groupElement = (Element) objectgroups.item(group);
-            String name = groupElement.getAttribute("name");
-
-            NodeList objects = groupElement.getElementsByTagName("object");
-            int objectAmount = objects.getLength();
-            objectGroups.put(name, new ArrayList<>(objectAmount));
-
-            Log.d("TileLoader", "Adding " + objectAmount + " Objects!");
-            for (int i = 0; i < objectAmount; i++) {
-                Element objectElement = (Element) objects.item(i);
-                int id = Integer.parseInt(objectElement.getAttribute("id"));
-                //If it's stupid but it works it isn't stupid
-                int x = (int) (Double.parseDouble(objectElement.getAttribute("x")) * ratioX);
-                int y = (int) (Double.parseDouble(objectElement.getAttribute("y")) * ratioY);
-
-                //Rect
-                String width = objectElement.getAttribute("width");
-                String height = objectElement.getAttribute("height");
-                if (width != null && height != null && !width.isEmpty() && !height.isEmpty()) {
-                    int tmpWidth = (int) Double.parseDouble(width);
-                    int tmpHeight = (int) Double.parseDouble(height);
-                    tmpWidth *= ratioX;
-                    tmpHeight *= ratioY;
-                    Rectangle tmpRect = new Rectangle(x, y, tmpWidth, tmpHeight);
-                    tmpRect.setId(id);
-                    objectGroups.get(name).add(tmpRect);
-                }
-            }
-        }
-        Log.d("TileLoader", "Finished Hitboxes");*/
     }
 
     private String loadBackgroundImageString(Document doc) {
@@ -420,6 +377,7 @@ public class TileLoader extends Observable implements Runnable {
             backgroundBMP = Bitmap.createScaledBitmap(backgroundImage, (int) (backgroundImage.getWidth() * scale), (int) (backgroundImage.getHeight() * scale), false);
             backgroundImage = null;
         }
+        Log.d("TileLoader", w + ", " + h + " | " + conf.toString() + "(" + width + "x" + height + ")" + " - " + tileWidth);
         Bitmap bmp = Bitmap.createBitmap(w, h, conf);
         Canvas canvas = new Canvas(bmp);
 

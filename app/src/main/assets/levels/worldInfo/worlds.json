@@ -18,6 +18,12 @@
       "description": "I'm just playing games",
       "saveLocation": "Level 3",
       "time": 150
+    },
+    {
+      "name": "Generics",
+      "description": "More Generic than java",
+      "saveLocation": "generic",
+      "time": 150
     }
   ]
 }

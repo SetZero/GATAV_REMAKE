@@ -9,8 +9,8 @@ import android.graphics.Rect;
 public class Rectangle extends Collidable {
     private Rect rect;
     private int width;
-
     private int height;
+    private String type;
 
     public Rectangle(int x, int y, int width, int height) {
         this.width = width;
@@ -20,25 +20,40 @@ public class Rectangle extends Collidable {
         rect = new Rect(x, y, x + width, y + height);
     }
 
+    public Rectangle(int x, int y, int width, int height, String type) {
+        this(x, y, width, height);
+        this.type = type;
+    }
+
+    public String getType() {
+        return type;
+    }
+
+    public void setType(String type) {
+        this.type = type;
+    }
+
     /**
      * set position using left bottom corner position
+     *
      * @param x axis
      * @param y axis
      */
-    public void setPos(int x, int y){
+    public void setPos(int x, int y) {
         super.setX(x);
         super.setY(y);
         rect.left = x;
-        rect.right = x+width;
+        rect.right = x + width;
         rect.top = y;
-        rect.bottom = y+height;
+        rect.bottom = y + height;
+
     }
 
     @Override
     public void setX(int x) {
         super.setX(x);
         rect.left = super.getX();
-        rect.right = rect.left+width;
+        rect.right = rect.left + width;
     }
 
     @Override
@@ -72,10 +87,10 @@ public class Rectangle extends Collidable {
 
     @Override
     public boolean isCollidingWith(Collidable other) {
-        if(other instanceof Rectangle) {
-           if(rect.intersect( ((Rectangle) other).rect)) {
-               return true;
-           }
+        if (other instanceof Rectangle) {
+            if (rect.intersect(((Rectangle) other).rect)) {
+                return true;
+            }
         }
         return false;
     }
