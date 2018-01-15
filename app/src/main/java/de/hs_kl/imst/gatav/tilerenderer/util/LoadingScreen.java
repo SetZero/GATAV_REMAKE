@@ -8,8 +8,6 @@ import android.graphics.Rect;
 import java.util.Locale;
 import java.util.concurrent.ThreadLocalRandom;
 
-import de.hs_kl.imst.gatav.tilerenderer.TileLoader;
-
 /**
  * Created by Sebastian on 2018-01-06.
  */

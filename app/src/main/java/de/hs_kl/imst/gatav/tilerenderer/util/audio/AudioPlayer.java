@@ -6,7 +6,6 @@ import android.media.AudioAttributes;
 import android.media.MediaPlayer;
 import android.media.SoundPool;
 import android.media.audiofx.Equalizer;
-import android.util.Log;
 import android.util.LruCache;
 import android.util.Pair;
 
@@ -28,14 +27,14 @@ import de.hs_kl.imst.gatav.tilerenderer.util.Vector2;
 
 public class AudioPlayer implements Runnable {
 
-    private MediaPlayer player;
     private final int cacheElements = 10;
     // ~83.2 = 100% volume => @ ~4000 Units = 0%
     private final double audioThreshold = 83.2;
     private final Queue<Pair<AudioDataKeeper, Integer>> loadingQueue = new ConcurrentLinkedQueue<>();
-    private List<Equalizer> eq = new ArrayList<>();
     private final AtomicBoolean playing = new AtomicBoolean(true);
     private final Context ctx;
+    private MediaPlayer player;
+    private List<Equalizer> eq = new ArrayList<>();
     private SoundPool sp;
     private final LruCache<Integer, Integer> cache = new LruCache<Integer, Integer>(cacheElements) {
 
@@ -63,24 +62,6 @@ public class AudioPlayer implements Runnable {
     };
     private Player playerCharacter;
 
-    class AudioDataKeeper {
-        private final Vector2 position;
-        private final double decibel;
-
-        public AudioDataKeeper(Vector2 position, double decibel) {
-            this.position = position;
-            this.decibel = decibel;
-        }
-
-        public Vector2 getPosition() {
-            return position;
-        }
-
-        public double getDecibel() {
-            return decibel;
-        }
-    }
-
     public AudioPlayer(Context ctx) {
         //Start Sound Pool
         initSoundPool();
@@ -102,7 +83,7 @@ public class AudioPlayer implements Runnable {
     }
 
     public void changeBGMSpeed(float speed) {
-        if(player.isPlaying()) {
+        if (player.isPlaying()) {
             player.setPlaybackParams(player.getPlaybackParams().setSpeed(speed));
         }
     }
@@ -182,7 +163,7 @@ public class AudioPlayer implements Runnable {
 
     @Override
     public void run() {
-        if(player != null)
+        if (player != null)
             player.start();
         //As long as we can play songs
         while (playing.get()) {
@@ -223,6 +204,24 @@ public class AudioPlayer implements Runnable {
             } catch (InterruptedException e) {
                 e.printStackTrace();
             }
+        }
+    }
+
+    private class AudioDataKeeper {
+        private final Vector2 position;
+        private final double decibel;
+
+        private AudioDataKeeper(Vector2 position, double decibel) {
+            this.position = position;
+            this.decibel = decibel;
+        }
+
+        public Vector2 getPosition() {
+            return position;
+        }
+
+        public double getDecibel() {
+            return decibel;
         }
     }
 }

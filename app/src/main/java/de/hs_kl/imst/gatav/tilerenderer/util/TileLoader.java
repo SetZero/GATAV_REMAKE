@@ -1,4 +1,4 @@
-package de.hs_kl.imst.gatav.tilerenderer;
+package de.hs_kl.imst.gatav.tilerenderer.util;
 
 
 import android.content.Context;

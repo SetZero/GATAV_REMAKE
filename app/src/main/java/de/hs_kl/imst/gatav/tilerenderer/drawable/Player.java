@@ -11,6 +11,7 @@ import java.io.IOException;
 import java.io.InputStream;
 
 import de.hs_kl.imst.gatav.tilerenderer.drawable.enemies.Enemies;
+import de.hs_kl.imst.gatav.tilerenderer.drawable.enemies.Robotic;
 import de.hs_kl.imst.gatav.tilerenderer.util.Animations;
 import de.hs_kl.imst.gatav.tilerenderer.util.Constants;
 import de.hs_kl.imst.gatav.tilerenderer.util.Contact;

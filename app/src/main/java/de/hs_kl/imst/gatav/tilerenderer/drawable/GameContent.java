@@ -15,7 +15,7 @@ import java.util.List;
 import java.util.Observable;
 import java.util.Observer;
 
-import de.hs_kl.imst.gatav.tilerenderer.TileLoader;
+import de.hs_kl.imst.gatav.tilerenderer.util.TileLoader;
 import de.hs_kl.imst.gatav.tilerenderer.drawable.enemies.Enemies;
 import de.hs_kl.imst.gatav.tilerenderer.util.Constants;
 import de.hs_kl.imst.gatav.tilerenderer.util.LoadingScreen;

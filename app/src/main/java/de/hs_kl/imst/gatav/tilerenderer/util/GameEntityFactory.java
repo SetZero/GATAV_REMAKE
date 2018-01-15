@@ -11,7 +11,7 @@ import de.hs_kl.imst.gatav.tilerenderer.BuildConfig;
 import de.hs_kl.imst.gatav.tilerenderer.drawable.Coin;
 import de.hs_kl.imst.gatav.tilerenderer.drawable.enemies.Enemies;
 import de.hs_kl.imst.gatav.tilerenderer.drawable.Player;
-import de.hs_kl.imst.gatav.tilerenderer.drawable.Robotic;
+import de.hs_kl.imst.gatav.tilerenderer.drawable.enemies.Robotic;
 import de.hs_kl.imst.gatav.tilerenderer.drawable.enemies.Walker;
 import de.hs_kl.imst.gatav.tilerenderer.util.Hitboxes.Collidable;
 import de.hs_kl.imst.gatav.tilerenderer.util.Hitboxes.Rectangle;
@@ -57,7 +57,7 @@ public class GameEntityFactory {
                 Rect enemyRect = zoneRectangle.getRect();
                 Enemies enemy;
                 String name = zoneRectangle.getType();
-                EnemyTypes type = name != null ? EnemyTypes.valueOf(name.toUpperCase()) : EnemyTypes.ROBOT;
+                EnemyTypes type = (name != null && !name.isEmpty() ? EnemyTypes.valueOf(name.toUpperCase()) : EnemyTypes.ROBOT);
 
                 switch(type) {
                     case WALKER:

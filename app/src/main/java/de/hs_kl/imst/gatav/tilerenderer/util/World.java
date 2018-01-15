@@ -10,7 +10,6 @@ import java.util.ArrayList;
 import java.util.List;
 import java.util.Map;
 
-import de.hs_kl.imst.gatav.tilerenderer.TileLoader;
 import de.hs_kl.imst.gatav.tilerenderer.drawable.Collectable;
 import de.hs_kl.imst.gatav.tilerenderer.drawable.Drawables;
 import de.hs_kl.imst.gatav.tilerenderer.drawable.MovableGraphics;

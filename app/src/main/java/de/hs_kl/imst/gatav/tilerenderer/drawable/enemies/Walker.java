@@ -64,7 +64,6 @@ public final class Walker extends Enemies implements CollisionReactive, Destroya
     @Override
     public void aIHandle() {
         if (GameContent.player.isAlive()) {
-            Log.d("Walker", "Current: " + walkingDirection + ", Position X: " + Position.x + "(" + walkArea.left + "|" + walkArea.right + ")");
 
             if(walkingDirection == Direction.LEFT && Position.x  + hitbox.getWidth() < walkArea.left) {
                 walkingDirection = Direction.RIGHT;
