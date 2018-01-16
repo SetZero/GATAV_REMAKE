@@ -3,6 +3,7 @@ package de.hs_kl.imst.gatav.tilerenderer.util.audio;
 import de.hs_kl.imst.gatav.tilerenderer.R;
 
 /**
+ * A Enum of all sounds which are used. Used to prevent passing of integers and confusion
  * Created by Sebastian on 2018-01-04.
  */
 

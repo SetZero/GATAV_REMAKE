@@ -3,6 +3,8 @@ package de.hs_kl.imst.gatav.tilerenderer.util.states;
 import de.hs_kl.imst.gatav.tilerenderer.util.Vector2;
 
 /**
+ * Saves the last checkpoint of the player
+ * Should have also saved the score, but well teamwork + y u no read github tickets...
  * Created by Sebastian on 2017-12-27.
  */
 

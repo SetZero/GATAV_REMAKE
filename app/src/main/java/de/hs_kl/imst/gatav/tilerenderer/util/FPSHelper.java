@@ -8,6 +8,7 @@ import java.util.LinkedList;
 import java.util.Locale;
 
 /**
+ * Helper to show the FPS
  * Created by Sebastian on 2017-12-05.
  */
 
@@ -18,6 +19,10 @@ public class FPSHelper {
         add(System.nanoTime());
     }};
 
+    /**
+     * Draw FPS text
+     * @param canvas canvas to draw on
+     */
     public static void draw(Canvas canvas) {
         String fpsText = String.format(Locale.GERMAN, "FPS: %.2f", fps());
 

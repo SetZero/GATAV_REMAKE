@@ -22,6 +22,7 @@ import de.hs_kl.imst.gatav.tilerenderer.util.Constants;
 import de.hs_kl.imst.gatav.tilerenderer.util.Vector2;
 
 /**
+ * Audio Player which supports positional audio
  * Created by Sebastian on 2018-01-03.
  */
 
@@ -62,6 +63,10 @@ public class AudioPlayer implements Runnable {
     };
     private Player playerCharacter;
 
+    /**
+     * Create the background music and start the soundpool
+     * @param ctx The context to start the sound on
+     */
     public AudioPlayer(Context ctx) {
         //Start Sound Pool
         initSoundPool();
@@ -82,16 +87,26 @@ public class AudioPlayer implements Runnable {
         }
     }
 
+    /**
+     * Change the speed of the background music
+     * @param speed speed in percent
+     */
     public void changeBGMSpeed(float speed) {
         if (player.isPlaying()) {
             player.setPlaybackParams(player.getPlaybackParams().setSpeed(speed));
         }
     }
 
+    /**
+     * stops the bgm
+     */
     public void stopBGM() {
         player.stop();
     }
 
+    /**
+     * starts the soundpool and sets up listener for new songs
+     */
     private void initSoundPool() {
         AudioAttributes attrs = new AudioAttributes.Builder()
                 .setUsage(AudioAttributes.USAGE_GAME)
@@ -115,10 +130,22 @@ public class AudioPlayer implements Runnable {
         });
     }
 
+    /**
+     * Adds a sound to the pool
+     * @param s sound to play
+     * @param source position to play at
+     */
     public void addSound(Sounds s, Vector2 source) {
         addSound(s, source, audioThreshold);
     }
 
+    /**
+     * adds a sound to the pool with noise in decibel.
+     * If the sound is already loaded directly play it (if it is not out of view)
+     * @param s sound to play
+     * @param source position to play at
+     * @param decibel volume in decibel
+     */
     public void addSound(Sounds s, Vector2 source, double decibel) {
         //If we can play a song....
         if (playing.get() && playerCharacter != null) {
@@ -144,6 +171,9 @@ public class AudioPlayer implements Runnable {
         }
     }
 
+    /**
+     * cleans everything up
+     */
     public void cleanup() {
         player.reset();
         player.release();
@@ -153,14 +183,26 @@ public class AudioPlayer implements Runnable {
         soundToPlay.evictAll();
     }
 
+    /**
+     * Sets the player character (needed for position calculation)
+     * @param playerCharacter the player object
+     */
     public void setPlayerCharacter(Player playerCharacter) {
         this.playerCharacter = playerCharacter;
     }
 
+    /**
+     * Starts playing a sound (with volume 0, as volume will be calculated by the thread)
+     * @param soundID the id to play
+     * @return the stream id
+     */
     private int startPlay(int soundID) {
         return sp.play(soundID, 0.0f, 0.0f, 1, 0, 1);
     }
 
+    /**
+     * Will calculate the distance the sound is playing at and the direction (left / right channel)
+     */
     @Override
     public void run() {
         if (player != null)
@@ -207,6 +249,9 @@ public class AudioPlayer implements Runnable {
         }
     }
 
+    /**
+     * Helper class for audio data
+     */
     private class AudioDataKeeper {
         private final Vector2 position;
         private final double decibel;

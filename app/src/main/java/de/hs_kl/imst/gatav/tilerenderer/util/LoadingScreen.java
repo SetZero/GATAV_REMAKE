@@ -9,6 +9,7 @@ import java.util.Locale;
 import java.util.concurrent.ThreadLocalRandom;
 
 /**
+ * displays the loading screen while TileLoader is doing it's job!
  * Created by Sebastian on 2018-01-06.
  */
 
@@ -18,12 +19,21 @@ public class LoadingScreen {
     private String loadingScreenText;
     private TileLoader tileLoader;
 
+    /**
+     * Selects random message from LoadingScreenTexts
+     * @param tileLoader the TileLoader to get the loading percentage from
+     */
     public LoadingScreen(TileLoader tileLoader) {
         int rnd = ThreadLocalRandom.current().nextInt(LoadingScreenTexts.text.length);
         loadingScreenText = LoadingScreenTexts.text[rnd];
         this.tileLoader = tileLoader;
     }
 
+    /**
+     * shows (draws) the loading screen bar with the selected text
+     * will make some fancy color switching
+     * @param canvas canvas to draw on
+     */
     public void showLoadingScreen(Canvas canvas) {
         if (loadingScreenFadeDirection) {
             if (loadingScreenColor < 255) {

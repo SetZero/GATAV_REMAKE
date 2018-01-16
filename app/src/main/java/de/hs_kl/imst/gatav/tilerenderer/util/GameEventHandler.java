@@ -44,6 +44,15 @@ public class GameEventHandler implements Observer {
     private boolean speedUpSound = false;
     private List<EventContainer> audioEventList;
 
+    /**
+     * Constructor of GameEventHandler, will initialize all audio events and save all parameters as object
+     * variables
+     * @param objects All objects with object group name as key
+     * @param timer a gloabal timer (of the level)
+     * @param executioner a game event executioner for returning to title screen
+     * @param audioPlayer a audio player to play audio events
+     * @param audioEventList a list of all audio events
+     */
     public GameEventHandler(Map<String, List<Collidable>> objects, Timer timer, GameEventExecutioner executioner, AudioPlayer audioPlayer, List<EventContainer> audioEventList) {
         this.objects = objects;
         this.timer = timer;
@@ -58,10 +67,27 @@ public class GameEventHandler implements Observer {
         }
     }
 
+    /**
+     * @return all dynamic (moveable) objects
+     */
     public ArrayList<MovableGraphics> getDynamics() {
         return dynamics;
     }
 
+    /**
+     * will update all game events
+     * 1. activate player if he is disabled at the start
+     * 2. player has reached finish: play finish sequence
+     * 3. finish sequence is over, go back  to main menu
+     * 4. player has reached checkpoint, check if checkpoint if further away than the last and updaze it
+     * 5. if player is out of bounds or in death zone: mark for death
+     * 6. if player is in water, play water sound and mark for death
+     * 7. if player has a little time left, make bgm faster
+     * 8. if the player is marked for death and the death animation timer is over:
+     *     either reset him if there are no checkpoints or reset him to the checkpoints, also reset player
+     * 9. Play audio events
+     * @param cam
+     */
     public void update(GameCamera cam) {
         if (!hasReachedFinish() && (timer.getElapsedTime() > 0.2 && timer.getElapsedTime() < 0.5)) {
             player.isActive = true;
@@ -152,6 +178,9 @@ public class GameEventHandler implements Observer {
         }
     }
 
+    /**
+     * @return if player is in finish zone
+     */
     private boolean hasReachedFinish() {
         if (player == null) return false;
 
@@ -159,22 +188,35 @@ public class GameEventHandler implements Observer {
         return isInTheZone(finishObjs);
     }
 
+    /**
+     * @return if player is in death zone
+     */
     private boolean isInDeathZone() {
         List<Collidable> deathZones = objects.get(Constants.deathzoneObjectGroupString);
         return isInTheZone(deathZones);
     }
 
+    /**
+     * @return if player is in water
+     */
     private boolean isInWaterZone() {
         List<Collidable> waterZones = objects.get(Constants.waterObjectGroupString);
         return isInTheZone(waterZones);
     }
 
-
+    /**
+     * @return if player is in checkpoint zone
+     */
     private boolean hasReachCheckpoint() {
         List<Collidable> checkpoints = objects.get(Constants.checkpointsObjectGroupString);
         return isInTheZone(checkpoints);
     }
 
+    /**
+     * If a player is in a collision zone (like checkpoint, water, etc.)
+     * @param zone the zone(s) to check
+     * @return if player is inside
+     */
     private boolean isInTheZone(List<Collidable> zone) {
         if (zone != null) {
             for (Collidable z : zone) {
@@ -189,15 +231,28 @@ public class GameEventHandler implements Observer {
         return false;
     }
 
+    /**
+     * @param cam game camera
+     * @return  if player is not in view anymore
+     */
     private boolean isOutOfBounds(GameCamera cam) {
         //Player is in Center = not out of bounds
         return !cam.isRectInView(player.getHitbox().getRect());
     }
 
+    /**
+     * @return  if player has no time remaining
+     */
     private boolean isOutOfTime() {
         return timer.getElapsedTime() > timer.getTotalLevelTime();
     }
 
+    /**
+     * After a checkpoint calculates the time a player has remaining by the distance to the finish.
+     * Will return a guess if there is no finish
+     * @param checkpointCoordinates the coordinates of the current checkpoint where the player will respawn
+     * @return time in seconds
+     */
     private double calculateRemaingTimeAfterCheckpoint(Vector2 checkpointCoordinates) {
         List<Collidable> finishZones = objects.get(Constants.finishObjectGroupString);
         if (finishZones != null && finishZones.size() > 0 && finishZones.get(0) != null) {
@@ -211,6 +266,10 @@ public class GameEventHandler implements Observer {
         return (timer.getElapsedTime() > timer.getTotalLevelTime() * 0.8 ? timer.getTotalLevelTime() * 0.2 : timer.getElapsedTime());
     }
 
+    /**
+     * Adds a dynamic (moveable object), also tries to find the player object
+     * @param dynamic
+     */
     void addDynamicObject(MovableGraphics dynamic) {
         dynamics.add(dynamic);
         if (dynamic instanceof Player) {
@@ -218,6 +277,14 @@ public class GameEventHandler implements Observer {
         }
     }
 
+    /**
+     * Observer for different types of events.
+     * Will play sound for enemies and collectables (passed by pair<sounds, vector2> -> sound to play,
+     *                                                                                  position to play)
+     * If player called it check if audio event or if deathm then set failed to true (mark for death)
+     * @param o The Observable which called the event
+     * @param arg the arguments it was called
+     */
     @Override
     public void update(Observable o, Object arg) {
         if (o instanceof Collectable || o instanceof Enemies) {

@@ -1,6 +1,7 @@
 package de.hs_kl.imst.gatav.tilerenderer.util;
 
 /**
+ * Strings to show while loading
  * Created by Sebastian on 2017-12-30.
  */
 
@@ -16,7 +17,7 @@ public class LoadingScreenTexts {
             "c2VyaW91c2x5Pw==",
             "Spoiler: Darth Vader is Harry's father",
             "Live Long, and Prosper - Han Solo",
-            "I too have a Nuclear Button, but it is a much bigger - Donald Trump",
+            "I too have a Nuclear Button, but it is a much bigger one - Donald Trump",
             "Yes we Scan - Princess Peach",
             "I'm Batman - Läderlappen",
             "Sehr genau!",

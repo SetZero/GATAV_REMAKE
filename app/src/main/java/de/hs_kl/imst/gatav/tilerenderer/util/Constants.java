@@ -1,6 +1,7 @@
 package de.hs_kl.imst.gatav.tilerenderer.util;
 
 /**
+ * Constants with different locations locations of elements and settings and naming conventions
  * Created by Sebastian on 2017-12-27.
  */
 

@@ -13,6 +13,9 @@ import webview.WebAppInterface;
 
 public class MainActivity extends AppCompatActivity {
 
+    /**
+     * Sets up saved settings and displays main menu as webview
+     */
     @Override
     protected void onCreate(Bundle savedInstanceState) {
         super.onCreate(savedInstanceState);
@@ -35,6 +38,10 @@ public class MainActivity extends AppCompatActivity {
         mainMenuView.addJavascriptInterface(new WebAppInterface(this, am, getResources().getString(R.string.app_name), settings), "Android");
     }
 
+    /**
+     * Loads the level which is passed (starts MainGameActivity)
+     * @param level the level to load
+     */
     public void loadLevel(String level) {
         Intent intent = new Intent(MainActivity.this, MainGameActivity.class);
         intent.putExtra("level", level);

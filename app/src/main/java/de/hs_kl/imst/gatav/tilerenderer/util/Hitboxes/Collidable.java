@@ -1,6 +1,7 @@
 package de.hs_kl.imst.gatav.tilerenderer.util.Hitboxes;
 
 /**
+ * A collideable object (only has one point and an id)
  * Created by Sebastian on 2017-12-06.
  */
 

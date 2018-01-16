@@ -20,6 +20,8 @@ import de.hs_kl.imst.gatav.tilerenderer.util.audio.AudioPlayer;
 import static de.hs_kl.imst.gatav.tilerenderer.util.Constants.enableEyeCandy;
 
 /**
+ * Main render and update loop
+ * managing game objects to pass them to other objects
  * Created by Sebastian on 2017-12-06.
  */
 
@@ -33,24 +35,46 @@ public class World {
     private PhysicsController physics;
     private GameEventHandler gameEvents;
 
+    /**
+     * Constructor of World, loads all parameters as object variables
+     * @param tileLoader The Tileloader used for the loading of a level
+     * @param step inverse physics steps per second (e.g. 60steps/s = 1/60)
+     * @param timer The global timer manager
+     * @param executioner A executioner for View Events, like going back to title screen
+     * @param audioPlayer A audio player for audio events (has separate thread!)
+     */
     public World(TileLoader tileLoader, float step, Timer timer, GameEventExecutioner executioner, AudioPlayer audioPlayer) {
         this.tileLoader = tileLoader;
-        objects = tileLoader.getObjectGroups();
-        physics = new PhysicsController(this);
-        gameEvents = new GameEventHandler(this.getObjects(), timer, executioner, audioPlayer, tileLoader.getAudioEventList());
+        this.objects = tileLoader.getObjectGroups();
+        this.physics = new PhysicsController(this);
+        this.gameEvents = new GameEventHandler(this.getObjects(), timer, executioner, audioPlayer, tileLoader.getAudioEventList());
         this.step = step;
         this.timer = timer;
     }
 
+    /**
+     * Adds collectables which are added while the game is running
+     * @param collectable a collectable to add
+     */
     public void addCollectables(Collectable collectable) {
         this.collectables.add(collectable);
         collectable.addObserver(gameEvents);
     }
 
+    /**
+     * gets all current active Objects (Zones, the Rectangles in Tiled), with their group as the key
+     * @return the map
+     */
     public Map<String, List<Collidable>> getObjects() {
         return objects;
     }
 
+    /**
+     * Executes Updates of all dynamic Objects, Collectables, Physics Events, gameEvents.
+     * Also cleans up some unneeded resources after execution
+     * @param delta inverse physics steps per second (e.g. 60steps/s = 1/60)
+     * @param cam current game camera
+     */
     public void update(float delta, GameCamera cam) {
         for (Drawables x : dynamicObjects) {
             x.update(delta);
@@ -66,6 +90,17 @@ public class World {
         physics.cleanup();
     }
 
+    /**
+     * Draws the level on the screen.
+     * 1. Starting with the game camera (transform)
+     * 2. It'll draw the background as one big bitmap (it's a lot faster than drawing every single
+     *    tile, but also a lot more memory consuming)
+     * 3. If debug build is enabled it'll draw all debug hitboxes.
+     * 4. it'll draw all dynamic objects
+     * 5. it'll draw all collectables (coins)
+     * @param camera current game camera
+     * @param canvas the canvas to draw on
+     */
     public void draw(GameCamera camera, Canvas canvas) {
         //1. Load All Tiles
         camera.draw(canvas);
@@ -159,6 +194,10 @@ public class World {
         }
     }
 
+    /**
+     * Adds a game object to the game and all elements which need it
+     * @param object the object to add
+     */
     public void addGameObject(MovableGraphics object) {
         dynamicObjects.add(object);
         physics.addPhysical(object);
@@ -166,6 +205,10 @@ public class World {
         object.addObserver(gameEvents);
     }
 
+    /**
+     * removes a game object
+     * @param object the object to remove
+     */
     public void removeGameObject(MovableGraphics object) {
         physics.removePhysical(object);
     }

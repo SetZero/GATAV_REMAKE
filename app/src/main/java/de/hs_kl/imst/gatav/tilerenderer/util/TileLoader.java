@@ -35,17 +35,14 @@ import javax.xml.parsers.DocumentBuilder;
 import javax.xml.parsers.DocumentBuilderFactory;
 import javax.xml.parsers.ParserConfigurationException;
 
-import de.hs_kl.imst.gatav.tilerenderer.util.Constants;
 import de.hs_kl.imst.gatav.tilerenderer.util.Hitboxes.Collidable;
 import de.hs_kl.imst.gatav.tilerenderer.util.Hitboxes.Rectangle;
-import de.hs_kl.imst.gatav.tilerenderer.util.ScaleHelper;
-import de.hs_kl.imst.gatav.tilerenderer.util.TileInformation;
-import de.hs_kl.imst.gatav.tilerenderer.util.Vector2;
 import de.hs_kl.imst.gatav.tilerenderer.util.audio.events.EventContainer;
 
 import static de.hs_kl.imst.gatav.tilerenderer.util.Constants.enableEyeCandy;
 
 /**
+ * Loads all game elements from tiled xml (save) file
  * Created by Sebastian on 2017-12-05.
  */
 public class TileLoader extends Observable implements Runnable {
@@ -76,9 +73,15 @@ public class TileLoader extends Observable implements Runnable {
 
     private List<EventContainer> audioEventList = new ArrayList<>();
 
+    /**
+     * Constructor of TileLoader, can only be initialized AFTER the scale helper was initialized
+     *
+     * @param context  currently unused (can be null)
+     * @param filename the file to load (only filename without .tmx and folder)
+     */
     public TileLoader(Context context, String filename) {
-        assert (ratioX > 0) : "Scale Helper never initialized!";
-        assert (ratioY > 0) : "Scale Helper never initialized!";
+        if (ratioX <= 0) throw new AssertionError("Scale Helper never initialized!");
+        if (ratioY <= 0) throw new AssertionError("Scale Helper never initialized!");
 
         Log.d("Tile Loader", "Ratio X: " + ratioX);
 
@@ -87,6 +90,9 @@ public class TileLoader extends Observable implements Runnable {
         this.filename = filename;
     }
 
+    /**
+     * Starts loading process, will notify observers when finished
+     */
     @Override
     public void run() {
         xmlLoadMap();
@@ -98,61 +104,121 @@ public class TileLoader extends Observable implements Runnable {
         Log.d("TileLoader", "Finished!");
     }
 
+    /**
+     * @return level width (px, scaled)
+     */
     public int getWidth() {
         return width;
     }
 
+    /**
+     * @return level height (px, scaled)
+     */
     public int getHeight() {
         return height;
     }
 
+    /**
+     * @return tile width (px, scaled)
+     */
     public int getTileWidth() {
         return tileWidth;
     }
 
+    /**
+     * @return tile height (px, scaled)
+     */
     public int getTileHeight() {
         return tileHeight;
     }
 
+    /**
+     * @return number of layers
+     */
     @Deprecated
     public int getLayers() {
         return layers;
     }
 
+    /**
+     * DON'T CALL, will return null!
+     *
+     * @return all map tiles sorted by layer
+     */
     @Deprecated
     public List<List<TileInformation>> getMap() {
         return map;
     }
 
+    /**
+     * DON'T CALL, will throw NullPointerException
+     *
+     * @param layer the layer to get
+     * @return tiles in layer "layer"
+     */
     @Deprecated
     public List<TileInformation> getLayer(int layer) {
         return map.get(layer);
     }
 
+    /**
+     * DON'T CALL, will return null!
+     *
+     * @return All Tiles
+     */
+    @Deprecated
     public Map<Integer, Bitmap> getTiles() {
         return tiles;
     }
 
+    /**
+     * @return all object groups with group name as key and Rectangle as area
+     */
     public Map<String, List<Collidable>> getObjectGroups() {
         return objectGroups;
     }
 
+    /**
+     * Call this to check if the TileLoader is fully finished with loading
+     *
+     * @return is finished?
+     */
     synchronized public boolean isFinishedLoading() {
         return finishedLoading;
     }
 
+    /**
+     * returns the current State of loading, will return 100 if already finished
+     *
+     * @return percentage as int (n/100, with n as return)
+     */
     synchronized public int getLoadingPercentage() {
         return loadingPercentage;
     }
 
+    /**
+     * @return the fully rendered map, will return null if not finished loading!
+     */
     public Bitmap getSceneBitmap() {
         return sceneBitmap;
     }
 
+    /**
+     * @return the Background Image, only call if eyecandy enabled, otherwise it'll be null
+     */
     public Bitmap getBackgroundBitmap() {
         return backgroundBitmap;
     }
 
+    /**
+     * Main loading process, will call all substeps.
+     * 1. Start loading the Map file
+     * 2. Start XML Parser
+     * 3. Start loading all tile layers in order, mark all used tiles and save the tiles in a list
+     * 4. load all bitmaps with the tiles
+     * 5.load all object groups (rectangles, hitboxes, event areas...)
+     * 6. generate full background bitmap
+     */
     private void xmlLoadMap() {
         try {
             DocumentBuilderFactory factory = DocumentBuilderFactory.newInstance();
@@ -244,7 +310,14 @@ public class TileLoader extends Observable implements Runnable {
         }
     }
 
-
+    /**
+     * Splits a tilemap in single bitmaps
+     *
+     * @param src                file name to the tileset, (must be saved in levels/spritesheets)
+     * @param firstGID           the start id (offset to start spliting)
+     * @param usedTilesInTileset a set of all used tiles to split, others will be ignored
+     * @return a map with the tile id and the bitmap
+     */
     private Map<Integer, Bitmap> generateBitmaps(String src, int firstGID, Set<Integer> usedTilesInTileset) {
         Log.d("TileLoader", "Start Generating Bitmaps");
         try {
@@ -283,6 +356,11 @@ public class TileLoader extends Observable implements Runnable {
         return new HashMap<>();
     }
 
+    /**
+     * loads all object groups (hitboxes, events, coins, enemys, all as area rectangle)
+     *
+     * @param doc XML doc
+     */
     private void loadObjectGroups(Document doc) {
         Log.d("TileLoader", "Start Loading Hitboxes ");
         NodeList objectgroups = doc.getElementsByTagName("objectgroup");
@@ -295,7 +373,7 @@ public class TileLoader extends Observable implements Runnable {
             NodeList objects = groupElement.getElementsByTagName("object");
             int objectAmount = objects.getLength();
 
-            if(!Objects.equals(name, Constants.musicObjectGroupString)) {
+            if (!Objects.equals(name, Constants.musicObjectGroupString)) {
                 List<Collidable> list = IntStream.range(0, objectAmount).parallel().mapToObj(obj -> {
                     Element objectElement = (Element) objects.item(obj);
                     int id = Integer.parseInt(objectElement.getAttribute("id"));
@@ -340,10 +418,17 @@ public class TileLoader extends Observable implements Runnable {
         }).filter(Objects::nonNull).collect(Collectors.toMap(i -> i.first, i -> i.second));
     }
 
+    /**
+     * Loads the background image name, but only one!
+     *
+     * @param doc the xml file to load from
+     * @return the name of the file
+     */
     private String loadBackgroundImageString(Document doc) {
         NodeList backgroundImage = doc.getElementsByTagName("imagelayer");
         int amount = backgroundImage.getLength();
-        assert amount < 2 : "There can only be a maximum of ONE background image!";
+        if (amount >= 2)
+            throw new AssertionError("There can only be a maximum of ONE background image!");
         if (amount > 0) {
             Element backgroundElement = (Element) backgroundImage.item(0);
             NodeList image = backgroundElement.getElementsByTagName("image");
@@ -356,12 +441,30 @@ public class TileLoader extends Observable implements Runnable {
         return null;
     }
 
+    /**
+     * Loads a static background image, if eyecandy is disabled
+     *
+     * @param doc the xml file to load from
+     * @return the bitmap file with the background image
+     */
     private Bitmap loadStaticBackgroundImage(Document doc) {
         if (enableEyeCandy) return null;
         String name = loadBackgroundImageString(doc);
         return (name != null ? BitmapFactory.decodeStream(getGraphicsStream(name, "levels/backgrounds/")) : null);
     }
 
+    /**
+     * generates the full map
+     * 1. Check if eyecandy is enabled and choose if transparency is needed
+     * 2. place the background image
+     * 3. draw background, if there is none make it blue, if eyecandy is disabled make it the static background
+     * if eyecandy is enabled make it transparent
+     * 4. Load all tiles in the game
+     *
+     * @param map
+     * @param backgroundImage
+     * @return
+     */
     private Bitmap generateGameBitmap(ArrayList<List<TileInformation>> map, Bitmap backgroundImage) {
         int w = width * tileWidth;
         int h = height * tileHeight;
@@ -407,6 +510,12 @@ public class TileLoader extends Observable implements Runnable {
         return bmp;
     }
 
+    /**
+     * generate the eyecandy background
+     *
+     * @param doc the xml file to load from
+     * @return bitmap with the background image
+     */
     private Bitmap generateBackground(Document doc) {
         Bitmap.Config conf = Bitmap.Config.RGB_565;
         String name = loadBackgroundImageString(doc);
@@ -446,6 +555,13 @@ public class TileLoader extends Observable implements Runnable {
         }
     }*/
 
+    /**
+     * returns a graphics stream with the given parameters
+     *
+     * @param graphicsName the name of the file to load
+     * @param folder       the folder of the file to load
+     * @return
+     */
     private InputStream getGraphicsStream(String graphicsName, String folder) {
         try {
             return assetManager.open(folder + graphicsName);
@@ -454,19 +570,27 @@ public class TileLoader extends Observable implements Runnable {
         }
     }
 
+    /**
+     * Returns a spritesheet / tileset
+     *
+     * @param graphicsName name of the element (saved in /levels/spritesheets)
+     * @return the stream of the file
+     */
     private InputStream getSpriteGraphicsStream(String graphicsName) {
         return getGraphicsStream(graphicsName, "levels/spritesheets/");
     }
 
+    /**
+     * cleans up mess after execution, currently only the scene Bitmap
+     */
     public void cleanup() {
         sceneBitmap = null;
     }
 
+    /**
+     * @return all AudioEvents
+     */
     public List<EventContainer> getAudioEventList() {
         return audioEventList;
-    }
-
-    public void setAudioEventList(List<EventContainer> audioEventList) {
-        this.audioEventList = audioEventList;
     }
 }

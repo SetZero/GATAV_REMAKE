@@ -19,16 +19,26 @@ import de.hs_kl.imst.gatav.tilerenderer.util.audio.AudioPlayer;
 import de.hs_kl.imst.gatav.tilerenderer.util.types.EnemyTypes;
 
 /**
+ * Creates all Game Entities
  * Created by Sebastian on 2018-01-05.
  */
 
 public class GameEntityFactory {
     private Map<String, List<Collidable>> objects;
 
+    /**
+     * @param objects zones with object group name as key
+     */
     public GameEntityFactory(Map<String, List<Collidable>> objects) {
         this.objects = objects;
     }
 
+    /**
+     * loads the player, there can only be exactly one player
+     * @param context context needed for player
+     * @param audioPlayer a audio player for the player
+     * @return the player
+     */
     public Player generatePlayer(Context context, AudioPlayer audioPlayer) {
         List<Collidable> zone = objects.get(Constants.playerStartObjectGroupString);
         if (BuildConfig.DEBUG && zone == null) throw new AssertionError("Level without Start Position!");
@@ -46,6 +56,12 @@ public class GameEntityFactory {
         return null;
     }
 
+    /**
+     * Generates all enemies.
+     * Different Types of enemies (by their type in Tiled) can be generated
+     * @param context The context needed for the Enemies (for graphic loading -> this could have been done better :-/)
+     * @return A List of enemies
+     */
     public List<Enemies> generateEnemies(Context context) {
         List<Collidable> zones = objects.get(Constants.enemyObjectGroupString);
         if(zones == null) return new ArrayList<>();
@@ -75,6 +91,11 @@ public class GameEntityFactory {
         return enemies;
     }
 
+    /**
+     * Generate coins, fill full rect in Tiled with coins
+     * @param context The context needed for the Enemies (screw it, whoever did this - actually i know it)
+     * @return the list of all coins
+     */
     public List<Coin> generateCoins(Context context) {
         List<Collidable> zones = objects.get(Constants.coinObjectGroupString);
         if(zones == null) return new ArrayList<>();

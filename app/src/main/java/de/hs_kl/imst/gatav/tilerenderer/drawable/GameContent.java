@@ -53,6 +53,13 @@ public class GameContent implements Drawables, Observer {
     private Timer timer = new Timer();
     private AudioPlayer audioPlayer;
 
+    /**
+     * Sets up everything and starts loading of level
+     * @param context the context
+     * @param levelName the name of the level to load from
+     * @param executioner the event executioner (e.g. return to main menu)
+     * @param player Audio Player
+     */
     public GameContent(Context context, String levelName, GameEventExecutioner executioner, AudioPlayer player) {
         this.context = context;
         this.assetManager = context.getAssets();
@@ -65,6 +72,10 @@ public class GameContent implements Drawables, Observer {
         hud = new HUD(camera, timer, assetManager);
     }
 
+    /**
+     * returns the HUD
+     * @return
+     */
     public static HUD getHud() {
         return hud;
     }
@@ -77,12 +88,20 @@ public class GameContent implements Drawables, Observer {
         return gameHeight;
     }
 
+    /**
+     * Moves the player in a direction if the setup is finished
+     * @param direction
+     */
     public void movePlayer(Direction direction) {
         if (finishedSetup)
             player.move(direction);
     }
 
 
+    /**
+     * Calls world.draw as world is managing the draw
+     * @param canvas Zeichenfläche, auf die zu zeichnen ist
+     */
     @Override
     public void draw(Canvas canvas) {
         if (finishedSetup) {
@@ -92,6 +111,10 @@ public class GameContent implements Drawables, Observer {
         }
     }
 
+    /**
+     * calls world.update, as world is managing the update
+     * @param delta
+     */
     @Override
     public void update(float delta) {
         if (finishedSetup) {
@@ -100,6 +123,11 @@ public class GameContent implements Drawables, Observer {
         }
     }
 
+    /**
+     * Loads the time of the level from the json file
+     * @param levelName the name of the current level
+     * @return time in seconds
+     */
     private int getLevelTime(String levelName) {
         try {
             InputStream is = assetManager.open(Constants.worldInfoSaveLocation + Constants.worldInfoFileName);
@@ -123,6 +151,10 @@ public class GameContent implements Drawables, Observer {
         return -1;
     }
 
+    /**
+     * Starts the Tileloader and adds itself as an observer of it
+     * Sets up the loading screen while the tileLoader is loading
+     */
     private void loadLevel() {
         tileLoader = new TileLoader(context, levelName);
         tileLoader.addObserver(this);
@@ -130,6 +162,10 @@ public class GameContent implements Drawables, Observer {
         new Thread(tileLoader).start();
     }
 
+    /**
+     * Finished the loading of the level?
+     * start the world and set up the rest
+     */
     private void finishLoading() {
         Log.d("GameContent", "" + tileLoader.getTileHeight() * tileLoader.getTileHeight());
         gameHeight = tileLoader.getHeight();
@@ -146,6 +182,9 @@ public class GameContent implements Drawables, Observer {
         player.isActive = true;
     }
 
+    /**
+     * Generates and pass all enemies to the classes which need them
+     */
     public void generateGameElements() {
         GameEntityFactory factory = new GameEntityFactory(tileLoader.getObjectGroups());
         player = factory.generatePlayer(context, audioPlayer);
@@ -163,6 +202,11 @@ public class GameContent implements Drawables, Observer {
         }
     }
 
+    /**
+     * Called if the TileLoader is finsiehd with loading
+     * @param o most likely the TileLOader
+     * @param arg Arguments
+     */
     @Override
     public void update(Observable o, Object arg) {
         if (o instanceof TileLoader) {
@@ -173,6 +217,9 @@ public class GameContent implements Drawables, Observer {
         }
     }
 
+    /**
+     * clean up after TileLoader is finished
+     */
     public void cleanup() {
         tileLoader.cleanup();
         timer.stopTimeThread();

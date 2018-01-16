@@ -3,7 +3,10 @@ package de.hs_kl.imst.gatav.tilerenderer.util;
 import android.graphics.Rect;
 
 /**
+ * Used by Tileloader to store all Tiles
  * Created by Sebastian on 2017-12-05.
+ *
+ * @see de.hs_kl.imst.gatav.tilerenderer.util.TileLoader
  */
 
 public class TileInformation {
@@ -14,6 +17,7 @@ public class TileInformation {
     private int height;
     private Rect tileRect;
 
+    //getter and setter
     public int getxPos() {
         return xPos;
     }
@@ -38,6 +42,9 @@ public class TileInformation {
         this.tilesetPiece = tilesetPiece;
     }
 
+    /**
+     * generates a rect from all given parameters
+     */
     public void generateRect() {
         int left = getxPos() * width;
         int top = getyPos() * height;

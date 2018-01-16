@@ -3,6 +3,7 @@ package de.hs_kl.imst.gatav.tilerenderer.util.Hitboxes;
 import android.graphics.Rect;
 
 /**
+ * A Rectangle which has a type, with and height.
  * Created by Sebastian on 2017-12-06.
  */
 
@@ -12,6 +13,13 @@ public class Rectangle extends Collidable {
     private int height;
     private String type;
 
+    /**
+     * creates a Rectangle Area with which a player can collide
+     * @param x The x cooridnates of the rectangle (left)
+     * @param y The y coordinates of the rectangle (top)
+     * @param width width of the rectangle
+     * @param height height of the rectangle
+     */
     public Rectangle(int x, int y, int width, int height) {
         this.width = width;
         this.height = height;
