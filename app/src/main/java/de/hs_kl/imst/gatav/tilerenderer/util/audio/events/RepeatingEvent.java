@@ -20,4 +20,8 @@ public abstract class RepeatingEvent implements AudioEvent{
         this.timer = timer;
         this.position = position;
     }
+
+    public void reset() {
+        lastSound = 0;
+    }
 }

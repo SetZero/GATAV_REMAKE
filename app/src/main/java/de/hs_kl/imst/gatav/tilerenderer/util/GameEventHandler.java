@@ -170,12 +170,10 @@ public class GameEventHandler implements Observer {
             }
 
             audioPlayer.changeBGMSpeed(1);
+            audioEventList.forEach(EventContainer::reset);
             failed = false;
         }
-
-        for (EventContainer event : audioEventList) {
-            event.update();
-        }
+        audioEventList.forEach(EventContainer::update);
     }
 
     /**

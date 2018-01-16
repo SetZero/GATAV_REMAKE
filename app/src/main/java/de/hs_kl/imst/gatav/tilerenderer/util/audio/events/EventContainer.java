@@ -37,4 +37,9 @@ public class EventContainer {
         if(started)
             fullEvent.update();
     }
+
+    public void reset() {
+        if(started)
+            fullEvent.reset();
+    }
 }

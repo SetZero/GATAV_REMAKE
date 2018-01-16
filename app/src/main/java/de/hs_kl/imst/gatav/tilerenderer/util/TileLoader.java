@@ -434,8 +434,7 @@ public class TileLoader extends Observable implements Runnable {
             NodeList image = backgroundElement.getElementsByTagName("image");
             if (image.getLength() > 0) {
                 Element imageElement = (Element) image.item(0);
-                String imageName = imageElement.getAttribute("source");
-                return imageName;
+                return imageElement.getAttribute("source");
             }
         }
         return null;
@@ -481,7 +480,14 @@ public class TileLoader extends Observable implements Runnable {
             backgroundImage = null;
         }
         Log.d("TileLoader", w + ", " + h + " | " + conf.toString() + "(" + width + "x" + height + ")" + " - " + tileWidth);
-        Bitmap bmp = Bitmap.createBitmap(w, h, conf);
+        Bitmap bmp;
+        try {
+            bmp = Bitmap.createBitmap(w, h, conf);
+        } catch (OutOfMemoryError e) {
+            conf = Bitmap.Config.RGB_565;
+            bmp = Bitmap.createBitmap(w, h, conf);
+            enableEyeCandy = false;
+        }
         Canvas canvas = new Canvas(bmp);
 
         if (!enableEyeCandy && backgroundBMP == null)

@@ -37,6 +37,8 @@ public class AudioPlayer implements Runnable {
     private MediaPlayer player;
     private List<Equalizer> eq = new ArrayList<>();
     private SoundPool sp;
+
+    //LRU Caches
     private final LruCache<Integer, Integer> cache = new LruCache<Integer, Integer>(cacheElements) {
 
         @Override
@@ -151,7 +153,7 @@ public class AudioPlayer implements Runnable {
         if (playing.get() && playerCharacter != null) {
             double distance = Math.abs(Vector2.distance(source, playerCharacter.getPosition()));
             //don't add out of reach sounds
-            if (distance > 4000) return;
+            //if (distance > 4000) return;
             if (cache.get(s.getSoundResource()) != null) {
                 //...get it from the cache and play it
                 int soundId = cache.get(s.getSoundResource());

@@ -76,12 +76,8 @@ public class World {
      * @param cam current game camera
      */
     public void update(float delta, GameCamera cam) {
-        for (Drawables x : dynamicObjects) {
-            x.update(delta);
-        }
-        for (Collectable x : collectables) {
-            x.update(delta);
-        }
+        dynamicObjects.forEach(o -> o.update(delta));
+        collectables.forEach(c -> c.update(delta));
         physics.Update(step, cam);
         gameEvents.update(cam);
 
@@ -186,12 +182,8 @@ public class World {
         }
 
         //3. Draw all Dynamic Objects
-        for (Drawables object : dynamicObjects) {
-            object.draw(canvas);
-        }
-        for (Collectable x : collectables) {
-            x.draw(canvas);
-        }
+        dynamicObjects.forEach(o -> o.draw(canvas));
+        collectables.forEach(c -> c.draw(canvas));
     }
 
     /**
