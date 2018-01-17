@@ -15,7 +15,7 @@ public class GameEventExecutioner {
     }
 
     /**
-     * go back to title screen (if player is in game)
+     * go back to title screen (if player is in game, otherwise this will just finish the activity)
      */
     public void finishLevel() {
         activity.finish();

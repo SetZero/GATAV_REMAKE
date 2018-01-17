@@ -58,7 +58,7 @@ public class GameEntityFactory {
 
     /**
      * Generates all enemies.
-     * Different Types of enemies (by their type in Tiled) can be generated
+     * Different Types of enemies (by their type [as in object group type] in Tiled) can be generated
      * @param context The context needed for the Enemies (for graphic loading -> this could have been done better :-/)
      * @return A List of enemies
      */

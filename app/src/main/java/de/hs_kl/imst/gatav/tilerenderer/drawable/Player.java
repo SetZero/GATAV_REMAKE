@@ -29,6 +29,7 @@ public final class Player extends MovableGraphics implements Destroyable, Collis
     protected Animations dieng;
     float dieTimer = 0.0f;
     private byte doublejump = 0;
+    private float maxLifePoints = 150;
     private float lifePoints = 150;
     private float speed = 300f;
     private boolean isAlive = true;
@@ -283,4 +284,11 @@ public final class Player extends MovableGraphics implements Destroyable, Collis
 
     }
 
+    public float getMaxLifePoints() {
+        return maxLifePoints;
+    }
+
+    public void setMaxLifePoints(float maxLifePoints) {
+        this.maxLifePoints = maxLifePoints;
+    }
 }

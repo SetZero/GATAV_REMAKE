@@ -28,12 +28,20 @@ public class HUD {
     private double popupLength;
 
     private Bitmap popupImage;
+    private Bitmap healthHeartImage;
+    private Bitmap scoreCoinImage;
+    private Bitmap timeWatchImage;
     private double popupImageLength;
     private int imageOffset = 40;
+    private final int hudTextHeight = 30;
     private Vector2 imagePosition = new Vector2(20, 20);
     private boolean showPopupImage = false;
 
     private Paint paint;
+    private Paint healthPaint;
+    private Paint backgroundPaint;
+    private Paint textPaint;
+    private Paint textStrokePaint;
     private Rect lp = new Rect();
     private Timer timer;
     private AssetManager assetManager;
@@ -45,6 +53,41 @@ public class HUD {
         paint = new Paint();
         paint.setColor(Color.BLACK);
         paint.setTextSize(50);
+
+        healthPaint = new Paint();
+        healthPaint.setColor(Color.rgb(211, 31, 19));
+        backgroundPaint = new Paint();
+        backgroundPaint.setColor(Color.rgb(137, 137, 137));
+        backgroundPaint.setStyle(Paint.Style.FILL_AND_STROKE);
+
+        textPaint = new Paint();
+        textPaint.setColor(Color.WHITE);
+        textPaint.setTextSize(30 * ScaleHelper.getRatioX());
+
+        textStrokePaint = new Paint();
+        textStrokePaint.setStyle(Paint.Style.STROKE);
+        textStrokePaint.setStrokeWidth(1.5f * ScaleHelper.getRatioX());
+        textStrokePaint.setColor(Color.BLACK);
+        textStrokePaint.setTextSize(30 * ScaleHelper.getRatioX());
+
+        try {
+            InputStream histr = assetManager.open("hudImages/heart.png");
+            healthHeartImage = BitmapFactory.decodeStream(histr);
+            healthHeartImage = Bitmap.createScaledBitmap(healthHeartImage, (int)((healthHeartImage.getWidth() / 4f) * ScaleHelper.getRatioX()), (int)((healthHeartImage.getHeight() / 4f) * ScaleHelper.getRatioY()), false);
+            histr.close();
+            //no pun intended...
+            InputStream sistr = assetManager.open("hudImages/coin.png");
+            scoreCoinImage = BitmapFactory.decodeStream(sistr);
+            scoreCoinImage = Bitmap.createScaledBitmap(scoreCoinImage, (int)((scoreCoinImage.getWidth() / 4f) * ScaleHelper.getRatioX()), (int)((scoreCoinImage.getHeight() / 4f) * ScaleHelper.getRatioY()), false);
+            sistr.close();
+
+            InputStream wistr = assetManager.open("hudImages/watch.png");
+            timeWatchImage = BitmapFactory.decodeStream(wistr);
+            timeWatchImage = Bitmap.createScaledBitmap(timeWatchImage, (int)((timeWatchImage.getWidth() / 4f) * ScaleHelper.getRatioX()), (int)((timeWatchImage.getHeight() / 4f) * ScaleHelper.getRatioY()), false);
+            wistr.close();
+        } catch (IOException e) {
+            e.printStackTrace();
+        }
     }
 
     public void draw(Canvas canvas) {
@@ -82,14 +125,27 @@ public class HUD {
     }
 
     private void drawLP(Canvas canvas) {
-        String lpText = "LP: " + (int) GameContent.player.getLifePoints();
-        paint.getTextBounds(lpText, 0, lpText.length(), lp);
-        canvas.drawText(lpText, 10, 60, paint);
+        //String lpText = "LP: " + (int) GameContent.player.getLifePoints();
+        //paint.getTextBounds(lpText, 0, lpText.length(), lp);
+        //canvas.drawText(lpText, 10, 60, paint);
+        Rect healthRect = new Rect();
+        healthRect.top = (int) (8 * ScaleHelper.getRatioY());
+        healthRect.left = (int) (2 * ScaleHelper.getRatioX() + healthHeartImage.getWidth() / 2);
+        healthRect.bottom = (int) (28 * ScaleHelper.getRatioY());
+        healthRect.right = (int) (152 * ScaleHelper.getRatioX() + healthHeartImage.getWidth() / 2);
+
+        canvas.drawRect(healthRect, backgroundPaint);
+        healthRect.right  *=  (GameContent.player.getLifePoints() / GameContent.player.getMaxLifePoints());
+        canvas.drawRect(healthRect, healthPaint);
+        canvas.drawBitmap(healthHeartImage, (int)(2 * ScaleHelper.getRatioX()), (int)(2 * ScaleHelper.getRatioY()), null);
     }
 
     private void drawScore(Canvas canvas) {
-        String scoreText = "Score: " + GameContent.player.getScore();
-        canvas.drawText(scoreText, lp.width() + 60, 60, paint);
+        int positionRight = (int) (155 * ScaleHelper.getRatioX() + healthHeartImage.getWidth() / 2);
+        String scoreText = String.valueOf(GameContent.player.getScore());
+        canvas.drawText(scoreText, positionRight + 2 + scoreCoinImage.getWidth(), (int)(hudTextHeight * ScaleHelper.getRatioY()), textPaint);
+        canvas.drawText(scoreText, positionRight + 2 + scoreCoinImage.getWidth(), (int)(hudTextHeight * ScaleHelper.getRatioY()), textStrokePaint);
+        canvas.drawBitmap(scoreCoinImage, positionRight, (int)(2 * ScaleHelper.getRatioY()), null);
     }
 
     public void drawPopupImage(String filename, float popupLength) {
@@ -128,10 +184,14 @@ public class HUD {
 
         long remainingTime = (long) (timer.getTotalLevelTime() - timer.getElapsedTime());
         remainingTime = (remainingTime >= 0 ? remainingTime : 0);
-        String timeText = "Time: " + String.format(Locale.GERMAN, "%03d", remainingTime);
-        paint.setTextSize(50);
-        paint.setTextAlign(Paint.Align.RIGHT);
-        canvas.drawText(timeText, canvas.getWidth() - timeText.length(), 60, paint);
-        paint.setTextAlign(Paint.Align.LEFT);
+        String timeText = String.format(Locale.GERMAN, "%03d", remainingTime);
+        textPaint.setTextAlign(Paint.Align.RIGHT);
+        textStrokePaint.setTextAlign(Paint.Align.RIGHT);
+        canvas.drawText(timeText, canvas.getWidth() - timeText.length(), (int)(hudTextHeight * ScaleHelper.getRatioY()), textPaint);
+        canvas.drawText(timeText, canvas.getWidth() - timeText.length(), (int)(hudTextHeight * ScaleHelper.getRatioY()), textStrokePaint);
+        textPaint.setTextAlign(Paint.Align.LEFT);
+        textStrokePaint.setTextAlign(Paint.Align.LEFT);
+        canvas.drawBitmap(timeWatchImage, canvas.getWidth() - timeText.length() * paint.getTextSize() - timeWatchImage.getWidth(), (int)(2 * ScaleHelper.getRatioY()), null);
+
     }
 }
