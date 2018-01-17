@@ -5,6 +5,7 @@ import de.hs_kl.imst.gatav.tilerenderer.util.Hitboxes.Collidable;
 import de.hs_kl.imst.gatav.tilerenderer.util.PhysicsController.intersectDirection;
 
 /**
+ * Helper class for collision system
  * Created by keven on 10.12.2017.
  */
 

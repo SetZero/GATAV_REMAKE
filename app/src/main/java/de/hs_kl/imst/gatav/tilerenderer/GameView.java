@@ -204,6 +204,11 @@ public class GameView extends SurfaceView implements SurfaceHolder.Callback, Run
         }
     }
 
+    /**
+     * touch handling for the controlling of the game ( the player )
+     * @param event
+     * @return
+     */
     @Override
     public boolean onTouchEvent(MotionEvent event) {
         if (gameContent == null) return false;
@@ -244,8 +249,7 @@ public class GameView extends SurfaceView implements SurfaceHolder.Callback, Run
     }
 
     /**
-     * Die Fling-Geste wird genutzt, um die Spielfigur durch den Level zu bewegen.
-     * Der eigentliche Move wird dem Gameloop synchron signalisiert und von diesem ausgeführt.
+     * the fling gesture is used to let the player jump without moving on x axis
      *
      * @param e1        {@link MotionEvent} welches die Geste gestartet hat (Ursprung)
      * @param e2        {@link MotionEvent} am Ende der Geste (aktuelle Position)

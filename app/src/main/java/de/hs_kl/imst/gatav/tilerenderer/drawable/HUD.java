@@ -19,6 +19,7 @@ import de.hs_kl.imst.gatav.tilerenderer.util.Timer;
 import de.hs_kl.imst.gatav.tilerenderer.util.Vector2;
 
 /**
+ * Klasse um dem Spieler ein HUD zu bieten
  * Created by keven on 27.12.2017.
  */
 

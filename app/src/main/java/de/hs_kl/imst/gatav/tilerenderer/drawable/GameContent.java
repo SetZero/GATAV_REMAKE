@@ -30,9 +30,11 @@ import de.hs_kl.imst.gatav.tilerenderer.util.audio.AudioPlayer;
 public class GameContent implements Drawables, Observer {
     //warum muss alles static sein? :-(
     //es gibt so viele andere möglichkeiten das zu lösen...
+    //-> faulheit xD
     public static GameCamera camera = new GameCamera();
     public static World world;
     //Not Thread safe! Can even return  old instance of Player (static player = evil!)
+    //Spieler wird nur in einem Thread behandelt :)
     public static Player player = null;
     public Context context;
     private static HUD hud;
