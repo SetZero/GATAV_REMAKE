@@ -5,6 +5,7 @@ import de.hs_kl.imst.gatav.tilerenderer.util.Vector2;
 import de.hs_kl.imst.gatav.tilerenderer.util.audio.AudioPlayer;
 
 /**
+ * Repeating Audio event. Plays a sound after a given period of time
  * Created by Sebastian on 2018-01-12.
  */
 

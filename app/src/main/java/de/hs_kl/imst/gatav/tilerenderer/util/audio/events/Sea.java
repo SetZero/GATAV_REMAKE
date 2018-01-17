@@ -8,6 +8,7 @@ import de.hs_kl.imst.gatav.tilerenderer.util.audio.AudioPlayer;
 import de.hs_kl.imst.gatav.tilerenderer.util.audio.Sounds;
 
 /**
+ * Plays the sound of the sea
  * Created by Sebastian on 2018-01-05.
  */
 

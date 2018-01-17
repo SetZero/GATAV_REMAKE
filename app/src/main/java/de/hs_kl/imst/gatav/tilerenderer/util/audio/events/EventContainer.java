@@ -8,6 +8,7 @@ import de.hs_kl.imst.gatav.tilerenderer.util.Vector2;
 import de.hs_kl.imst.gatav.tilerenderer.util.audio.AudioPlayer;
 
 /**
+ * Container for Repeating Audio events
  * Created by Sebastian on 2018-01-11.
  */
 
