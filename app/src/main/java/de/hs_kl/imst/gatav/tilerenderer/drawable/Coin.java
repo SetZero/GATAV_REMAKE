@@ -8,8 +8,11 @@ import de.hs_kl.imst.gatav.tilerenderer.util.audio.AudioPlayer;
 import de.hs_kl.imst.gatav.tilerenderer.util.audio.Sounds;
 
 /**
+ * coin class that gives +20 score to the player if collected
  * Created by keven on 31.12.2017.
  */
+
+
 
 public final class Coin extends Collectable {
     public Coin(int x, int y, Context context) {

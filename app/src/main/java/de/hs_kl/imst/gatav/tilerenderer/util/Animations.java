@@ -23,13 +23,13 @@ public class Animations {
     }
 
     /**
-     * ONLY png
+     * ONLY png files
      *
      * @param fileName  path from assets until the file + filename without number
      * @param range     how much frames? 1 - n
-     * @param dstWidth
-     * @param dstHeight
-     * @return
+     * @param dstWidth  the width it will be scaled to
+     * @param dstHeight the height it will be scaled to
+     * @return list of BitmapDrawables
      * @throws IOException
      */
     public static List<BitmapDrawable> frameLoad(String fileName, int range, int dstWidth, int dstHeight, Context context) throws IOException {
@@ -55,13 +55,17 @@ public class Animations {
      */
     public BitmapDrawable getDrawable(float faded) {
         int x = Math.round(faded / timeStep);
-        //Log.d("size / x",""+animations.size()+" "+x);
         if (x >= animations.size()) {
             return animations.get(animations.size() - 1);
         }
         return animations.get(x);
     }
 
+    /**
+     *
+     * @param faded time since last update
+     * @return if the animation is finished
+     */
     public boolean isFinished(float faded) {
         int x = Math.round(faded / timeStep);
         return x >= animations.size();

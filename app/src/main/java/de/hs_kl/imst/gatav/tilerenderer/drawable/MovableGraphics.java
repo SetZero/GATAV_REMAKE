@@ -17,6 +17,9 @@ import de.hs_kl.imst.gatav.tilerenderer.util.states.Direction;
 import de.hs_kl.imst.gatav.tilerenderer.util.Hitboxes.Rectangle;
 import de.hs_kl.imst.gatav.tilerenderer.util.Vector2;
 
+/**
+ * Class which expresses if its an movable graphical object and provides standard methods for drawing and moving it
+ */
 public abstract class MovableGraphics extends Observable implements Drawables, CollisionReactive {
 
     //aktuelle Geschwindigkeit des Objekts
@@ -124,7 +127,10 @@ public abstract class MovableGraphics extends Observable implements Drawables, C
         if (linearImpulse.x > -10 && linearImpulse.x < 10) linearImpulse.x = 0;
     }
 
-
+    /**
+     * updates position, movement and activity state
+     * @param delta
+     */
     @Override
     public void update(float delta) {
         Rect temp = (hitbox.getRect());

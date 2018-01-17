@@ -1,6 +1,7 @@
 package de.hs_kl.imst.gatav.tilerenderer.util;
 
 /**
+ * simple class for Vectors
  * Created by keven on 06.12.2017.
  */
 

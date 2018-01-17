@@ -16,6 +16,7 @@ import de.hs_kl.imst.gatav.tilerenderer.util.Vector2;
 import de.hs_kl.imst.gatav.tilerenderer.util.audio.AudioPlayer;
 
 /**
+ * abstract Class for simple collectable items
  * Created by keven on 31.12.2017.
  */
 
@@ -67,6 +68,10 @@ public abstract class Collectable extends Observable implements Drawables {
         bmp.setBounds((int) Position.getX(), ((int) Position.getY()) + this.height, ((int) Position.getX()) + this.width, (int) Position.getY());
     }
 
+    /**
+     * checks if the item was collected by the player and executes the onCollect method that have to be implemented
+     * @param delta time faded since last update
+     */
     @Override
     public void update(float delta) {
         if (!isCollected && GameContent.player.getHitbox().isCollidingWith(Hitbox)) {

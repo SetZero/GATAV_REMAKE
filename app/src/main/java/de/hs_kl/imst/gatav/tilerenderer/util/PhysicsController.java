@@ -11,6 +11,8 @@ import de.hs_kl.imst.gatav.tilerenderer.util.Hitboxes.Collidable;
 import de.hs_kl.imst.gatav.tilerenderer.util.Hitboxes.Rectangle;
 
 /**
+ * Class which controlls Gravity and a CollisionSystem for all MovableGraphics in the loaded world
+ * the Controller works with rectangles
  * Created by keven on 07.12.2017.
  */
 
@@ -133,7 +135,7 @@ public class PhysicsController {
     }
 
 
-    public ArrayList<Contact> isColliding(MovableGraphics item, GameCamera cam) {
+    private ArrayList<Contact> isColliding(MovableGraphics item, GameCamera cam) {
         ArrayList<Contact> contacts = new ArrayList<Contact>();
         Rect view = cam.getCameraViewRect();
         view.bottom = view.bottom + view.height() / 2;
@@ -147,6 +149,12 @@ public class PhysicsController {
         return contacts;
     }
 
+    /**
+     * checks if the movable is colliding with another object
+     * @param c the other collidable
+     * @param item the item that will be checked
+     * @return a contact object with informations about the collision
+     */
     private Contact collisionDirection(Collidable c, MovableGraphics item) {
         Rect rectA = (item.getHitbox().getRect());
         Rect rectB = (((Rectangle) c).getRect());
