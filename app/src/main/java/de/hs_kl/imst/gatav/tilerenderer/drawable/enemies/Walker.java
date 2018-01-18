@@ -19,7 +19,8 @@ import de.hs_kl.imst.gatav.tilerenderer.util.audio.Sounds;
 import de.hs_kl.imst.gatav.tilerenderer.util.states.Direction;
 
 /**
- * Created by keven on 19.12.2017.
+ * Walker
+ * Created by Sebastian on 2018-01-16.
  */
 
 public final class Walker extends Enemies implements CollisionReactive, Destroyable {

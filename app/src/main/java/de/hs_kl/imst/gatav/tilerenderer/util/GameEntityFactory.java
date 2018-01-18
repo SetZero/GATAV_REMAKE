@@ -9,6 +9,7 @@ import java.util.Map;
 
 import de.hs_kl.imst.gatav.tilerenderer.BuildConfig;
 import de.hs_kl.imst.gatav.tilerenderer.drawable.Coin;
+import de.hs_kl.imst.gatav.tilerenderer.drawable.enemies.DarkAngel;
 import de.hs_kl.imst.gatav.tilerenderer.drawable.enemies.Enemies;
 import de.hs_kl.imst.gatav.tilerenderer.drawable.Player;
 import de.hs_kl.imst.gatav.tilerenderer.drawable.enemies.Robotic;
@@ -76,6 +77,9 @@ public class GameEntityFactory {
                 EnemyTypes type = (name != null && !name.isEmpty() ? EnemyTypes.valueOf(name.toUpperCase()) : EnemyTypes.ROBOT);
 
                 switch(type) {
+                    case DARK_ANGEL:
+                        enemy = new DarkAngel(0, 0, context);
+                        break;
                     case WALKER:
                         enemy = new Walker(0, 0, context, enemyRect);
                         break;

@@ -197,7 +197,6 @@ public class GameContent implements Drawables, Observer {
         for (Enemies enemy : enemies) {
             world.addGameObject(enemy);
         }
-
         List<Coin> coins = factory.generateCoins(context);
         for(Coin coin : coins) {
             world.addCollectables(coin);
