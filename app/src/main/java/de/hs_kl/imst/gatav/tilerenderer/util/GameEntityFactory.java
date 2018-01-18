@@ -17,8 +17,8 @@ import de.hs_kl.imst.gatav.tilerenderer.drawable.enemies.Walker;
 import de.hs_kl.imst.gatav.tilerenderer.util.Hitboxes.Collidable;
 import de.hs_kl.imst.gatav.tilerenderer.util.Hitboxes.Rectangle;
 import de.hs_kl.imst.gatav.tilerenderer.util.audio.AudioPlayer;
-import de.hs_kl.imst.gatav.tilerenderer.util.particles.ParticleController;
-import de.hs_kl.imst.gatav.tilerenderer.util.particles.ParticleSpawner;
+import de.hs_kl.imst.gatav.tilerenderer.util.particles.ParticleFactory;
+import de.hs_kl.imst.gatav.tilerenderer.util.particles.Spawner.ParticleSpawner;
 import de.hs_kl.imst.gatav.tilerenderer.util.types.EnemyTypes;
 
 /**
@@ -28,17 +28,13 @@ import de.hs_kl.imst.gatav.tilerenderer.util.types.EnemyTypes;
 
 public class GameEntityFactory {
     private Map<String, List<Collidable>> objects;
-    private Timer timer;
-    private ParticleController particleController;
-    private World world;
+    private ParticleFactory particleFactory;
 
     /**
      * @param objects zones with object group name as key
      */
-    public GameEntityFactory(Map<String, List<Collidable>> objects, Timer timer, World world) {
+    public GameEntityFactory(Map<String, List<Collidable>> objects) {
         this.objects = objects;
-        this.timer = timer;
-        this.world = world;
     }
 
     /**
@@ -85,8 +81,7 @@ public class GameEntityFactory {
 
                 switch(type) {
                     case DARK_ANGEL:
-                        ParticleSpawner particleSpawner = new ParticleSpawner(new Vector2(0, 0), particleController, timer);
-                        world.addParticleSpawner(particleSpawner);
+                        ParticleSpawner particleSpawner = particleFactory.generateParticleSpawnerAndAddToWorld();
                         enemy = new DarkAngel(0, 0, context, particleSpawner);
                         break;
                     case WALKER:
@@ -130,7 +125,7 @@ public class GameEntityFactory {
         return coins;
     }
 
-    public void setParticleController(ParticleController particleController) {
-        this.particleController = particleController;
+    public void setParticleFactory(ParticleFactory particleFactory) {
+        this.particleFactory = particleFactory;
     }
 }

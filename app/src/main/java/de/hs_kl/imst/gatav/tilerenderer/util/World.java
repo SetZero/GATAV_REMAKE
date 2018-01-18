@@ -17,7 +17,7 @@ import de.hs_kl.imst.gatav.tilerenderer.util.Hitboxes.Collidable;
 import de.hs_kl.imst.gatav.tilerenderer.util.Hitboxes.Rectangle;
 import de.hs_kl.imst.gatav.tilerenderer.util.audio.AudioPlayer;
 import de.hs_kl.imst.gatav.tilerenderer.util.particles.ParticleController;
-import de.hs_kl.imst.gatav.tilerenderer.util.particles.ParticleSpawner;
+import de.hs_kl.imst.gatav.tilerenderer.util.particles.Spawner.ParticleSpawner;
 
 import static de.hs_kl.imst.gatav.tilerenderer.util.Constants.enableEyeCandy;
 
@@ -56,7 +56,7 @@ public class World {
         this.step = step;
         this.timer = timer;
 
-        //particleSpawner = new ParticleSpawner(new Vector2(400, 1400), particleController, timer);
+        //simpleParticleSpawner = new SimpleParticleSpawner(new Vector2(400, 1400), particleController, timer);
     }
 
     /**
@@ -99,6 +99,7 @@ public class World {
         if(particleController != null) {
             particleController.update(delta, cam);
             particleSpawner.forEach(ps -> ps.update(cam));
+            particleSpawner.removeIf(ps -> !ps.isActive());
         }
 
         dynamicObjects.removeAll(physics.getToRemove());

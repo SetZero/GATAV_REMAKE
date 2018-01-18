@@ -2,7 +2,6 @@ package de.hs_kl.imst.gatav.tilerenderer.drawable.enemies;
 
 
 import android.content.Context;
-import android.graphics.Rect;
 import android.util.Pair;
 
 import java.io.InputStream;
@@ -11,18 +10,17 @@ import java.util.concurrent.ThreadLocalRandom;
 import de.hs_kl.imst.gatav.tilerenderer.drawable.CollisionReactive;
 import de.hs_kl.imst.gatav.tilerenderer.drawable.Destroyable;
 import de.hs_kl.imst.gatav.tilerenderer.drawable.GameContent;
-import de.hs_kl.imst.gatav.tilerenderer.drawable.particles.Particle;
 import de.hs_kl.imst.gatav.tilerenderer.util.Animations;
 import de.hs_kl.imst.gatav.tilerenderer.util.Hitboxes.Rectangle;
 import de.hs_kl.imst.gatav.tilerenderer.util.ScaleHelper;
 import de.hs_kl.imst.gatav.tilerenderer.util.Vector2;
 import de.hs_kl.imst.gatav.tilerenderer.util.audio.Sounds;
-import de.hs_kl.imst.gatav.tilerenderer.util.particles.ParticleSpawner;
-import de.hs_kl.imst.gatav.tilerenderer.util.states.Direction;
+import de.hs_kl.imst.gatav.tilerenderer.util.particles.Spawner.ParticleSpawner;
 
 /**
  * Dark Angel
  * Bullet Hell Boss, crazy strong
+ * TODO: Add death animation!!!
  * Created by Sebastian on 2018-01-17.
  */
 
@@ -38,6 +36,12 @@ public final class DarkAngel extends Enemies implements CollisionReactive, Destr
             is.close();
             run = new Animations(1f / 8f);
             run.addAnimation(Animations.frameLoad("dynamics/enemys/darkAngle/attack/attack", 10, 70 * ScaleHelper.getEntitiyScale(), 56 * ScaleHelper.getEntitiyScale(), context));
+            dying = new Animations(1f / 4f);
+            try {
+                dying.addAnimation(Animations.frameLoad("dynamics/enemys/darkAngle/die/death", 4, 70 * ScaleHelper.getEntitiyScale(), 56 * ScaleHelper.getEntitiyScale(), context));
+            } catch (Exception e) {
+                e.printStackTrace();
+            }
             idle = run.getDrawable(0f);
             hitbox = new Rectangle(x, y, width / 2, height - 4 * ScaleHelper.getEntitiyScale());
             isActive = true;
@@ -77,5 +81,9 @@ public final class DarkAngel extends Enemies implements CollisionReactive, Destr
         /*if(currentDirection == Direction.IDLE){
             bmp = idle;
         }*/
+    }
+    @Override
+    protected void cleanup() {
+        spawner.setActive(false);
     }
 }
