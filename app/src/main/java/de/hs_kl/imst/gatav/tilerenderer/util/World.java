@@ -52,7 +52,7 @@ public class World {
         this.tileLoader = tileLoader;
         this.objects = tileLoader.getObjectGroups();
         this.physics = new PhysicsController(this);
-        this.gameEvents = new GameEventHandler(this.getObjects(), timer, executioner, audioPlayer, tileLoader.getAudioEventList());
+        this.gameEvents = new GameEventHandler(this.getObjects(), timer, executioner, audioPlayer, tileLoader.getAudioEventList(), particleSpawner);
         this.step = step;
         this.timer = timer;
 

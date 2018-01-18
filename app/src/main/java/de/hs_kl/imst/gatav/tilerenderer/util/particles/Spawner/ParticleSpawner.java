@@ -13,4 +13,5 @@ public interface ParticleSpawner {
     void setPosition(Vector2 position);
     boolean isActive();
     void setActive(boolean active);
+    void resetTimer();
 }

@@ -3,6 +3,7 @@ package de.hs_kl.imst.gatav.tilerenderer.util.particles;
 import de.hs_kl.imst.gatav.tilerenderer.util.Timer;
 import de.hs_kl.imst.gatav.tilerenderer.util.Vector2;
 import de.hs_kl.imst.gatav.tilerenderer.util.World;
+import de.hs_kl.imst.gatav.tilerenderer.util.particles.Spawner.DeferredCircleParticleSpawner;
 import de.hs_kl.imst.gatav.tilerenderer.util.particles.Spawner.ParticleSpawner;
 import de.hs_kl.imst.gatav.tilerenderer.util.particles.Spawner.SimpleParticleSpawner;
 
@@ -28,7 +29,7 @@ public class ParticleFactory {
      * @return a particle Spawner
      */
     public ParticleSpawner generateParticleSpawnerAndAddToWorld(Vector2 position) {
-        ParticleSpawner particleSpawner = new SimpleParticleSpawner(position, particleController, timer);
+        ParticleSpawner particleSpawner = new DeferredCircleParticleSpawner(position, particleController, timer);
         world.addParticleSpawner(particleSpawner);
         return particleSpawner;
     }

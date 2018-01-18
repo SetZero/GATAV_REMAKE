@@ -1,7 +1,6 @@
 package de.hs_kl.imst.gatav.tilerenderer.util.particles.Spawner;
 
 import android.graphics.Color;
-import android.util.Log;
 
 import de.hs_kl.imst.gatav.tilerenderer.drawable.particles.FancyParticle;
 import de.hs_kl.imst.gatav.tilerenderer.util.GameCamera;
@@ -14,10 +13,13 @@ import de.hs_kl.imst.gatav.tilerenderer.util.particles.ParticleController;
  * Created by Sebastian on 2018-01-18.
  */
 
-public class SimpleParticleSpawner  extends CircleParticleSpawner {
+public class DeferredCircleParticleSpawner extends CircleParticleSpawner {
+    private int currentCirclePosition = 0;
+    private int maxCirclePosition = 50;
 
-    public SimpleParticleSpawner(Vector2 position, ParticleController controller, Timer timer) {
+    public DeferredCircleParticleSpawner(Vector2 position, ParticleController controller, Timer timer) {
         super(position, controller, timer);
+        super.particleTimeBetween = 1;
     }
 
     /**
@@ -29,11 +31,12 @@ public class SimpleParticleSpawner  extends CircleParticleSpawner {
         if(active) {
             if (cam.getCameraViewRect().contains((int) position.getX(), (int) position.getY())) {
                 if (lastTimeParticleWave < timer.getElapsedTime() - particleTimeBetween) {
-                    for (int i = 0; i < 18; i++) {
-                        FancyParticle particle = new FancyParticle(position, Color.rgb(i * 14, 0, 255 - i * 14), i * 10);
-                        controller.addParticle(particle);
-                    }
+                    FancyParticle particle = new FancyParticle(position,
+                            Color.rgb(currentCirclePosition * (360 / maxCirclePosition), 0, 255 - currentCirclePosition * (360 / maxCirclePosition)),
+                            currentCirclePosition * (360 / maxCirclePosition));
+                    controller.addParticle(particle);
                     lastTimeParticleWave = timer.getElapsedTime();
+                    currentCirclePosition = (currentCirclePosition < maxCirclePosition ? currentCirclePosition+1 : 0);
                 }
             }
         }

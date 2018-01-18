@@ -19,6 +19,7 @@ import de.hs_kl.imst.gatav.tilerenderer.util.Hitboxes.Rectangle;
 import de.hs_kl.imst.gatav.tilerenderer.util.audio.AudioPlayer;
 import de.hs_kl.imst.gatav.tilerenderer.util.audio.Sounds;
 import de.hs_kl.imst.gatav.tilerenderer.util.audio.events.EventContainer;
+import de.hs_kl.imst.gatav.tilerenderer.util.particles.Spawner.ParticleSpawner;
 import de.hs_kl.imst.gatav.tilerenderer.util.states.GameStateHandler;
 import de.hs_kl.imst.gatav.tilerenderer.util.states.PlayerStates;
 
@@ -43,6 +44,7 @@ public class GameEventHandler implements Observer {
     //Audio Events
     private boolean speedUpSound = false;
     private List<EventContainer> audioEventList;
+    private List<ParticleSpawner> particleSpawner;
 
     /**
      * Constructor of GameEventHandler, will initialize all audio events and save all parameters as object
@@ -52,8 +54,9 @@ public class GameEventHandler implements Observer {
      * @param executioner a game event executioner for returning to title screen
      * @param audioPlayer a audio player to play audio events
      * @param audioEventList a list of all audio events
+     * @param particleSpawner
      */
-    public GameEventHandler(Map<String, List<Collidable>> objects, Timer timer, GameEventExecutioner executioner, AudioPlayer audioPlayer, List<EventContainer> audioEventList) {
+    public GameEventHandler(Map<String, List<Collidable>> objects, Timer timer, GameEventExecutioner executioner, AudioPlayer audioPlayer, List<EventContainer> audioEventList, List<ParticleSpawner> particleSpawner) {
         this.objects = objects;
         this.timer = timer;
         currentGracePeriod = timer.getElapsedTime() + gracePeriod;
@@ -61,6 +64,7 @@ public class GameEventHandler implements Observer {
         this.audioPlayer = audioPlayer;
         this.gameState.setLastCheckpointTime(timer.getTotalLevelTime());
         this.audioEventList = audioEventList;
+        this.particleSpawner = particleSpawner;
 
         for (EventContainer event : audioEventList) {
             event.start(timer, audioPlayer);
@@ -171,6 +175,7 @@ public class GameEventHandler implements Observer {
 
             audioPlayer.changeBGMSpeed(1);
             audioEventList.forEach(EventContainer::reset);
+            particleSpawner.forEach(ParticleSpawner::resetTimer);
             failed = false;
         }
         audioEventList.forEach(EventContainer::update);
