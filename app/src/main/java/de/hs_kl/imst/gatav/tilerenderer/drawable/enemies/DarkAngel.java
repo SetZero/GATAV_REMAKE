@@ -22,7 +22,7 @@ import de.hs_kl.imst.gatav.tilerenderer.util.states.Direction;
 
 /**
  * Dark Angel
- * not ready should be some bullet hell boss
+ * Bullet Hell Boss, crazy strong
  * Created by Sebastian on 2018-01-17.
  */
 
@@ -31,7 +31,7 @@ public final class DarkAngel extends Enemies implements CollisionReactive, Destr
     private ParticleSpawner spawner;
 
     public DarkAngel(int x, int y, Context context, ParticleSpawner spawner) {
-        super(x, y, 9999, 9999, 190f, 30);
+        super(x, y, 100, 15, 0f, 150);
         try {
             InputStream is = context.getAssets().open("dynamics/enemys/darkAngle/attack/attack1.png");
             loadGraphic(is, 70, 56, ScaleHelper.getEntitiyScale());
