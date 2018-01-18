@@ -201,12 +201,6 @@ public class GameContent implements Drawables, Observer {
         ParticleFactory particleFactory = new ParticleFactory(particleController, timer, world);
         factory.setParticleFactory(particleFactory);
 
-        //Vector2 position = new Vector2( 400, 1400);
-        //SimpleParticleSpawner particleSpawner = new SimpleParticleSpawner(position, particleController, timer);
-        //DarkAngel angle = new DarkAngel((int)position.getX(), (int)position.getY(), context, particleSpawner);
-        //world.addGameObject(angle);
-        //world.addParticleSpawner(particleSpawner);
-
         List<Enemies> enemies = factory.generateEnemies(context);
         for (Enemies enemy : enemies) {
             world.addGameObject(enemy);

@@ -12,7 +12,7 @@ import de.hs_kl.imst.gatav.tilerenderer.util.Hitboxes.Collidable;
 import de.hs_kl.imst.gatav.tilerenderer.util.Hitboxes.Rectangle;
 
 /**
- * Manages all Particles in the game
+ * Manages Spawns of all Particles in the game. Every Particle Spawner manages its own chunk of Particles
  * Created by Sebastian on 2018-01-18.
  */
 

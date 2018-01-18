@@ -4,6 +4,7 @@ import de.hs_kl.imst.gatav.tilerenderer.util.GameCamera;
 import de.hs_kl.imst.gatav.tilerenderer.util.Vector2;
 
 /**
+ * Interface for a Particle Spawner
  * Created by Sebastian on 2018-01-18.
  */
 
