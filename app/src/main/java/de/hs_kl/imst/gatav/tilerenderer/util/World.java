@@ -16,6 +16,8 @@ import de.hs_kl.imst.gatav.tilerenderer.drawable.MovableGraphics;
 import de.hs_kl.imst.gatav.tilerenderer.util.Hitboxes.Collidable;
 import de.hs_kl.imst.gatav.tilerenderer.util.Hitboxes.Rectangle;
 import de.hs_kl.imst.gatav.tilerenderer.util.audio.AudioPlayer;
+import de.hs_kl.imst.gatav.tilerenderer.util.particles.ParticleController;
+import de.hs_kl.imst.gatav.tilerenderer.util.particles.ParticleSpawner;
 
 import static de.hs_kl.imst.gatav.tilerenderer.util.Constants.enableEyeCandy;
 
@@ -35,6 +37,9 @@ public class World {
     private PhysicsController physics;
     private GameEventHandler gameEvents;
 
+    private ParticleController particleController;
+    private List<ParticleSpawner> particleSpawner = new ArrayList<>();
+
     /**
      * Constructor of World, loads all parameters as object variables
      * @param tileLoader The Tileloader used for the loading of a level
@@ -50,6 +55,8 @@ public class World {
         this.gameEvents = new GameEventHandler(this.getObjects(), timer, executioner, audioPlayer, tileLoader.getAudioEventList());
         this.step = step;
         this.timer = timer;
+
+        //particleSpawner = new ParticleSpawner(new Vector2(400, 1400), particleController, timer);
     }
 
     /**
@@ -59,6 +66,14 @@ public class World {
     public void addCollectables(Collectable collectable) {
         this.collectables.add(collectable);
         collectable.addObserver(gameEvents);
+    }
+
+    public void addParticleSpawner(ParticleSpawner particleSpawner) {
+        this.particleSpawner.add(particleSpawner);
+    }
+
+    public void setParticleController(ParticleController particleController) {
+        this.particleController = particleController;
     }
 
     /**
@@ -80,6 +95,11 @@ public class World {
         collectables.forEach(c -> c.update(delta));
         physics.Update(step, cam);
         gameEvents.update(cam);
+
+        if(particleController != null) {
+            particleController.update(delta, cam);
+            particleSpawner.forEach(ps -> ps.update(cam));
+        }
 
         dynamicObjects.removeAll(physics.getToRemove());
         gameEvents.getDynamics().removeAll(physics.getToRemove());
@@ -184,6 +204,9 @@ public class World {
         //3. Draw all Dynamic Objects
         dynamicObjects.forEach(o -> o.draw(canvas));
         collectables.forEach(c -> c.draw(canvas));
+
+        if(particleController != null)
+            particleController.draw(canvas);
     }
 
     /**

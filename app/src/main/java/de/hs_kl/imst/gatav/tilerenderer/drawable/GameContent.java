@@ -15,10 +15,14 @@ import java.util.List;
 import java.util.Observable;
 import java.util.Observer;
 
+import de.hs_kl.imst.gatav.tilerenderer.drawable.enemies.DarkAngel;
 import de.hs_kl.imst.gatav.tilerenderer.util.TileLoader;
 import de.hs_kl.imst.gatav.tilerenderer.drawable.enemies.Enemies;
 import de.hs_kl.imst.gatav.tilerenderer.util.Constants;
 import de.hs_kl.imst.gatav.tilerenderer.util.LoadingScreen;
+import de.hs_kl.imst.gatav.tilerenderer.util.Vector2;
+import de.hs_kl.imst.gatav.tilerenderer.util.particles.ParticleController;
+import de.hs_kl.imst.gatav.tilerenderer.util.particles.ParticleSpawner;
 import de.hs_kl.imst.gatav.tilerenderer.util.states.Direction;
 import de.hs_kl.imst.gatav.tilerenderer.util.GameCamera;
 import de.hs_kl.imst.gatav.tilerenderer.util.GameEventExecutioner;
@@ -54,6 +58,7 @@ public class GameContent implements Drawables, Observer {
     private LoadingScreen loadingScreen;
     private Timer timer = new Timer();
     private AudioPlayer audioPlayer;
+    private ParticleController particleController;
 
     /**
      * Sets up everything and starts loading of level
@@ -188,10 +193,20 @@ public class GameContent implements Drawables, Observer {
      * Generates and pass all enemies to the classes which need them
      */
     public void generateGameElements() {
-        GameEntityFactory factory = new GameEntityFactory(tileLoader.getObjectGroups());
+        GameEntityFactory factory = new GameEntityFactory(tileLoader.getObjectGroups(), timer, world);
         player = factory.generatePlayer(context, audioPlayer);
         world.addGameObject(player);
         camera.attach(player);
+
+        particleController = new ParticleController(tileLoader.getObjectGroups().get(Constants.collisionObjectGroupString), player);
+        world.setParticleController(particleController);
+        factory.setParticleController(particleController);
+
+        //Vector2 position = new Vector2( 400, 1400);
+        //ParticleSpawner particleSpawner = new ParticleSpawner(position, particleController, timer);
+        //DarkAngel angle = new DarkAngel((int)position.getX(), (int)position.getY(), context, particleSpawner);
+        //world.addGameObject(angle);
+        //world.addParticleSpawner(particleSpawner);
 
         List<Enemies> enemies = factory.generateEnemies(context);
         for (Enemies enemy : enemies) {

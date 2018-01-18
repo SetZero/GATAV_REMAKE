@@ -17,6 +17,8 @@ import de.hs_kl.imst.gatav.tilerenderer.drawable.enemies.Walker;
 import de.hs_kl.imst.gatav.tilerenderer.util.Hitboxes.Collidable;
 import de.hs_kl.imst.gatav.tilerenderer.util.Hitboxes.Rectangle;
 import de.hs_kl.imst.gatav.tilerenderer.util.audio.AudioPlayer;
+import de.hs_kl.imst.gatav.tilerenderer.util.particles.ParticleController;
+import de.hs_kl.imst.gatav.tilerenderer.util.particles.ParticleSpawner;
 import de.hs_kl.imst.gatav.tilerenderer.util.types.EnemyTypes;
 
 /**
@@ -26,12 +28,17 @@ import de.hs_kl.imst.gatav.tilerenderer.util.types.EnemyTypes;
 
 public class GameEntityFactory {
     private Map<String, List<Collidable>> objects;
+    private Timer timer;
+    private ParticleController particleController;
+    private World world;
 
     /**
      * @param objects zones with object group name as key
      */
-    public GameEntityFactory(Map<String, List<Collidable>> objects) {
+    public GameEntityFactory(Map<String, List<Collidable>> objects, Timer timer, World world) {
         this.objects = objects;
+        this.timer = timer;
+        this.world = world;
     }
 
     /**
@@ -78,7 +85,9 @@ public class GameEntityFactory {
 
                 switch(type) {
                     case DARK_ANGEL:
-                        enemy = new DarkAngel(0, 0, context);
+                        ParticleSpawner particleSpawner = new ParticleSpawner(new Vector2(0, 0), particleController, timer);
+                        world.addParticleSpawner(particleSpawner);
+                        enemy = new DarkAngel(0, 0, context, particleSpawner);
                         break;
                     case WALKER:
                         enemy = new Walker(0, 0, context, enemyRect);
@@ -119,5 +128,9 @@ public class GameEntityFactory {
             }
         }
         return coins;
+    }
+
+    public void setParticleController(ParticleController particleController) {
+        this.particleController = particleController;
     }
 }

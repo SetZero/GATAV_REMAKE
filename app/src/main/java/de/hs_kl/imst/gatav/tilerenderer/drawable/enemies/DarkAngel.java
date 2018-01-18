@@ -11,10 +11,13 @@ import java.util.concurrent.ThreadLocalRandom;
 import de.hs_kl.imst.gatav.tilerenderer.drawable.CollisionReactive;
 import de.hs_kl.imst.gatav.tilerenderer.drawable.Destroyable;
 import de.hs_kl.imst.gatav.tilerenderer.drawable.GameContent;
+import de.hs_kl.imst.gatav.tilerenderer.drawable.particles.Particle;
 import de.hs_kl.imst.gatav.tilerenderer.util.Animations;
 import de.hs_kl.imst.gatav.tilerenderer.util.Hitboxes.Rectangle;
 import de.hs_kl.imst.gatav.tilerenderer.util.ScaleHelper;
+import de.hs_kl.imst.gatav.tilerenderer.util.Vector2;
 import de.hs_kl.imst.gatav.tilerenderer.util.audio.Sounds;
+import de.hs_kl.imst.gatav.tilerenderer.util.particles.ParticleSpawner;
 import de.hs_kl.imst.gatav.tilerenderer.util.states.Direction;
 
 /**
@@ -25,7 +28,9 @@ import de.hs_kl.imst.gatav.tilerenderer.util.states.Direction;
 
 public final class DarkAngel extends Enemies implements CollisionReactive, Destroyable {
 
-    public DarkAngel(int x, int y, Context context) {
+    private ParticleSpawner spawner;
+
+    public DarkAngel(int x, int y, Context context, ParticleSpawner spawner) {
         super(x, y, 9999, 9999, 190f, 30);
         try {
             InputStream is = context.getAssets().open("dynamics/enemys/darkAngle/attack/attack1.png");
@@ -37,6 +42,7 @@ public final class DarkAngel extends Enemies implements CollisionReactive, Destr
             hitbox = new Rectangle(x, y, width / 2, height - 4 * ScaleHelper.getEntitiyScale());
             isActive = true;
             drawOffsetY = -3 * ScaleHelper.getEntitiyScale();
+            this.spawner = spawner;
         } catch (Exception e) {
             e.printStackTrace();
         }
@@ -50,6 +56,7 @@ public final class DarkAngel extends Enemies implements CollisionReactive, Destr
             setChanged();
             notifyObservers(new Pair<>(Sounds.WOOSH, Position));
         }
+        spawner.setPosition(new Vector2(getPosition().getX() + getHitbox().getWidth() / 2, getPosition().getY() - 10 * ScaleHelper.getRatioY()));
     }
 
     @Override
