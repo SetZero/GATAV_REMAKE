@@ -13,6 +13,7 @@ import java.util.Map;
 import de.hs_kl.imst.gatav.tilerenderer.drawable.Collectable;
 import de.hs_kl.imst.gatav.tilerenderer.drawable.Drawables;
 import de.hs_kl.imst.gatav.tilerenderer.drawable.MovableGraphics;
+import de.hs_kl.imst.gatav.tilerenderer.drawable.enemies.Enemies;
 import de.hs_kl.imst.gatav.tilerenderer.util.Hitboxes.Collidable;
 import de.hs_kl.imst.gatav.tilerenderer.util.Hitboxes.Rectangle;
 import de.hs_kl.imst.gatav.tilerenderer.util.audio.AudioPlayer;
@@ -54,7 +55,7 @@ public class World {
         this.tileLoader = tileLoader;
         this.objects = tileLoader.getObjectGroups();
         this.physics = new PhysicsController(this);
-        this.gameEvents = new GameEventHandler(this.getObjects(), timer, executioner, audioPlayer, tileLoader.getAudioEventList(), particleSpawner);
+        this.gameEvents = new GameEventHandler(this.getObjects(), timer, executioner, audioPlayer, tileLoader.getAudioEventList(), particleSpawner, this);
         this.step = step;
         this.timer = timer;
 
@@ -234,6 +235,15 @@ public class World {
      */
     public void removeGameObject(MovableGraphics object) {
         physics.removePhysical(object);
+    }
+
+    public void reset() {
+        dynamicObjects.stream()
+                .filter(Enemies.class::isInstance)
+                .map(Enemies.class::cast)
+                .forEach(enemy -> {
+                    enemy.reset();
+        });
     }
 
 }

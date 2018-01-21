@@ -20,7 +20,7 @@ public class FancyParticle extends ParticlePrototype {
     private int speed = 100;
     private int size = 10;
     private int stroke = 2;
-    private int damage = 10;
+    private int damage = 30;
 
     public FancyParticle(Vector2 position, int color, float radians) {
         setPosition(position);

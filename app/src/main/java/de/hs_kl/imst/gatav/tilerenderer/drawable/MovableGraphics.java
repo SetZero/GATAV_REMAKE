@@ -31,6 +31,7 @@ public abstract class MovableGraphics extends Observable implements Drawables, C
     protected boolean isFlipped = false;
     //koordinaten als Vektor
     protected Vector2 Position = new Vector2();
+    protected Vector2 initialPosition = new Vector2();
     protected float friction = 0.0f;
     protected Vector2 linearImpulse = new Vector2();
     protected int width, height;
@@ -42,6 +43,7 @@ public abstract class MovableGraphics extends Observable implements Drawables, C
     protected volatile Direction currentDirection = Direction.IDLE;
     public MovableGraphics(float x, float y) {
         this.Position = new Vector2(x, y);
+        this.initialPosition = new Vector2(x, y);
     }
     public MovableGraphics(Vector2 pos) {
         this.Position = pos;

@@ -34,7 +34,7 @@ public class WaterParticleSpawner extends CircleParticleSpawner {
                     controller.addParticle(particle);
                 }
                 lastTimeParticleWave = timer.getElapsedTime();
-                active = false;
+                setActive(false);
             }
         }
     }

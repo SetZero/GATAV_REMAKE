@@ -3,6 +3,7 @@ package de.hs_kl.imst.gatav.tilerenderer.util.particles;
 import android.graphics.Canvas;
 
 import java.util.ArrayList;
+import java.util.LinkedList;
 import java.util.List;
 
 import de.hs_kl.imst.gatav.tilerenderer.drawable.Player;
@@ -17,7 +18,7 @@ import de.hs_kl.imst.gatav.tilerenderer.util.Hitboxes.Rectangle;
  */
 
 public class ParticleController {
-    private List<ParticlePrototype> particles = new ArrayList<>();
+    private List<ParticlePrototype> particles = new LinkedList<>(); //heavy deleting -> LinkedList
     private List<Collidable> collidables = new ArrayList<>();
     private Player player;
 

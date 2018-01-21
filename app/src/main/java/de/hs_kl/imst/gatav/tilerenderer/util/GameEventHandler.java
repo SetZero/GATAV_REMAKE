@@ -32,6 +32,7 @@ import de.hs_kl.imst.gatav.tilerenderer.util.states.PlayerStates;
 public class GameEventHandler implements Observer {
     private final Timer timer;
     private final GameEventExecutioner executioner;
+    private World world;
     private final float speedUpSoundAmount = 1.25f;
     private final float speedUpSoundTime = 0.8f;
     private ArrayList<MovableGraphics> dynamics = new ArrayList<>();
@@ -53,14 +54,17 @@ public class GameEventHandler implements Observer {
     /**
      * Constructor of GameEventHandler, will initialize all audio events and save all parameters as object
      * variables
-     * @param objects All objects with object group name as key
-     * @param timer a gloabal timer (of the level)
-     * @param executioner a game event executioner for returning to title screen
-     * @param audioPlayer a audio player to play audio events
-     * @param audioEventList a list of all audio events
+     *
+     * @param objects         All objects with object group name as key
+     * @param timer           a gloabal timer (of the level)
+     * @param executioner     a game event executioner for returning to title screen
+     * @param audioPlayer     a audio player to play audio events
+     * @param audioEventList  a list of all audio events
      * @param particleSpawner
      */
-    public GameEventHandler(Map<String, List<Collidable>> objects, Timer timer, GameEventExecutioner executioner, AudioPlayer audioPlayer, List<EventContainer> audioEventList, List<ParticleSpawner> particleSpawner) {
+    public GameEventHandler(Map<String, List<Collidable>> objects, Timer timer, GameEventExecutioner executioner,
+                            AudioPlayer audioPlayer, List<EventContainer> audioEventList, List<ParticleSpawner> particleSpawner,
+                            World world) {
         this.objects = objects;
         this.timer = timer;
         currentGracePeriod = timer.getElapsedTime() + gracePeriod;
@@ -69,6 +73,7 @@ public class GameEventHandler implements Observer {
         this.gameState.setLastCheckpointTime(timer.getTotalLevelTime());
         this.audioEventList = audioEventList;
         this.particleSpawner = particleSpawner;
+        this.world = world;
 
         for (EventContainer event : audioEventList) {
             event.start(timer, audioPlayer);
@@ -92,8 +97,9 @@ public class GameEventHandler implements Observer {
      * 6. if player is in water, play water sound and mark for death
      * 7. if player has a little time left, make bgm faster
      * 8. if the player is marked for death and the death animation timer is over:
-     *     either reset him if there are no checkpoints or reset him to the checkpoints, also reset player
+     * either reset him if there are no checkpoints or reset him to the checkpoints, also reset player
      * 9. Play audio events
+     *
      * @param cam
      */
     public void update(GameCamera cam) {
@@ -174,6 +180,7 @@ public class GameEventHandler implements Observer {
             if (gameState.getLastCheckpoint() != null) {
                 player.setPosition(gameState.getLastCheckpoint());
                 player.softResetPlayer();
+                world.reset();
                 double calculatedTime = timer.getTotalLevelTime() - calculateRemaingTimeAfterCheckpoint(gameState.getLastCheckpoint());
                 double lastCheckpointTime = gameState.getLastCheckpointTime();
                 timer.increaseElapsedTime(Math.min(calculatedTime, lastCheckpointTime));
@@ -225,6 +232,7 @@ public class GameEventHandler implements Observer {
 
     /**
      * If a player is in a collision zone (like checkpoint, water, etc.)
+     *
      * @param zone the zone(s) to check
      * @return if player is inside
      */
@@ -244,7 +252,7 @@ public class GameEventHandler implements Observer {
 
     /**
      * @param cam game camera
-     * @return  if player is not in view anymore
+     * @return if player is not in view anymore
      */
     private boolean isOutOfBounds(GameCamera cam) {
         //Player is in Center = not out of bounds
@@ -252,7 +260,7 @@ public class GameEventHandler implements Observer {
     }
 
     /**
-     * @return  if player has no time remaining
+     * @return if player has no time remaining
      */
     private boolean isOutOfTime() {
         return timer.getElapsedTime() > timer.getTotalLevelTime();
@@ -261,6 +269,7 @@ public class GameEventHandler implements Observer {
     /**
      * After a checkpoint calculates the time a player has remaining by the distance to the finish.
      * Will return a guess if there is no finish
+     *
      * @param checkpointCoordinates the coordinates of the current checkpoint where the player will respawn
      * @return time in seconds
      */
@@ -279,6 +288,7 @@ public class GameEventHandler implements Observer {
 
     /**
      * Adds a dynamic (moveable object), also tries to find the player object
+     *
      * @param dynamic
      */
     void addDynamicObject(MovableGraphics dynamic) {
@@ -291,9 +301,10 @@ public class GameEventHandler implements Observer {
     /**
      * Observer for different types of events.
      * Will play sound for enemies and collectables (passed by pair<sounds, vector2> -> sound to play,
-     *                                                                                  position to play)
+     * position to play)
      * If player called it check if audio event or if deathm then set failed to true (mark for death)
-     * @param o The Observable which called the event
+     *
+     * @param o   The Observable which called the event
      * @param arg the arguments it was called
      */
     @Override

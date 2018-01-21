@@ -25,7 +25,7 @@ import de.hs_kl.imst.gatav.tilerenderer.util.Constants;
 
 public abstract class Enemies extends MovableGraphics implements Destroyable, CollisionReactive {
     public int hitPoints;
-    protected float lifePoints, animTime, speed;
+    protected float lifePoints, maxLifePoints, animTime, speed;
     protected float dieTimer = 0.0f;
     protected Animations run;
     protected Animations dying;
@@ -38,6 +38,7 @@ public abstract class Enemies extends MovableGraphics implements Destroyable, Co
         super(x, y);
         this.scorePoints = scorePoints;
         this.lifePoints = lifePoints;
+        this.maxLifePoints = lifePoints;
         this.hitPoints = hitPoints;
         this.speed = speed;
     }
@@ -56,6 +57,10 @@ public abstract class Enemies extends MovableGraphics implements Destroyable, Co
 
     public void setHitPoints(int hitPoints) {
         this.hitPoints = hitPoints;
+    }
+
+    public float getMaxLifePoints() {
+        return maxLifePoints;
     }
 
     @Override
@@ -234,5 +239,11 @@ public abstract class Enemies extends MovableGraphics implements Destroyable, Co
     }
 
     public abstract Sounds getHitSound();
+
     protected abstract Sounds getDeathSound();
+
+    public void reset() {
+        lifePoints = getMaxLifePoints();
+        //setPosition(initialPosition);
+    }
 }

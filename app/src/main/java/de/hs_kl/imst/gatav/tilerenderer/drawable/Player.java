@@ -9,6 +9,7 @@ import android.util.Pair;
 
 import java.io.IOException;
 import java.io.InputStream;
+import java.util.concurrent.atomic.AtomicInteger;
 
 import de.hs_kl.imst.gatav.tilerenderer.drawable.enemies.Enemies;
 import de.hs_kl.imst.gatav.tilerenderer.drawable.enemies.Robotic;
@@ -28,7 +29,7 @@ public final class Player extends MovableGraphics implements Destroyable, Collis
     public static int hitPoints = 40;
     protected Animations dieng;
     float dieTimer = 0.0f;
-    private byte doublejump = 0;
+    private AtomicInteger doublejump = new AtomicInteger(0);
     private float maxLifePoints = 150;
     private float lifePoints = 150;
     private float speed = 300f;
@@ -106,13 +107,14 @@ public final class Player extends MovableGraphics implements Destroyable, Collis
         previous = currentDirection;
         switch (direction) {
             case UP: {
-                if (velocity.getY() != 0 && previous == Direction.DOWN) doublejump++;
-                if (doublejump < 2) {
+                int doubleJumpValue = doublejump.get();
+                //if (velocity.getY() != 0 && previous == Direction.DOWN) doubleJumpValue = doublejump.incrementAndGet();
+                if (doubleJumpValue < 2) {
                     audioPlayer.addSound(Sounds.JUMP, getPosition());
                     velocity.setY(0f);
                     impact(new Vector2(0f, -550f));
                     currentDirection = Direction.UP;
-                    doublejump++;
+                    doublejump.getAndAdd(1);
                 }
                 break;
             }
@@ -190,7 +192,7 @@ public final class Player extends MovableGraphics implements Destroyable, Collis
             previous = currentDirection;
             currentDirection = Direction.IDLE;
         }
-        if (doublejump != 0 && velocity.getY() == 0 && isOnGround) doublejump = 0;
+        if (doublejump.get() != 0 && velocity.getY() == 0 && isOnGround) doublejump.set(0);
         if (isOnGround && stopDirection != Direction.IDLE) {
             if (stopDirection == Direction.LEFT && velocity.getX() < 0f) {
                 impact(new Vector2(speed, 0f));

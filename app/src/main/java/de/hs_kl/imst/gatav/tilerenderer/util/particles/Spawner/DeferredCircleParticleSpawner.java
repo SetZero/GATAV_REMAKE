@@ -19,7 +19,7 @@ public class DeferredCircleParticleSpawner extends CircleParticleSpawner {
 
     public DeferredCircleParticleSpawner(Vector2 position, ParticleController controller, Timer timer) {
         super(position, controller, timer);
-        super.particleTimeBetween = 1;
+        super.particleTimeBetween = 0.7;
     }
 
     /**
