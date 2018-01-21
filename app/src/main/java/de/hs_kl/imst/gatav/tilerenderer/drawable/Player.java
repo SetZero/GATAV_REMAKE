@@ -77,6 +77,7 @@ public final class Player extends MovableGraphics implements Destroyable, Collis
         setActive(true);
         setVelocity(new Vector2(0, 0));
         setLinearImpulse(new Vector2(0, 0));
+        dieTimer = 0.0f;
     }
 
     public void resetPlayer() {
@@ -163,22 +164,24 @@ public final class Player extends MovableGraphics implements Destroyable, Collis
 
     @Override
     public void update(float delta) {
-        if(isActive) {
-            if (isAlive) {
+        if (isAlive) {
+            if(isActive) {
                 super.update(delta);
                 if (lifePoints <= 0)
                     isAlive = false;
                 stateHandle();
                 animationHandle(delta);
-            } else {
-                if (dieng.isFinished(dieTimer)) {
+            }
+        } else {
+            if (dieng.isFinished(dieTimer)) {
+                if(isActive) {
                     setChanged();
                     notifyObservers(PlayerStates.DEAD);
-                } else {
-                    bmp = dieng.getDrawable(dieTimer);
                 }
-                dieTimer += delta;
+            } else {
+                bmp = dieng.getDrawable(dieTimer);
             }
+            dieTimer += delta;
         }
     }
 

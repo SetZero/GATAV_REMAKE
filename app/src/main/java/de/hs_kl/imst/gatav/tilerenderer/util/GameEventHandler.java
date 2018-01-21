@@ -100,6 +100,7 @@ public class GameEventHandler implements Observer {
         if (!hasReachedFinish() && (timer.getElapsedTime() > 0.2 && timer.getElapsedTime() < 0.5)) {
             player.isActive = true;
         }
+        //just finished level
         if (!finished && hasReachedFinish()) {
             //TODO: add some Finish Screen
             finished = true;
@@ -114,6 +115,7 @@ public class GameEventHandler implements Observer {
             player.setActive(false);
         }
 
+        //fully finished level
         if (finished && timer.getElapsedTime() > timer.getSnapshotTime() + 3) {
             executioner.finishLevel();
         }
@@ -132,13 +134,13 @@ public class GameEventHandler implements Observer {
             //TODO: Add some Death Screen
             //GameContent.getHud().drawPopupMessage("you Died :(", 5);
             GameContent.getHud().drawPopupImage("hudImages/rip.png", (float) gracePeriod);
-            failed = true;
+            startPlayerDeath();
             currentGracePeriod = timer.getElapsedTime() + gracePeriod;
         }
 
         //If is in water
         if (!failed && isInWaterZone()) {
-            failed = true;
+            startPlayerDeath();
             Vector2 playerFootPosition = Vector2.add(player.getPosition(), new Vector2(0, player.getHitbox().getHeight()));
             particleFactory.generateParticleSpawnerAndAddToWorld(playerFootPosition, WaterParticleSpawner.class);
             //Todo: Some water joke with electronics
@@ -158,7 +160,7 @@ public class GameEventHandler implements Observer {
 
         // If player is out of time
         if (!finished && !failed && isOutOfTime()) {
-            failed = true;
+            startPlayerDeath();
             GameContent.getHud().drawPopupImage("hudImages/outatime.png", (float) gracePeriod);
             currentGracePeriod = timer.getElapsedTime() + gracePeriod;
         }
@@ -320,5 +322,11 @@ public class GameEventHandler implements Observer {
 
     public void setParticleFactory(ParticleFactory particleFactory) {
         this.particleFactory = particleFactory;
+    }
+
+    public void startPlayerDeath() {
+        failed = true;
+        player.setActive(false);
+        player.setIsAlive(false);
     }
 }
