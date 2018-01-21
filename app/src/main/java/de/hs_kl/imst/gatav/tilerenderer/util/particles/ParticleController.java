@@ -36,20 +36,19 @@ public class ParticleController {
     public void update(float delta, GameCamera cam) {
         particles.removeIf(p -> {
             if(!p.isActive()) return true;
+            if (!p.isIgnoringPlayer() && player.getHitbox().getRect().contains((int) p.getPosition().getX(), (int) p.getPosition().getY())) {
+                player.setLifePoints(player.getLifePoints() - p.getDamage());
+                return true;
+            }
+            if (!p.isIgnoringCameraView() && !cam.getCameraViewRect().contains((int) p.getPosition().getX(), (int) p.getPosition().getY())) {
+                return true;
+            }
             boolean toBeRemoved = false;
             for (Collidable c : collidables) {
                 if (c instanceof Rectangle) {
                     Rectangle r = (Rectangle) c;
                     if (r.getRect().contains((int) p.getPosition().getX(), (int) p.getPosition().getY())) {
                         toBeRemoved = true;
-                        break;
-                    } else if (!cam.getCameraViewRect().contains((int) p.getPosition().getX(), (int) p.getPosition().getY())) {
-                        toBeRemoved = true;
-                        break;
-                    }
-                    if (player.getHitbox().getRect().contains((int) p.getPosition().getX(), (int) p.getPosition().getY())) {
-                        toBeRemoved = true;
-                        player.setLifePoints(player.getLifePoints() - p.getDamage());
                         break;
                     }
                 }

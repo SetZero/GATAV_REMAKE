@@ -31,6 +31,7 @@ public class WaterParticle extends ParticlePrototype {
         direction = new Vector2((float)Math.cos(radians), (float)Math.sin(radians));
         this.innerColor.setColor(color);
         this.color.setARGB(125, Color.red(color), Color.green(color), Color.blue(color));
+        super.setIgnoringPlayer(true);
     }
 
     @Override
@@ -40,7 +41,6 @@ public class WaterParticle extends ParticlePrototype {
             setPosition(Vector2.add(getPosition(), new Vector2(direction.getX() * speed * delta * velocity.getX(), direction.getY() * speed * delta * velocity.getY())));
 
             if (velocity.getY() > -1) {
-                //TODO: add delta
                 velocity.setY(velocity.getY() - (2f*delta));
             }
         }

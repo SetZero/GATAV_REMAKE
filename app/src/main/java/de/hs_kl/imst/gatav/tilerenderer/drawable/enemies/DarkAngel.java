@@ -50,6 +50,10 @@ public final class DarkAngel extends Enemies implements CollisionReactive, Destr
             e.printStackTrace();
         }
     }
+    public DarkAngel(int x, int y, Context context, ParticleSpawner spawner, float lifePoints) {
+        this(x, y, context, spawner);
+        super.lifePoints = lifePoints;
+    }
 
     @Override
     public void update(float delta) {

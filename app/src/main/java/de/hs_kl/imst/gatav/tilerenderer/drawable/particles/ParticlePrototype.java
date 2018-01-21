@@ -9,6 +9,8 @@ import de.hs_kl.imst.gatav.tilerenderer.util.Vector2;
 public abstract class ParticlePrototype implements Particle {
     private Vector2 position;
     private boolean active = true;
+    private boolean ignoringPlayer = false;
+    private boolean ignoringCameraView = false;
 
     /**
      * Getter
@@ -45,4 +47,23 @@ public abstract class ParticlePrototype implements Particle {
      * @return damage value
      */
     public abstract int getDamage();
+
+
+    @Override
+    public boolean isIgnoringPlayer() {
+        return ignoringPlayer;
+    }
+
+    @Override
+    public boolean isIgnoringCameraView() {
+        return ignoringCameraView;
+    }
+
+    protected void setIgnoringPlayer(boolean ignoringPlayer) {
+        this.ignoringPlayer = ignoringPlayer;
+    }
+
+    protected void setIgnoringCameraView(boolean ignoringCameraView) {
+        this.ignoringCameraView = ignoringCameraView;
+    }
 }

@@ -48,6 +48,10 @@ public class ParticleFactory {
         return null;
     }
 
+    public ParticleSpawner generateParticleSpawnerAndAddToWorld(Class<? extends CircleParticleSpawner> particleClass) {
+        return generateParticleSpawnerAndAddToWorld(new Vector2(0, 0), particleClass);
+    }
+
     /**
      * Generate a particle Spawner and add it to the world for updates
      *

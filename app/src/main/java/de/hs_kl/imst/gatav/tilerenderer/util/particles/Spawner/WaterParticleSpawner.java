@@ -2,9 +2,9 @@ package de.hs_kl.imst.gatav.tilerenderer.util.particles.Spawner;
 
 import android.graphics.Color;
 
-import de.hs_kl.imst.gatav.tilerenderer.drawable.particles.FancyParticle;
 import de.hs_kl.imst.gatav.tilerenderer.drawable.particles.WaterParticle;
 import de.hs_kl.imst.gatav.tilerenderer.util.GameCamera;
+import de.hs_kl.imst.gatav.tilerenderer.util.CustomMathUtils;
 import de.hs_kl.imst.gatav.tilerenderer.util.Timer;
 import de.hs_kl.imst.gatav.tilerenderer.util.Vector2;
 import de.hs_kl.imst.gatav.tilerenderer.util.particles.ParticleController;
@@ -29,8 +29,8 @@ public class WaterParticleSpawner extends CircleParticleSpawner {
     public void update(GameCamera cam) {
         if (active) {
             if (cam.getCameraViewRect().contains((int) position.getX(), (int) position.getY())) {
-                for (int i = -90; i < 90; i += 5) {
-                    WaterParticle particle = new WaterParticle(position, Color.rgb(17, 152, 224), i, 3);
+                for (int i = -180; i < 0; i += 10) {
+                    WaterParticle particle = new WaterParticle(position, Color.rgb(17, 152, 224), CustomMathUtils.degreeToRadians(i), 3);
                     controller.addParticle(particle);
                 }
                 lastTimeParticleWave = timer.getElapsedTime();

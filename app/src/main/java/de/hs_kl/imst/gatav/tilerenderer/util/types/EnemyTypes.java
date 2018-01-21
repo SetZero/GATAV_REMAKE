@@ -5,5 +5,5 @@ package de.hs_kl.imst.gatav.tilerenderer.util.types;
  */
 
 public enum EnemyTypes {
-    ROBOT, WALKER, DARK_ANGEL
+    ROBOT, WALKER, BOSS_ANGEL, DARK_ANGEL
 }

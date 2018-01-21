@@ -24,4 +24,8 @@ public interface Particle {
      * @return is particle active?
      */
     boolean isActive();
+
+    //ignore list
+    boolean isIgnoringPlayer();
+    boolean isIgnoringCameraView();
 }

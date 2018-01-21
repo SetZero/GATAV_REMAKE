@@ -50,6 +50,8 @@ public class PhysicsController {
     }
 
     public void Update(float delta, GameCamera cam) {
+        //heavy lag protection
+        if(delta > 3) delta = 3;
         for (MovableGraphics item : physicals) {
             boolean groundCollision = false;
             boolean noCollision = true;
