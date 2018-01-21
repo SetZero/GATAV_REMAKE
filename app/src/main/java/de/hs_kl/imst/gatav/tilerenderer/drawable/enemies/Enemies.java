@@ -75,7 +75,7 @@ public abstract class Enemies extends MovableGraphics implements Destroyable, Co
         if (isAlive && this.lifePoints <= 0) {
             isAlive = false;
             setChanged();
-            notifyObservers(new Pair<>(Sounds.ENEMY_DEATH, new Vector2(Position)));
+            notifyObservers(new Pair<>(getDeathSound(), new Vector2(Position)));
         }
         if (isActive) {
             if (isAlive) {
@@ -232,4 +232,7 @@ public abstract class Enemies extends MovableGraphics implements Destroyable, Co
         lifePoints -= hitPoints;
         return lifePoints <= 0;
     }
+
+    public abstract Sounds getHitSound();
+    protected abstract Sounds getDeathSound();
 }

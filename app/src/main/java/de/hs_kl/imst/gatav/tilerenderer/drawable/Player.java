@@ -271,12 +271,9 @@ public final class Player extends MovableGraphics implements Destroyable, Collis
                 impact(new Vector2(0f, -400f));
                 if (enemy.decreaseLife(hitPoints))
                     score += enemy.getScorePoints();
-                //TODO: Hit sound
-                if(c.collisionObject instanceof Robotic) {
-                    if(enemy.isAlive()) {
-                        setChanged();
-                        notifyObservers(new Pair<>(Sounds.ROBOT_HIT_BY_PLAYER, new Vector2(Position)));
-                    }
+                if(enemy.isAlive()) {
+                    setChanged();
+                    notifyObservers(new Pair<>(((Enemies) c.collisionObject).getHitSound(), new Vector2(Position)));
                 }
             }
 

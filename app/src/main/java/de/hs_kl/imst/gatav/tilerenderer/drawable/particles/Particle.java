@@ -7,7 +7,21 @@ import android.graphics.Canvas;
  */
 
 public interface Particle {
+    /**
+     * Updates a Particle
+     * @param delta delta time (in seconds)
+     */
     void update(float delta);
+
+    /**
+     * Draws a particle to the canvas
+     * @param canvas Canvas to draw on
+     */
     void draw(Canvas canvas);
+
+    /**
+     * Check if particle is active
+     * @return is particle active?
+     */
     boolean isActive();
 }

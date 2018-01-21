@@ -8,7 +8,7 @@ import de.hs_kl.imst.gatav.tilerenderer.util.ScaleHelper;
 import de.hs_kl.imst.gatav.tilerenderer.util.Vector2;
 
 /**
- * Totally not a Touhou Particle system ;-)
+ * Totally not a Touhou Particle ;-)
  * Created by Sebastian on 2018-01-18.
  */
 

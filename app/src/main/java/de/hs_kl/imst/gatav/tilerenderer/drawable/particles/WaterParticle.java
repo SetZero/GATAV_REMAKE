@@ -8,7 +8,7 @@ import de.hs_kl.imst.gatav.tilerenderer.util.ScaleHelper;
 import de.hs_kl.imst.gatav.tilerenderer.util.Vector2;
 
 /**
- * Totally not a Touhou Particle system ;-)
+ * Emits Water Particles
  * Created by Sebastian on 2018-01-18.
  */
 
@@ -40,7 +40,8 @@ public class WaterParticle extends ParticlePrototype {
             setPosition(Vector2.add(getPosition(), new Vector2(direction.getX() * speed * delta * velocity.getX(), direction.getY() * speed * delta * velocity.getY())));
 
             if (velocity.getY() > -1) {
-                velocity.setY(velocity.getY() - 0.1f);
+                //TODO: add delta
+                velocity.setY(velocity.getY() - (2f*delta));
             }
         }
     }

@@ -54,4 +54,13 @@ public final class Robotic extends Enemies implements CollisionReactive, Destroy
         }
 
     }
+
+    @Override
+    public Sounds getHitSound() {
+        return Sounds.ROBOT_HIT_BY_PLAYER;
+    }
+    @Override
+    protected Sounds getDeathSound() {
+        return Sounds.ENEMY_DEATH;
+    }
 }

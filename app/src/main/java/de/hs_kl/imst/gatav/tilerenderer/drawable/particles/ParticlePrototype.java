@@ -10,10 +10,18 @@ public abstract class ParticlePrototype implements Particle {
     private Vector2 position;
     private boolean active = true;
 
+    /**
+     * Getter
+     * @return  Current Position of Particle
+     */
     public Vector2 getPosition() {
         return position;
     }
 
+    /**
+     * Setter
+     * @param position New position of Particle
+     */
     public void setPosition(Vector2 position) {
         this.position = position;
     }
@@ -23,9 +31,18 @@ public abstract class ParticlePrototype implements Particle {
         return active;
     }
 
+    /**
+     * Deactives a Particle and removes it from the game.
+     * Mark it for gargabe collection if isActive = false
+     * @param active active status
+     */
     protected void setActive(boolean active) {
         this.active = active;
     }
 
+    /**
+     * Damage of a Particle
+     * @return damage value
+     */
     public abstract int getDamage();
 }

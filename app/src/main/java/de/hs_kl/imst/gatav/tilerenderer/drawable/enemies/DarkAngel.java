@@ -70,6 +70,16 @@ public final class DarkAngel extends Enemies implements CollisionReactive, Destr
     }
 
     @Override
+    public Sounds getHitSound() {
+        return Sounds.ROBOT_HIT_BY_PLAYER;
+    }
+
+    @Override
+    protected Sounds getDeathSound() {
+        return Sounds.ENEMY_DEATH;
+    }
+
+    @Override
     protected void animationHandle(float delta) {
         if (run.isFinished(animTime)) animTime = 0;
         animTime += delta;

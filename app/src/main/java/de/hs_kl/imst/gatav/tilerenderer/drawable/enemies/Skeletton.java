@@ -9,6 +9,7 @@ import de.hs_kl.imst.gatav.tilerenderer.drawable.Destroyable;
 import de.hs_kl.imst.gatav.tilerenderer.util.Animations;
 import de.hs_kl.imst.gatav.tilerenderer.util.Hitboxes.Rectangle;
 import de.hs_kl.imst.gatav.tilerenderer.util.ScaleHelper;
+import de.hs_kl.imst.gatav.tilerenderer.util.audio.Sounds;
 
 /**
  * Created by keven on 27.12.2017.
@@ -36,5 +37,14 @@ public final class Skeletton extends Enemies implements Destroyable, CollisionRe
         } catch (Exception e) {
             e.printStackTrace();
         }
+    }
+
+    @Override
+    public Sounds getHitSound() {
+        return Sounds.ROBOT_HIT_BY_PLAYER;
+    }
+    @Override
+    protected Sounds getDeathSound() {
+        return Sounds.ENEMY_DEATH;
     }
 }

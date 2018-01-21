@@ -81,4 +81,13 @@ public final class Walker extends Enemies implements CollisionReactive, Destroya
             }
         }
     }
+
+    @Override
+    public Sounds getHitSound() {
+        return Sounds.ROBOT_HIT_BY_PLAYER;
+    }
+    @Override
+    protected Sounds getDeathSound() {
+        return Sounds.ENEMY_DEATH;
+    }
 }

@@ -30,7 +30,7 @@ public class FPSHelper {
 
         paint.setColor(Color.BLACK);
         paint.setTextSize(20);
-        canvas.drawText(fpsText, 10, 25, paint);
+        canvas.drawText(fpsText, 300*ScaleHelper.getRatioX(), 25, paint);
     }
 
     /**
