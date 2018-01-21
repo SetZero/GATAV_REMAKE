@@ -28,23 +28,25 @@ public class ParticleController {
 
     /**
      * executes update on all Particles, checks if they collide with terrain, are out of camera or with the player
+     *
      * @param delta delta time
-     * @param cam the camera object (for out of view check)
+     * @param cam   the camera object (for out of view check)
      */
     public void update(float delta, GameCamera cam) {
         particles.removeIf(p -> {
+            if(!p.isActive()) return true;
             boolean toBeRemoved = false;
-            for(Collidable c : collidables) {
-                if(c instanceof Rectangle) {
+            for (Collidable c : collidables) {
+                if (c instanceof Rectangle) {
                     Rectangle r = (Rectangle) c;
-                    if(r.getRect().contains((int)p.getPosition().getX(), (int)p.getPosition().getY())) {
+                    if (r.getRect().contains((int) p.getPosition().getX(), (int) p.getPosition().getY())) {
                         toBeRemoved = true;
                         break;
-                    } else if(!cam.getCameraViewRect().contains((int)p.getPosition().getX(), (int)p.getPosition().getY())) {
+                    } else if (!cam.getCameraViewRect().contains((int) p.getPosition().getX(), (int) p.getPosition().getY())) {
                         toBeRemoved = true;
                         break;
                     }
-                    if(player.getHitbox().getRect().contains((int)p.getPosition().getX(), (int)p.getPosition().getY())) {
+                    if (player.getHitbox().getRect().contains((int) p.getPosition().getX(), (int) p.getPosition().getY())) {
                         toBeRemoved = true;
                         player.setLifePoints(player.getLifePoints() - p.getDamage());
                         break;
@@ -58,6 +60,7 @@ public class ParticleController {
 
     /**
      * draws all particles
+     *
      * @param canvas canvas to draw on
      */
     public void draw(Canvas canvas) {
@@ -66,6 +69,7 @@ public class ParticleController {
 
     /**
      * Adds a Single Particle
+     *
      * @param p one Particle
      */
     public void addParticle(ParticlePrototype p) {

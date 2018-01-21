@@ -28,12 +28,14 @@ public abstract class CircleParticleSpawner implements ParticleSpawner {
 
     /**
      * Spawn 18 Particles with random color if the player is in the view of the spawner
+     *
      * @param cam Camera to check if spawn is needed
      */
     public abstract void update(GameCamera cam);
 
     /**
      * Updates Position (e.g. if attached to Dark Angle)
+     *
      * @param position
      */
     public void setPosition(Vector2 position) {

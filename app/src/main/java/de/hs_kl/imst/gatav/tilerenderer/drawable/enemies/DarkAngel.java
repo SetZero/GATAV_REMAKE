@@ -20,7 +20,6 @@ import de.hs_kl.imst.gatav.tilerenderer.util.particles.Spawner.ParticleSpawner;
 /**
  * Dark Angel
  * Bullet Hell Boss, crazy strong
- * TODO: Add death animation!!!
  * Created by Sebastian on 2018-01-17.
  */
 
@@ -82,6 +81,7 @@ public final class DarkAngel extends Enemies implements CollisionReactive, Destr
             bmp = idle;
         }*/
     }
+
     @Override
     protected void cleanup() {
         spawner.setActive(false);

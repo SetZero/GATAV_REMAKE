@@ -200,6 +200,7 @@ public class GameContent implements Drawables, Observer {
         world.setParticleController(particleController);
         ParticleFactory particleFactory = new ParticleFactory(particleController, timer, world);
         factory.setParticleFactory(particleFactory);
+        world.setParticleFactory(particleFactory);
 
         List<Enemies> enemies = factory.generateEnemies(context);
         for (Enemies enemy : enemies) {

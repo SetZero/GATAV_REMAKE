@@ -19,7 +19,9 @@ import de.hs_kl.imst.gatav.tilerenderer.util.Hitboxes.Rectangle;
 import de.hs_kl.imst.gatav.tilerenderer.util.audio.AudioPlayer;
 import de.hs_kl.imst.gatav.tilerenderer.util.audio.Sounds;
 import de.hs_kl.imst.gatav.tilerenderer.util.audio.events.EventContainer;
+import de.hs_kl.imst.gatav.tilerenderer.util.particles.ParticleFactory;
 import de.hs_kl.imst.gatav.tilerenderer.util.particles.Spawner.ParticleSpawner;
+import de.hs_kl.imst.gatav.tilerenderer.util.particles.Spawner.WaterParticleSpawner;
 import de.hs_kl.imst.gatav.tilerenderer.util.states.GameStateHandler;
 import de.hs_kl.imst.gatav.tilerenderer.util.states.PlayerStates;
 
@@ -45,6 +47,8 @@ public class GameEventHandler implements Observer {
     private boolean speedUpSound = false;
     private List<EventContainer> audioEventList;
     private List<ParticleSpawner> particleSpawner;
+
+    private ParticleFactory particleFactory;
 
     /**
      * Constructor of GameEventHandler, will initialize all audio events and save all parameters as object
@@ -135,6 +139,8 @@ public class GameEventHandler implements Observer {
         //If is in water
         if (!failed && isInWaterZone()) {
             failed = true;
+            Vector2 playerFootPosition = Vector2.add(player.getPosition(), new Vector2(0, player.getHitbox().getHeight()));
+            particleFactory.generateParticleSpawnerAndAddToWorld(playerFootPosition, WaterParticleSpawner.class);
             //Todo: Some water joke with electronics
             GameContent.getHud().drawPopupImage("hudImages/rip.png", (float) gracePeriod);
             audioPlayer.addSound(Sounds.WATERDROP, new Vector2(player.getPosition()));
@@ -310,5 +316,9 @@ public class GameEventHandler implements Observer {
                 }
             }
         }
+    }
+
+    public void setParticleFactory(ParticleFactory particleFactory) {
+        this.particleFactory = particleFactory;
     }
 }

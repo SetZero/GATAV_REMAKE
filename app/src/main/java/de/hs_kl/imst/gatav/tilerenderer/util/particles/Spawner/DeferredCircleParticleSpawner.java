@@ -24,11 +24,12 @@ public class DeferredCircleParticleSpawner extends CircleParticleSpawner {
 
     /**
      * Spawn 18 Particles with random color if the player is in the view of the spawner
+     *
      * @param cam Camera to check if spawn is needed
      */
     @Override
     public void update(GameCamera cam) {
-        if(active) {
+        if (active) {
             if (cam.getCameraViewRect().contains((int) position.getX(), (int) position.getY())) {
                 if (lastTimeParticleWave < timer.getElapsedTime() - particleTimeBetween) {
                     FancyParticle particle = new FancyParticle(position,
@@ -36,7 +37,7 @@ public class DeferredCircleParticleSpawner extends CircleParticleSpawner {
                             currentCirclePosition * (360 / maxCirclePosition));
                     controller.addParticle(particle);
                     lastTimeParticleWave = timer.getElapsedTime();
-                    currentCirclePosition = (currentCirclePosition < maxCirclePosition ? currentCirclePosition+1 : 0);
+                    currentCirclePosition = (currentCirclePosition < maxCirclePosition ? currentCirclePosition + 1 : 0);
                 }
             }
         }

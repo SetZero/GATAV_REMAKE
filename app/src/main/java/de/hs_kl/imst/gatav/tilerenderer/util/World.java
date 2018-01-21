@@ -17,6 +17,7 @@ import de.hs_kl.imst.gatav.tilerenderer.util.Hitboxes.Collidable;
 import de.hs_kl.imst.gatav.tilerenderer.util.Hitboxes.Rectangle;
 import de.hs_kl.imst.gatav.tilerenderer.util.audio.AudioPlayer;
 import de.hs_kl.imst.gatav.tilerenderer.util.particles.ParticleController;
+import de.hs_kl.imst.gatav.tilerenderer.util.particles.ParticleFactory;
 import de.hs_kl.imst.gatav.tilerenderer.util.particles.Spawner.ParticleSpawner;
 
 import static de.hs_kl.imst.gatav.tilerenderer.util.Constants.enableEyeCandy;
@@ -39,6 +40,7 @@ public class World {
 
     private ParticleController particleController;
     private List<ParticleSpawner> particleSpawner = new ArrayList<>();
+    private ParticleFactory particleFactory;
 
     /**
      * Constructor of World, loads all parameters as object variables
@@ -74,6 +76,11 @@ public class World {
 
     public void setParticleController(ParticleController particleController) {
         this.particleController = particleController;
+    }
+
+    public void setParticleFactory(ParticleFactory particleFactory) {
+        this.particleFactory = particleFactory;
+        gameEvents.setParticleFactory(particleFactory);
     }
 
     /**

@@ -9,4 +9,5 @@ import android.graphics.Canvas;
 public interface Particle {
     void update(float delta);
     void draw(Canvas canvas);
+    boolean isActive();
 }
