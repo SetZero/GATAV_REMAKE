@@ -53,9 +53,10 @@ public class ParticleController {
                     }
                 }
             }
+            if(!toBeRemoved)
+                p.update(delta);
             return toBeRemoved;
         });
-        particles.forEach(p -> p.update(delta));
     }
 
     /**
