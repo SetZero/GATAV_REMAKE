@@ -51,7 +51,7 @@ public class PhysicsController {
 
     public void Update(float delta, GameCamera cam) {
         //heavy lag protection
-        if(delta > 3) delta = 3;
+        if(delta > 2) delta = 2;
         for (MovableGraphics item : physicals) {
             boolean groundCollision = false;
             boolean noCollision = true;
@@ -164,19 +164,18 @@ public class PhysicsController {
 
             float wy = (rectA.width() + rectB.width()) * (rectA.centerY() - rectB.centerY());
             float hx = (rectA.height() + rectB.height()) * (rectA.centerX() - rectB.centerX());
-
-            if (wy > hx) {
+            if (wy < hx) {
+                if (wy < -hx) {
+                    return new Contact(intersectDirection.BOTTOM, c);
+                }
+                if (wy > -hx) {
+                    return new Contact(intersectDirection.LEFT, c);
+                }
+            }else if (wy > hx) {
                 if (wy > -hx) {
                     return new Contact(intersectDirection.TOP, c);
                 }
                 if (wy < -hx) return new Contact(intersectDirection.RIGHT, c);
-            } else if (wy < hx) {
-                if (wy > -hx) {
-                    return new Contact(intersectDirection.LEFT, c);
-                }
-                if (wy < -hx) {
-                    return new Contact(intersectDirection.BOTTOM, c);
-                }
             }
         }
         return new Contact(intersectDirection.DONT, null);

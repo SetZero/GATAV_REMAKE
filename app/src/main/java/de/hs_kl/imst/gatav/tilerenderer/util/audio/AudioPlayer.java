@@ -28,7 +28,7 @@ import de.hs_kl.imst.gatav.tilerenderer.util.Vector2;
 
 public class AudioPlayer implements Runnable {
 
-    private final int cacheElements = 10;
+    private final int cacheElements = 4;
     // ~83.2 = 100% volume => @ ~4000 Units = 0%
     private final double audioThreshold = 83.2;
     private final Queue<Pair<AudioDataKeeper, Integer>> loadingQueue = new ConcurrentLinkedQueue<>();
@@ -199,7 +199,7 @@ public class AudioPlayer implements Runnable {
      * @return the stream id
      */
     private int startPlay(int soundID) {
-        return sp.play(soundID, 0.0f, 0.0f, 1, 0, 1);
+        return sp.play(soundID, 0.0f, 0.0f, -1, 0, 1);
     }
 
     /**
