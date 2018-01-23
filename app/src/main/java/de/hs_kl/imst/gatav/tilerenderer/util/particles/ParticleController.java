@@ -3,10 +3,10 @@ package de.hs_kl.imst.gatav.tilerenderer.util.particles;
 import android.graphics.Canvas;
 
 import java.util.ArrayList;
-import java.util.LinkedList;
 import java.util.List;
+import java.util.Queue;
+import java.util.concurrent.ConcurrentLinkedQueue;
 
-import de.hs_kl.imst.gatav.tilerenderer.drawable.MovableGraphics;
 import de.hs_kl.imst.gatav.tilerenderer.drawable.Player;
 import de.hs_kl.imst.gatav.tilerenderer.drawable.enemies.Enemies;
 import de.hs_kl.imst.gatav.tilerenderer.drawable.particles.ParticlePrototype;
@@ -19,15 +19,19 @@ import de.hs_kl.imst.gatav.tilerenderer.util.Hitboxes.Rectangle;
  * Created by Sebastian on 2018-01-18.
  */
 
-public class ParticleController {
-    private List<ParticlePrototype> particles = new LinkedList<>(); //heavy deleting -> LinkedList
+public class ParticleController implements Runnable {
+    //private List<ParticlePrototype> particles = new LinkedList<>(); //heavy deleting -> LinkedList
+    private Queue<ParticlePrototype> particles = new ConcurrentLinkedQueue<>();
     private List<Collidable> collidables = new ArrayList<>();
     private Player player;
     private List<Enemies> enemies = new ArrayList<>();
+    private GameCamera camera;
+    private boolean running = true;
 
-    public ParticleController(List<Collidable> collidables, Player player) {
+    public ParticleController(List<Collidable> collidables, Player player, GameCamera cam) {
         this.collidables = collidables;
         this.player = player;
+        this.camera = cam;
     }
 
     /**
@@ -36,7 +40,7 @@ public class ParticleController {
      * @param delta delta time
      * @param cam   the camera object (for out of view check)
      */
-    public void update(float delta, GameCamera cam) {
+    public synchronized void update(float delta, GameCamera cam) {
         particles.removeIf(p -> {
             if(!p.isActive()) return true;
             if (!p.isIgnoringPlayer() && player.getHitbox().getRect().contains((int) p.getPosition().getX(), (int) p.getPosition().getY())) {
@@ -85,11 +89,27 @@ public class ParticleController {
      *
      * @param p one Particle
      */
-    public void addParticle(ParticlePrototype p) {
+    public synchronized void addParticle(ParticlePrototype p) {
         particles.add(p);
     }
 
     public void addEnemy(Enemies enemy) {
         enemies.add(enemy);
+    }
+
+    @Override
+    public void run() {
+        while (running) {
+            try {
+                this.update(0.016f, camera);
+                Thread.sleep(16);
+            } catch (InterruptedException e) {
+                e.printStackTrace();
+            }
+        }
+    }
+
+    public void cleanup() {
+        running = false;
     }
 }

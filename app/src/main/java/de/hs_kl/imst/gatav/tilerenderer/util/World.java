@@ -117,7 +117,7 @@ public class World {
         gameEvents.update(cam);
 
         if(particleController != null) {
-            particleController.update(delta, cam);
+            //particleController.update(delta, cam);
             particleSpawner.removeIf(ps ->  {
                 boolean remove = !ps.isActive();
                 if(!remove)

@@ -18,8 +18,10 @@ import de.hs_kl.imst.gatav.tilerenderer.util.Hitboxes.Collidable;
 import de.hs_kl.imst.gatav.tilerenderer.util.Hitboxes.Rectangle;
 import de.hs_kl.imst.gatav.tilerenderer.util.audio.AudioPlayer;
 import de.hs_kl.imst.gatav.tilerenderer.util.particles.ParticleFactory;
+import de.hs_kl.imst.gatav.tilerenderer.util.particles.Spawner.DeferredCircleParticleSpawner;
 import de.hs_kl.imst.gatav.tilerenderer.util.particles.Spawner.ExtremeDeferredCircleParticleSpawner;
 import de.hs_kl.imst.gatav.tilerenderer.util.particles.Spawner.ParticleSpawner;
+import de.hs_kl.imst.gatav.tilerenderer.util.particles.Spawner.SimpleParticleSpawner;
 import de.hs_kl.imst.gatav.tilerenderer.util.types.EnemyTypes;
 
 /**
@@ -82,7 +84,7 @@ public class GameEntityFactory {
 
                 switch(type) {
                     case DARK_ANGEL:
-                        ParticleSpawner particleSpawner = particleFactory.generateParticleSpawnerAndAddToWorld();
+                        ParticleSpawner particleSpawner = particleFactory.generateParticleSpawnerAndAddToWorld(DeferredCircleParticleSpawner.class);
                         enemy = new DarkAngel(0, 0, context, particleSpawner);
                         break;
                     case BOSS_ANGEL:

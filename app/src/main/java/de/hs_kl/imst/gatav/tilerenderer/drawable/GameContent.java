@@ -203,7 +203,7 @@ public class GameContent implements Drawables, Observer {
         world.addGameObject(player);
         camera.attach(player);
 
-        particleController = new ParticleController(tileLoader.getObjectGroups().get(Constants.collisionObjectGroupString), player);
+        particleController = new ParticleController(tileLoader.getObjectGroups().get(Constants.collisionObjectGroupString), player, camera);
         world.setParticleController(particleController);
         ParticleFactory particleFactory = new ParticleFactory(particleController, timer, world);
         factory.setParticleFactory(particleFactory);
@@ -218,6 +218,8 @@ public class GameContent implements Drawables, Observer {
         for(Coin coin : coins) {
             world.addCollectables(coin);
         }
+        new Thread(particleController).start();
+
     }
 
     /**
@@ -241,5 +243,6 @@ public class GameContent implements Drawables, Observer {
     public void cleanup() {
         tileLoader.cleanup();
         timer.stopTimeThread();
+        particleController.cleanup();
     }
 }
