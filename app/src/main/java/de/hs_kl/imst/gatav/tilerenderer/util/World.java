@@ -71,14 +71,26 @@ public class World {
         collectable.addObserver(gameEvents);
     }
 
+    /**
+     * Adds a Particle Spawner to the world
+     * @param particleSpawner particle Spawner to add
+     */
     public void addParticleSpawner(ParticleSpawner particleSpawner) {
         this.particleSpawner.add(particleSpawner);
     }
 
+    /**
+     * Sets the Particle Controler for this World
+     * @param particleController the Particle Controller
+     */
     public void setParticleController(ParticleController particleController) {
         this.particleController = particleController;
     }
 
+    /**
+     * Adds a Particle Factory which will generate all Particle Spawners
+     * @param particleFactory a Particle Factory
+     */
     public void setParticleFactory(ParticleFactory particleFactory) {
         this.particleFactory = particleFactory;
         gameEvents.setParticleFactory(particleFactory);
@@ -106,8 +118,12 @@ public class World {
 
         if(particleController != null) {
             particleController.update(delta, cam);
-            particleSpawner.forEach(ps -> ps.update(cam));
-            particleSpawner.removeIf(ps -> !ps.isActive());
+            particleSpawner.removeIf(ps ->  {
+                boolean remove = !ps.isActive();
+                if(!remove)
+                    ps.update(cam);
+                return remove;
+            });
         }
 
         dynamicObjects.removeAll(physics.getToRemove());

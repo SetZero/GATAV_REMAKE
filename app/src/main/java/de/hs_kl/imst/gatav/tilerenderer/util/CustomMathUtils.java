@@ -1,6 +1,7 @@
 package de.hs_kl.imst.gatav.tilerenderer.util;
 
 /**
+ * Utils for Math Functions
  * Created by Sebastian on 2018-01-22.
  */
 

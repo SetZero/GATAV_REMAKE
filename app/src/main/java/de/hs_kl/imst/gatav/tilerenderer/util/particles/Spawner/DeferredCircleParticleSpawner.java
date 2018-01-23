@@ -23,7 +23,7 @@ public class DeferredCircleParticleSpawner extends CircleParticleSpawner {
     }
 
     /**
-     * Spawn 18 Particles with random color if the player is in the view of the spawner
+     * Spawn 1 particle every {@link #particleTimeBetween} seconds. Will be Spawned in a circle
      *
      * @param cam Camera to check if spawn is needed
      */

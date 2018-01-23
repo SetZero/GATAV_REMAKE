@@ -24,7 +24,7 @@ public class ExtremeDeferredCircleParticleSpawner extends CircleParticleSpawner 
     }
 
     /**
-     * Spawn 18 Particles with random color if the player is in the view of the spawner
+     * Spawn 2 particles in a circle on opposite directions
      *
      * @param cam Camera to check if spawn is needed
      */

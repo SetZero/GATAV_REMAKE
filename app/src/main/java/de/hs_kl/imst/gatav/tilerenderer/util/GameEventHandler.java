@@ -26,6 +26,7 @@ import de.hs_kl.imst.gatav.tilerenderer.util.states.GameStateHandler;
 import de.hs_kl.imst.gatav.tilerenderer.util.states.PlayerStates;
 
 /**
+ * Handels Game Events, like Player Enters Zone or Player died etc.
  * Created by Sebastian on 2017-12-25.
  */
 

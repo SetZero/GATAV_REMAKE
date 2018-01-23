@@ -16,6 +16,12 @@ import de.hs_kl.imst.gatav.tilerenderer.util.particles.ParticleController;
 
 public class WaterParticleSpawner extends CircleParticleSpawner {
 
+    /**
+     * Constructor for a Water Particle Spawner
+     * @param position the Position of the Spawner
+     * @param controller the Particle Controller
+     * @param timer a global timer
+     */
     public WaterParticleSpawner(Vector2 position, ParticleController controller, Timer timer) {
         super(position, controller, timer);
     }

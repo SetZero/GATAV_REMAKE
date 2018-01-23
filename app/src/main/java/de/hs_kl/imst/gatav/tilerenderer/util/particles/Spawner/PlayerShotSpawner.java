@@ -19,10 +19,17 @@ public class PlayerShotSpawner extends CircleParticleSpawner {
 
     private int totalShots = 3;
     private Direction direction = Direction.RIGHT;
+    private static final  int maximumSpawner = 2;
+    private static int totalPlayerShotSpawner = 0;
 
     public PlayerShotSpawner(Vector2 position, ParticleController controller, Timer timer) {
         super(position, controller, timer);
         super.particleTimeBetween = 0.2;
+
+
+        PlayerShotSpawner.totalPlayerShotSpawner++;
+        if(PlayerShotSpawner.totalPlayerShotSpawner > PlayerShotSpawner.maximumSpawner)
+            setActive(false);
     }
 
     /**
@@ -44,6 +51,13 @@ public class PlayerShotSpawner extends CircleParticleSpawner {
                 }
             }
         }
+    }
+
+    @Override
+    public void setActive(boolean active) {
+        super.setActive(active);
+        if(!active)
+            PlayerShotSpawner.totalPlayerShotSpawner--;
     }
 
     public void setDirection(Direction direction) {

@@ -244,7 +244,7 @@ public class GameView extends SurfaceView implements SurfaceHolder.Callback, Run
             if (event.getAction() == 262)
                 GameContent.player.move(Direction.UP);
             //Easteregg :P
-            if(event.getPointerCount() == 10)
+            if(event.getPointerCount() == 4)
                 gameContent.playerShootParticles();
         }
         if (gestureDetector.onTouchEvent(event))

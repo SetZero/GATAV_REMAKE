@@ -13,15 +13,25 @@ public class ScaleHelper {
     private static int ratioX = 2;
     private static int ratioY = 2;
 
-    //This is static!
+    /**
+     * Do not try to call this, there are only static functions!
+     */
     private ScaleHelper() {
 
     }
 
+    /**
+     * Getter for ratio X
+     * @return Scale factor for X coordinates
+     */
     public static float getRatioX() {
         return ratioX;
     }
 
+    /**
+     * Getter for ratio Y
+     * @return Scale factor for Y coordinates
+     */
     public static float getRatioY() {
         return ratioY;
     }
