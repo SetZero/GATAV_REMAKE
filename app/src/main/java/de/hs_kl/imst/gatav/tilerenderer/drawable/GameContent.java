@@ -102,6 +102,13 @@ public class GameContent implements Drawables, Observer {
             player.move(direction);
     }
 
+    /**
+     * Shots a Particle ray from the player origin
+     */
+    public void playerShootParticles() {
+        if (finishedSetup)
+            player.shootParticles();
+    }
 
     /**
      * Calls world.draw as world is managing the draw
@@ -201,6 +208,7 @@ public class GameContent implements Drawables, Observer {
         ParticleFactory particleFactory = new ParticleFactory(particleController, timer, world);
         factory.setParticleFactory(particleFactory);
         world.setParticleFactory(particleFactory);
+        player.setParticleFactory(particleFactory);
 
         List<Enemies> enemies = factory.generateEnemies(context);
         for (Enemies enemy : enemies) {

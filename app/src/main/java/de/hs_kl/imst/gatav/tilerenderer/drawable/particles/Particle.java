@@ -28,4 +28,5 @@ public interface Particle {
     //ignore list
     boolean isIgnoringPlayer();
     boolean isIgnoringCameraView();
+    boolean isOriginatedFromPlayer();
 }

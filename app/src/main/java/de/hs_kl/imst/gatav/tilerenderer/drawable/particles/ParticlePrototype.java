@@ -11,6 +11,7 @@ public abstract class ParticlePrototype implements Particle {
     private boolean active = true;
     private boolean ignoringPlayer = false;
     private boolean ignoringCameraView = false;
+    private boolean originatedFromPlayer = false;
 
     /**
      * Getter
@@ -65,5 +66,14 @@ public abstract class ParticlePrototype implements Particle {
 
     protected void setIgnoringCameraView(boolean ignoringCameraView) {
         this.ignoringCameraView = ignoringCameraView;
+    }
+
+    @Override
+    public boolean isOriginatedFromPlayer() {
+        return originatedFromPlayer;
+    }
+
+    protected void setOriginatedFromPlayer(boolean originatedFromPlayer) {
+        this.originatedFromPlayer = originatedFromPlayer;
     }
 }

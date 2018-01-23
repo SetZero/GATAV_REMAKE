@@ -4,6 +4,7 @@ import android.content.Context;
 import android.graphics.Canvas;
 import android.graphics.Color;
 import android.support.v4.view.GestureDetectorCompat;
+import android.util.Log;
 import android.view.GestureDetector;
 import android.view.MotionEvent;
 import android.view.SurfaceHolder;
@@ -239,8 +240,12 @@ public class GameView extends SurfaceView implements SurfaceHolder.Callback, Run
             }
         }
         if (event.getPointerCount() > 1) {
+            //WTF?!?!?!?! So kann man auch deprecated warnungen umgehen *sigh*
             if (event.getAction() == 262)
                 GameContent.player.move(Direction.UP);
+            //Easteregg :P
+            if(event.getPointerCount() == 10)
+                gameContent.playerShootParticles();
         }
         if (gestureDetector.onTouchEvent(event))
             return true;
@@ -270,6 +275,11 @@ public class GameView extends SurfaceView implements SurfaceHolder.Callback, Run
             gameContent.movePlayer(Direction.UP);
         }
 
+        /*if(deg > 135 && deg < 225) {
+            gameContent.playerShootParticles();
+        }*/
+        //Log.d("GameView", "Deg: " + deg);
+
         return true;
     }
 
@@ -292,7 +302,9 @@ public class GameView extends SurfaceView implements SurfaceHolder.Callback, Run
 
     @Override
     public boolean onSingleTapUp(MotionEvent e) {
-        return false;
+
+        //gameContent.playerShootParticles();
+        return true;
     }
 
     @Override
@@ -303,5 +315,4 @@ public class GameView extends SurfaceView implements SurfaceHolder.Callback, Run
     @Override
     public void onLongPress(MotionEvent e) {
     }
-
 }

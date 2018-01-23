@@ -6,7 +6,9 @@ import java.util.ArrayList;
 import java.util.LinkedList;
 import java.util.List;
 
+import de.hs_kl.imst.gatav.tilerenderer.drawable.MovableGraphics;
 import de.hs_kl.imst.gatav.tilerenderer.drawable.Player;
+import de.hs_kl.imst.gatav.tilerenderer.drawable.enemies.Enemies;
 import de.hs_kl.imst.gatav.tilerenderer.drawable.particles.ParticlePrototype;
 import de.hs_kl.imst.gatav.tilerenderer.util.GameCamera;
 import de.hs_kl.imst.gatav.tilerenderer.util.Hitboxes.Collidable;
@@ -21,6 +23,7 @@ public class ParticleController {
     private List<ParticlePrototype> particles = new LinkedList<>(); //heavy deleting -> LinkedList
     private List<Collidable> collidables = new ArrayList<>();
     private Player player;
+    private List<Enemies> enemies = new ArrayList<>();
 
     public ParticleController(List<Collidable> collidables, Player player) {
         this.collidables = collidables;
@@ -53,6 +56,15 @@ public class ParticleController {
                     }
                 }
             }
+            if(p.isOriginatedFromPlayer()) {
+                for(Enemies e : enemies) {
+                    if(e.getHitbox().getRect().contains((int) p.getPosition().getX(), (int) p.getPosition().getY())) {
+                        toBeRemoved = true;
+                        e.processHit(p.getDamage());
+                        break;
+                    }
+                }
+            }
             if(!toBeRemoved)
                 p.update(delta);
             return toBeRemoved;
@@ -75,5 +87,9 @@ public class ParticleController {
      */
     public void addParticle(ParticlePrototype p) {
         particles.add(p);
+    }
+
+    public void addEnemy(Enemies enemy) {
+        enemies.add(enemy);
     }
 }

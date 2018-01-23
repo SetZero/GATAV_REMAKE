@@ -227,6 +227,8 @@ public class World {
         physics.addPhysical(object);
         gameEvents.addDynamicObject(object);
         object.addObserver(gameEvents);
+        if(object instanceof Enemies && particleController != null)
+            particleController.addEnemy((Enemies)object);
     }
 
     /**

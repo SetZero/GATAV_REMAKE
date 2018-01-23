@@ -13,6 +13,7 @@ import java.util.concurrent.atomic.AtomicInteger;
 
 import de.hs_kl.imst.gatav.tilerenderer.drawable.enemies.Enemies;
 import de.hs_kl.imst.gatav.tilerenderer.drawable.enemies.Robotic;
+import de.hs_kl.imst.gatav.tilerenderer.drawable.particles.PlayerParticle;
 import de.hs_kl.imst.gatav.tilerenderer.util.Animations;
 import de.hs_kl.imst.gatav.tilerenderer.util.Constants;
 import de.hs_kl.imst.gatav.tilerenderer.util.Contact;
@@ -22,6 +23,8 @@ import de.hs_kl.imst.gatav.tilerenderer.util.ScaleHelper;
 import de.hs_kl.imst.gatav.tilerenderer.util.Vector2;
 import de.hs_kl.imst.gatav.tilerenderer.util.audio.AudioPlayer;
 import de.hs_kl.imst.gatav.tilerenderer.util.audio.Sounds;
+import de.hs_kl.imst.gatav.tilerenderer.util.particles.ParticleFactory;
+import de.hs_kl.imst.gatav.tilerenderer.util.particles.Spawner.PlayerShotSpawner;
 import de.hs_kl.imst.gatav.tilerenderer.util.states.Direction;
 import de.hs_kl.imst.gatav.tilerenderer.util.states.PlayerStates;
 
@@ -41,6 +44,8 @@ public final class Player extends MovableGraphics implements Destroyable, Collis
     private AudioPlayer audioPlayer;
     private Vector2 startPosition;
     private float animTime = 0f;
+    private ParticleFactory particleFactory;
+    private boolean canShoot = true;
 
     public Player(float x, float y, Context context, AudioPlayer audioPlayer) {
         super(x, y);
@@ -237,6 +242,17 @@ public final class Player extends MovableGraphics implements Destroyable, Collis
         }
     }
 
+    /**
+     * Shoots a Particle ray originated from the player, takes current direction of the player
+     */
+    public void shootParticles() {
+        if(canShoot) {
+            PlayerShotSpawner spawner = (PlayerShotSpawner)particleFactory.generateParticleSpawnerAndAddToWorld(new Vector2(getPosition().getX() + getHitbox().getWidth(),
+                    getPosition().getY() + getHitbox().getHeight() / 2), PlayerShotSpawner.class);
+            spawner.setDirection(currentDirection);
+        }
+    }
+
     @Override
     public void draw(Canvas canvas) {
         if (bmp != null  && !isFlipped) {
@@ -286,11 +302,35 @@ public final class Player extends MovableGraphics implements Destroyable, Collis
 
     }
 
+    /**
+     * @return Maximum health of the player
+     */
     public float getMaxLifePoints() {
         return maxLifePoints;
     }
 
+
+    /**
+     * Set maximum health of the player
+     * @param maxLifePoints new maximum health
+     */
     public void setMaxLifePoints(float maxLifePoints) {
         this.maxLifePoints = maxLifePoints;
+    }
+
+    /**
+     * Adds a Particle Factory, so that the player can shoot particles
+     * @param particleFactory a particle Factory
+     */
+    public void setParticleFactory(ParticleFactory particleFactory) {
+        this.particleFactory = particleFactory;
+    }
+
+    /**
+     * De-/actives shots from player
+     * @param canShoot can the player shoot particles?
+     */
+    public void setCanShoot(boolean canShoot) {
+        this.canShoot = canShoot;
     }
 }
