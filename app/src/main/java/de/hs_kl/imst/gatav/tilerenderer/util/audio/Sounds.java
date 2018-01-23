@@ -20,7 +20,8 @@ public enum Sounds {
     ROBOT_HIT_BY_PLAYER(R.raw.robot_hit),
     OWL(R.raw.owl),
     SEA(R.raw.sea),
-    WOOSH(R.raw.woosh);
+    WOOSH(R.raw.woosh),
+    SIREN(R.raw.sirene);
 
     private int soundResource = -1;
 

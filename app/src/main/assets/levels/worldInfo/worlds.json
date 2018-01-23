@@ -8,6 +8,12 @@
       "time": 100
     },
     {
+      "name": "Spooky Scary...?",
+      "description": "Enter sandman",
+      "saveLocation": "Level 1",
+      "time": 150
+    },
+    {
       "name": "Desert Storm",
       "description": "Enter sandman",
       "saveLocation": "Level 2",
