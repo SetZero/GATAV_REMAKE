@@ -20,7 +20,6 @@ import de.hs_kl.imst.gatav.tilerenderer.util.Hitboxes.Rectangle;
  */
 
 public class ParticleController implements Runnable {
-    //private List<ParticlePrototype> particles = new LinkedList<>(); //heavy deleting -> LinkedList
     private Queue<ParticlePrototype> particles = new ConcurrentLinkedQueue<>();
     private List<Collidable> collidables = new ArrayList<>();
     private Player player;

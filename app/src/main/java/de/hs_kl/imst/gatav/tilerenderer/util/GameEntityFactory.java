@@ -119,12 +119,21 @@ public class GameEntityFactory {
         for (Collidable zone : zones) {
             if (zone instanceof Rectangle) {
                 Rect coinZoneRect = ((Rectangle) zone).getRect();
+                //dummy coin to get information about coins
                 Coin coin = new Coin(0, 0, context);
                 coin.setPosition(new Vector2(coinZoneRect.left, coinZoneRect.top - coin.getHitbox().getHeight()));
                 coins.add(coin);
-                int coinAmount = coinZoneRect.width() / coin.getHitbox().getWidth();
-                for (int i = 0; i < coinAmount; i++) {
-                    coins.add(new Coin(coinZoneRect.left + (i * coin.getHitbox().getWidth()), coinZoneRect.top - coin.getHitbox().getHeight(), context));
+                if(coinZoneRect.width() > coinZoneRect.height()) {
+                    int coinAmount = coinZoneRect.width() / coin.getHitbox().getWidth();
+                    for (int i = 0; i < coinAmount; i++) {
+                        coins.add(new Coin(coinZoneRect.left + (i * coin.getHitbox().getWidth()), coinZoneRect.top - coin.getHitbox().getHeight(), context));
+                    }
+                } else {
+                    int coinAmount = coinZoneRect.height() / coin.getHitbox().getHeight();
+                    for (int i = 0; i < coinAmount; i++) {
+                        coins.add(new Coin(coinZoneRect.left + coinZoneRect.width()/2 + coin.getHitbox().getWidth() / 2,
+                                coinZoneRect.top + i*coin.getHitbox().getHeight(), context));
+                    }
                 }
 
             }

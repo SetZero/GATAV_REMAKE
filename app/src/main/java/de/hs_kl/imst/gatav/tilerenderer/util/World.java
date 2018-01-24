@@ -42,6 +42,7 @@ public class World {
     private ParticleController particleController;
     private List<ParticleSpawner> particleSpawner = new ArrayList<>();
     private ParticleFactory particleFactory;
+    private GameEventExecutioner executioner;
 
     /**
      * Constructor of World, loads all parameters as object variables
@@ -58,6 +59,7 @@ public class World {
         this.gameEvents = new GameEventHandler(this.getObjects(), timer, executioner, audioPlayer, tileLoader.getAudioEventList(), particleSpawner, this);
         this.step = step;
         this.timer = timer;
+        this.executioner = executioner;
 
         //simpleParticleSpawner = new SimpleParticleSpawner(new Vector2(400, 1400), particleController, timer);
     }
@@ -143,6 +145,11 @@ public class World {
      * @param canvas the canvas to draw on
      */
     public void draw(GameCamera camera, Canvas canvas) {
+        //App was in background...
+        if(tileLoader == null) {
+            executioner.finishLevel();
+            return;
+        }
         //1. Load All Tiles
         camera.draw(canvas);
         /* Why is this so slow? Why is transparency so slow... :-/

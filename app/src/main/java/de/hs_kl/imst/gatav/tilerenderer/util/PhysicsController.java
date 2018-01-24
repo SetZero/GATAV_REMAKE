@@ -177,6 +177,25 @@ public class PhysicsController {
                 }
                 if (wy < -hx) return new Contact(intersectDirection.RIGHT, c);
             }
+
+            /*
+            TODO: Fixme, return a list with left or right and top or bottom
+            //First List item
+            if(rectA.left < rectB.right && rectA.left > (rectB.left + rectB.width()/2))
+                return new Contact(intersectDirection.LEFT, c);
+            else if(rectA.right > rectB.left && rectA.right < (rectB.right + rectB.width()/2))
+                return new Contact(intersectDirection.RIGHT, c);
+            else
+                return new Contact(intersectDirection.RIGHT, c); //player inside
+
+            //second list item
+            if(rectA.bottom > rectB.top && rectA.bottom < (rectB.bottom - rectB.height()/2))
+                return new Contact(intersectDirection.BOTTOM, c);
+            else if(rectA.top < rectB.bottom && rectA.top > (rectB.top - rectB.height()/2))
+                return new Contact(intersectDirection.TOP, c);
+            else
+                return new Contact(intersectDirection.BOTTOM, c); //player inside*/
+
         }
         return new Contact(intersectDirection.DONT, null);
     }
