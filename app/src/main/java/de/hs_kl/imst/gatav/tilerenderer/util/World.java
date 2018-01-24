@@ -234,8 +234,8 @@ public class World {
         }
 
         //3. Draw all Dynamic Objects
-        dynamicObjects.forEach(o -> o.draw(canvas));
-        collectables.forEach(c -> c.draw(canvas));
+        dynamicObjects.forEach(obj -> obj.draw(canvas));
+        collectables.forEach(col -> col.draw(canvas));
 
         if(particleController != null)
             particleController.draw(canvas);
@@ -266,9 +266,7 @@ public class World {
         dynamicObjects.stream()
                 .filter(Enemies.class::isInstance)
                 .map(Enemies.class::cast)
-                .forEach(enemy -> {
-                    enemy.reset();
-        });
+                .forEach(Enemies::reset);
     }
 
 }

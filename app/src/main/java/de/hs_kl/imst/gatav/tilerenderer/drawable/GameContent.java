@@ -241,8 +241,8 @@ public class GameContent implements Drawables, Observer {
      * clean up after TileLoader is finished
      */
     public void cleanup() {
-        tileLoader.cleanup();
-        timer.stopTimeThread();
-        particleController.cleanup();
+        if(tileLoader != null) tileLoader.cleanup();
+        if(timer != null) timer.stopTimeThread();
+        if(particleController != null) particleController.cleanup();
     }
 }

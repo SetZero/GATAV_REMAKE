@@ -138,8 +138,6 @@ public class GameEventHandler implements Observer {
         //TODO: Add World Reset!
         if (!finished && !failed && cam.isAttachedToObject() && (isOutOfBounds(cam) || isInDeathZone())) {
             if (currentGracePeriod >= timer.getElapsedTime()) return;
-            //TODO: Add some Death Screen
-            //GameContent.getHud().drawPopupMessage("you Died :(", 5);
             GameContent.getHud().drawPopupImage("hudImages/rip.png", (float) gracePeriod);
             startPlayerDeath();
             currentGracePeriod = timer.getElapsedTime() + gracePeriod;
@@ -150,7 +148,6 @@ public class GameEventHandler implements Observer {
             startPlayerDeath();
             Vector2 playerFootPosition = Vector2.add(player.getPosition(), new Vector2(0, player.getHitbox().getHeight()));
             particleFactory.generateParticleSpawnerAndAddToWorld(playerFootPosition, WaterParticleSpawner.class);
-            //Todo: Some water joke with electronics
             GameContent.getHud().drawPopupImage("hudImages/rip.png", (float) gracePeriod);
             audioPlayer.addSound(Sounds.WATERDROP, new Vector2(player.getPosition()));
             currentGracePeriod = timer.getElapsedTime() + gracePeriod;

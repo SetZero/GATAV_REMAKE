@@ -3,6 +3,7 @@ package de.hs_kl.imst.gatav.tilerenderer.drawable.enemies;
 import android.graphics.Canvas;
 import android.graphics.Color;
 import android.graphics.Paint;
+import android.graphics.Rect;
 import android.graphics.drawable.BitmapDrawable;
 import android.util.Pair;
 
@@ -13,6 +14,7 @@ import de.hs_kl.imst.gatav.tilerenderer.drawable.MovableGraphics;
 import de.hs_kl.imst.gatav.tilerenderer.drawable.Player;
 import de.hs_kl.imst.gatav.tilerenderer.util.Animations;
 import de.hs_kl.imst.gatav.tilerenderer.util.Contact;
+import de.hs_kl.imst.gatav.tilerenderer.util.ScaleHelper;
 import de.hs_kl.imst.gatav.tilerenderer.util.states.Direction;
 import de.hs_kl.imst.gatav.tilerenderer.util.PhysicsController;
 import de.hs_kl.imst.gatav.tilerenderer.util.Vector2;
@@ -225,7 +227,29 @@ public abstract class Enemies extends MovableGraphics implements Destroyable, Co
                 BitmapDrawable bmp = flip(this.bmp);
                 canvas.drawBitmap(bmp.getBitmap(), Position.getX(), Position.getY() + drawOffsetY, null);
             }
+            if(lifePoints < getMaxLifePoints()) {
+                drawHealthBar(canvas);
+            }
         }
+    }
+
+    public void drawHealthBar(Canvas canvas) {
+        Paint healthPaint = new Paint();
+        healthPaint.setColor(Color.rgb(211, 31, 19));
+
+        Paint backgroundPaint = new Paint();
+        backgroundPaint.setColor(Color.rgb(137, 137, 137));
+        backgroundPaint.setStyle(Paint.Style.FILL_AND_STROKE);
+
+        Rect healthRect = new Rect();
+        healthRect.top = (int)(getPosition().y - 10 * ScaleHelper.getRatioY());
+        healthRect.left = (int)(getPosition().x + getHitbox().getWidth()/2 - 20 * ScaleHelper.getRatioX());
+        healthRect.right = (int) (getPosition().x + getHitbox().getWidth()/2 + 20 * ScaleHelper.getRatioX());
+        healthRect.bottom = (int)(getPosition().y - 2 * ScaleHelper.getRatioY());
+
+        canvas.drawRect(healthRect, backgroundPaint);
+        healthRect.right = healthRect.left + (int)((healthRect.right - healthRect.left) * ((lifePoints < 0 ? 0 : lifePoints) / getMaxLifePoints()));
+        canvas.drawRect(healthRect, healthPaint);
     }
 
     /**

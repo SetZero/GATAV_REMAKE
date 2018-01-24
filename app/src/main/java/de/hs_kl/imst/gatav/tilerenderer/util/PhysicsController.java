@@ -178,8 +178,16 @@ public class PhysicsController {
                 if (wy < -hx) return new Contact(intersectDirection.RIGHT, c);
             }
 
+
             /*
             TODO: Fixme, return a list with left or right and top or bottom
+            TODO: It would be better if we just assume a move and than check if it is
+            TODO: possible and revert it if the player collides, because with that technique
+            TODO: it would be possible to really check the collision direction and not only
+            TODO: assume how the player got there...
+            TODO: on the other hand then I could have do... meh wathever :-/
+            */
+            /*
             //First List item
             if(rectA.left < rectB.right && rectA.left > (rectB.left + rectB.width()/2))
                 return new Contact(intersectDirection.LEFT, c);
