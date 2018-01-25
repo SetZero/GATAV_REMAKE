@@ -57,4 +57,12 @@ public class ScaleHelper {
     public static int getEntitiyScale() {
         return (int) ((5f / 3f) * getRatioY());
     }
+
+    public static int getCameraViewWidth() {
+        return cameraViewWidth;
+    }
+
+    public static int getCameraViewHeight() {
+        return cameraViewHeight;
+    }
 }

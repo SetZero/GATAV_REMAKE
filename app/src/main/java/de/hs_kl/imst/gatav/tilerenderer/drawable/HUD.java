@@ -8,6 +8,7 @@ import android.graphics.Color;
 import android.graphics.Matrix;
 import android.graphics.Paint;
 import android.graphics.Rect;
+import android.graphics.Typeface;
 
 import java.io.IOException;
 import java.io.InputStream;
@@ -46,6 +47,10 @@ public class HUD {
     private Timer timer;
     private AssetManager assetManager;
 
+    private boolean drawScoreboard = false;
+    private Paint scoreBoardForegroundPaint;
+    private Paint scoreBoardBackgroundPaint;
+
 
     public HUD(GameCamera camera, Timer timer, AssetManager assetManager) {
         this.timer = timer;
@@ -60,15 +65,25 @@ public class HUD {
         backgroundPaint.setColor(Color.rgb(137, 137, 137));
         backgroundPaint.setStyle(Paint.Style.FILL_AND_STROKE);
 
-        textPaint = new Paint();
+        textPaint = new Paint(Paint.ANTI_ALIAS_FLAG);
         textPaint.setColor(Color.WHITE);
         textPaint.setTextSize(30 * ScaleHelper.getRatioX());
 
-        textStrokePaint = new Paint();
+        textStrokePaint = new Paint(Paint.ANTI_ALIAS_FLAG);
         textStrokePaint.setStyle(Paint.Style.STROKE);
         textStrokePaint.setStrokeWidth(1.5f * ScaleHelper.getRatioX());
         textStrokePaint.setColor(Color.BLACK);
         textStrokePaint.setTextSize(30 * ScaleHelper.getRatioX());
+
+        scoreBoardForegroundPaint = new Paint();
+        scoreBoardForegroundPaint.setColor(Color.rgb(0, 0, 0));
+        scoreBoardForegroundPaint.setTextSize(30 * ScaleHelper.getRatioX());
+        scoreBoardForegroundPaint.setTextAlign(Paint.Align.CENTER);
+        scoreBoardForegroundPaint.setTypeface(Typeface.create(Typeface.MONOSPACE, Typeface.NORMAL));
+
+
+        scoreBoardBackgroundPaint = new Paint();
+        scoreBoardBackgroundPaint.setColor(Color.rgb(237, 226, 184));
 
         try {
             InputStream histr = assetManager.open("hudImages/heart.png");
@@ -99,6 +114,7 @@ public class HUD {
                 drawPopupImage(canvas);
             drawScore(canvas);
             drawTimer(canvas);
+            drawScoreboard(canvas);
         }
     }
 
@@ -193,5 +209,32 @@ public class HUD {
         textStrokePaint.setTextAlign(Paint.Align.LEFT);
         canvas.drawBitmap(timeWatchImage, canvas.getWidth() - timeText.length() * paint.getTextSize() - timeWatchImage.getWidth(), (int)(2 * ScaleHelper.getRatioY()), null);
 
+    }
+
+    public void drawScoreboard(Canvas canvas) {
+
+        if(drawScoreboard) {
+            Rect scoreBackground = new Rect();
+            scoreBackground.top = (int) (20 * ScaleHelper.getRatioY());
+            scoreBackground.left = (int) (20 * ScaleHelper.getRatioX());
+            scoreBackground.bottom = (int) ((ScaleHelper.getCameraViewHeight() - 20) * ScaleHelper.getRatioY());
+            scoreBackground.right = (int) ((ScaleHelper.getCameraViewWidth() - 20) * ScaleHelper.getRatioX());
+            canvas.drawRect(scoreBackground, scoreBoardBackgroundPaint);
+
+            String scoreText = String.format(Locale.GERMAN, "Score:       %06d", GameContent.player.getScore());
+            canvas.drawText(scoreText, (ScaleHelper.getCameraViewWidth() / 2) * ScaleHelper.getRatioX(), (ScaleHelper.getCameraViewHeight()/2 - 45) * ScaleHelper.getRatioY(), scoreBoardForegroundPaint);
+            String deathText = String.format(Locale.GERMAN, "Deaths:      %06d", GameContent.player.getPlayerDeaths());
+            canvas.drawText(deathText, (ScaleHelper.getCameraViewWidth() / 2) * ScaleHelper.getRatioX(), (ScaleHelper.getCameraViewHeight()/2) * ScaleHelper.getRatioY(), scoreBoardForegroundPaint);
+            String timeUsedText = String.format(Locale.GERMAN, "Time:        %06d", (int)(timer.getTotalLevelTime() - timer.getSnapshotTime()));
+            canvas.drawText(timeUsedText, (ScaleHelper.getCameraViewWidth() / 2) * ScaleHelper.getRatioX(), (ScaleHelper.getCameraViewHeight()/2 + 45) * ScaleHelper.getRatioY(), scoreBoardForegroundPaint);
+        }
+    }
+
+    public void setDrawScoreboard(boolean drawIt) {
+        this.drawScoreboard = drawIt;
+    }
+
+    public void onPlayerDeath() {
+        popupImageLength = 0;
     }
 }

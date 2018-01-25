@@ -33,9 +33,9 @@ import de.hs_kl.imst.gatav.tilerenderer.util.states.PlayerStates;
 public class GameEventHandler implements Observer {
     private final Timer timer;
     private final GameEventExecutioner executioner;
-    private World world;
     private final float speedUpSoundAmount = 1.25f;
     private final float speedUpSoundTime = 0.8f;
+    private World world;
     private ArrayList<MovableGraphics> dynamics = new ArrayList<>();
     private Map<String, List<Collidable>> objects;
     private Player player;
@@ -49,7 +49,6 @@ public class GameEventHandler implements Observer {
     private boolean speedUpSound = false;
     private List<EventContainer> audioEventList;
     private List<ParticleSpawner> particleSpawner;
-
     private ParticleFactory particleFactory;
 
     /**
@@ -109,7 +108,8 @@ public class GameEventHandler implements Observer {
         }
         //just finished level
         if (!finished && hasReachedFinish()) {
-            //TODO: add some Finish Screen
+            if(GameContent.getHud() != null)
+                GameContent.getHud().setDrawScoreboard(true);
             finished = true;
             timer.snapshotTime();
             player.setScore(player.getScore() + (int) (timer.getTotalLevelTime() - timer.getSnapshotTime()));
@@ -189,6 +189,8 @@ public class GameEventHandler implements Observer {
             audioPlayer.changeBGMSpeed(1);
             audioEventList.forEach(EventContainer::reset);
             particleSpawner.forEach(ParticleSpawner::resetTimer);
+            GameContent.getHud().onPlayerDeath();
+            player.setPlayerDeaths(player.getPlayerDeaths() + 1);
             failed = false;
         }
         audioEventList.forEach(EventContainer::update);
@@ -319,6 +321,7 @@ public class GameEventHandler implements Observer {
                 if (arg == PlayerStates.DEAD) {
                     failed = true;
                     currentGracePeriod = timer.getElapsedTime();
+                    audioPlayer.addSound(Sounds.PLAYER_DEAHT_BY_ENEMY_LINE, player.getPosition());
                 }
             } else if (arg instanceof Pair) {
                 if (((Pair) arg).first instanceof Sounds && ((Pair) arg).second instanceof Vector2) {
@@ -337,5 +340,6 @@ public class GameEventHandler implements Observer {
         failed = true;
         player.setActive(false);
         player.setIsAlive(false);
+        audioPlayer.addSound(Sounds.PLAYER_DEATH_LINE, player.getPosition(), 50);
     }
 }

@@ -46,6 +46,7 @@ public final class Player extends MovableGraphics implements Destroyable, Collis
     private float animTime = 0f;
     private ParticleFactory particleFactory;
     private boolean canShoot = true;
+    private int playerDeaths = 0;
 
     public Player(float x, float y, Context context, AudioPlayer audioPlayer) {
         super(x, y);
@@ -67,6 +68,14 @@ public final class Player extends MovableGraphics implements Destroyable, Collis
         } catch (IOException e) {
             e.printStackTrace();
         }
+    }
+
+    public int getPlayerDeaths() {
+        return playerDeaths;
+    }
+
+    public void setPlayerDeaths(int playerDeaths) {
+        this.playerDeaths = playerDeaths;
     }
 
     public Vector2 getStartPosition() {
@@ -162,6 +171,7 @@ public final class Player extends MovableGraphics implements Destroyable, Collis
     /**
      * interrupts LEFT or RIGHT movement the correct way (is the player on Ground?)
      * this interrupt will occur on the next update (if interrupt is possible)
+     *
      * @param direction which the movement should be stopped
      */
     public void stopMove(Direction direction) {
@@ -172,7 +182,7 @@ public final class Player extends MovableGraphics implements Destroyable, Collis
     @Override
     public void update(float delta) {
         if (isAlive) {
-            if(isActive) {
+            if (isActive) {
                 super.update(delta);
                 if (lifePoints <= 0)
                     isAlive = false;
@@ -181,7 +191,7 @@ public final class Player extends MovableGraphics implements Destroyable, Collis
             }
         } else {
             if (dieng.isFinished(dieTimer)) {
-                if(isActive) {
+                if (isActive) {
                     setChanged();
                     notifyObservers(PlayerStates.DEAD);
                 }
@@ -246,8 +256,8 @@ public final class Player extends MovableGraphics implements Destroyable, Collis
      * Shoots a Particle ray originated from the player, takes current direction of the player
      */
     public void shootParticles() {
-        if(canShoot) {
-            PlayerShotSpawner spawner = (PlayerShotSpawner)particleFactory.generateParticleSpawnerAndAddToWorld(new Vector2(getPosition().getX() + getHitbox().getWidth(),
+        if (canShoot) {
+            PlayerShotSpawner spawner = (PlayerShotSpawner) particleFactory.generateParticleSpawnerAndAddToWorld(new Vector2(getPosition().getX() + getHitbox().getWidth(),
                     getPosition().getY() + getHitbox().getHeight() / 2), PlayerShotSpawner.class);
             spawner.setDirection(currentDirection);
         }
@@ -255,7 +265,7 @@ public final class Player extends MovableGraphics implements Destroyable, Collis
 
     @Override
     public void draw(Canvas canvas) {
-        if (bmp != null  && !isFlipped) {
+        if (bmp != null && !isFlipped) {
             if (Constants.debugBuild) {
                 Paint p = new Paint();
                 p.setColor(Color.argb(128, 0, 65, 200));
@@ -292,7 +302,7 @@ public final class Player extends MovableGraphics implements Destroyable, Collis
                 impact(new Vector2(0f, -400f));
                 if (enemy.decreaseLife(hitPoints))
                     score += enemy.getScorePoints();
-                if(enemy.isAlive()) {
+                if (enemy.isAlive()) {
                     setChanged();
                     notifyObservers(new Pair<>(((Enemies) c.collisionObject).getHitSound(), new Vector2(Position)));
                 }
@@ -312,6 +322,7 @@ public final class Player extends MovableGraphics implements Destroyable, Collis
 
     /**
      * Set maximum health of the player
+     *
      * @param maxLifePoints new maximum health
      */
     public void setMaxLifePoints(float maxLifePoints) {
@@ -320,6 +331,7 @@ public final class Player extends MovableGraphics implements Destroyable, Collis
 
     /**
      * Adds a Particle Factory, so that the player can shoot particles
+     *
      * @param particleFactory a particle Factory
      */
     public void setParticleFactory(ParticleFactory particleFactory) {
@@ -328,6 +340,7 @@ public final class Player extends MovableGraphics implements Destroyable, Collis
 
     /**
      * De-/actives shots from player
+     *
      * @param canShoot can the player shoot particles?
      */
     public void setCanShoot(boolean canShoot) {

@@ -21,7 +21,9 @@ public enum Sounds {
     OWL(R.raw.owl),
     SEA(R.raw.sea),
     WOOSH(R.raw.woosh),
-    SIREN(R.raw.sirene);
+    SIREN(R.raw.sirene),
+    PLAYER_DEATH_LINE(R.raw.zum_abschied),
+    PLAYER_DEAHT_BY_ENEMY_LINE(R.raw.freund_oder_feind);
 
     private int soundResource = -1;
 
